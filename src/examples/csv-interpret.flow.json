@@ -1,0 +1,116 @@
+[
+  {
+    "id": "claude_csv_tab",
+    "type": "tab",
+    "label": "Claude interprets a CSV",
+    "disabled": false,
+    "info": "Downloads a CSV to the agent's working directory, then asks the Claude agent to read and interpret the file from disk (Read/Bash tools) — autonomous, like Claude Code in a terminal.\n\nSet the API key on the claude-agent-configuration node, and make sure its working directory (default /tmp/claude-agent) matches the file write path below."
+  },
+  {
+    "id": "claude_cfg_csv",
+    "type": "claude-agent-configuration",
+    "name": "Claude (autonomous)",
+    "provider": "anthropic",
+    "model": "",
+    "fallbackModel": "",
+    "systemPromptPreset": "claude_code",
+    "appendSystemPrompt": "",
+    "customSystemPrompt": "",
+    "cwd": "/tmp/claude-agent",
+    "permissionMode": "bypassPermissions",
+    "allowedTools": "",
+    "disallowedTools": "",
+    "settingSources": "user,project,local",
+    "maxTurns": 0,
+    "maxBudgetUsd": 0,
+    "additionalDirectories": ""
+  },
+  {
+    "id": "claude_csv_inject",
+    "type": "inject",
+    "z": "claude_csv_tab",
+    "name": "download CSV",
+    "props": [
+      {
+        "p": "url",
+        "v": "https://people.sc.fsu.edu/~jburkardt/data/csv/airtravel.csv",
+        "vt": "str"
+      }
+    ],
+    "once": false,
+    "topic": "",
+    "x": 140,
+    "y": 100,
+    "wires": [["claude_csv_http"]]
+  },
+  {
+    "id": "claude_csv_http",
+    "type": "http request",
+    "z": "claude_csv_tab",
+    "name": "GET csv",
+    "method": "GET",
+    "ret": "txt",
+    "url": "",
+    "x": 330,
+    "y": 100,
+    "wires": [["claude_csv_file"]]
+  },
+  {
+    "id": "claude_csv_file",
+    "type": "file",
+    "z": "claude_csv_tab",
+    "name": "write data.csv",
+    "filename": "/tmp/claude-agent/data.csv",
+    "filenameType": "str",
+    "appendNewline": false,
+    "createDir": true,
+    "overwriteFile": "true",
+    "encoding": "utf8",
+    "x": 520,
+    "y": 100,
+    "wires": [["claude_csv_agent"]]
+  },
+  {
+    "id": "claude_csv_agent",
+    "type": "claude-agent",
+    "z": "claude_csv_tab",
+    "name": "interpret",
+    "config": "claude_cfg_csv",
+    "prompt": "Your working directory contains data.csv. Read it and produce a concise markdown report: the column names and their inferred types, the number of rows, summary values per column, and any data-quality issues you notice. Use your file tools to inspect it.",
+    "promptType": "str",
+    "responseMode": "single",
+    "interactive": false,
+    "includePartial": false,
+    "permissionMode": "inherit",
+    "errorPort": true,
+    "completePort": false,
+    "statusPort": false,
+    "x": 720,
+    "y": 100,
+    "wires": [["claude_csv_debug"], [], ["claude_csv_error"]]
+  },
+  {
+    "id": "claude_csv_debug",
+    "type": "debug",
+    "z": "claude_csv_tab",
+    "name": "report",
+    "active": true,
+    "complete": "output.payload",
+    "targetType": "msg",
+    "x": 920,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "claude_csv_error",
+    "type": "debug",
+    "z": "claude_csv_tab",
+    "name": "error",
+    "active": true,
+    "complete": "error",
+    "targetType": "msg",
+    "x": 920,
+    "y": 160,
+    "wires": []
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "label": "claude agent",
+  "configs": {
+    "name": "Name",
+    "config": "Configuration",
+    "prompt": "Prompt",
+    "responseMode": "Response",
+    "interactive": "Interactive",
+    "includePartial": "Stream partials",
+    "permissionMode": "Permission mode",
+    "errorPort": "Error port",
+    "completePort": "Complete port",
+    "statusPort": "Status port"
+  }
+}

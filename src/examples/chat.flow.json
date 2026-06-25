@@ -1,0 +1,119 @@
+[
+  {
+    "id": "claude_chat_tab",
+    "type": "tab",
+    "label": "Claude chat (multi-user)",
+    "disabled": false,
+    "info": "Multi-user interactive chat. A Vue app (examples/chat-demo) connects over WebSocket at ws://localhost:1880/claude, logs in with a simple in-memory username/password, then chats. Each user gets a separate Claude conversation (session) and replies are routed back only to that user's connection.\n\nDemo users live in flow context (alice/alice123, bob/bob123). Set the API key on the claude-agent-configuration node before deploying."
+  },
+  {
+    "id": "claude_cfg",
+    "type": "claude-agent-configuration",
+    "name": "Claude (interactive)",
+    "provider": "anthropic",
+    "model": "",
+    "fallbackModel": "",
+    "systemPromptPreset": "claude_code",
+    "appendSystemPrompt": "",
+    "customSystemPrompt": "",
+    "cwd": "/tmp/claude-agent",
+    "permissionMode": "default",
+    "allowedTools": "",
+    "disallowedTools": "",
+    "settingSources": "user,project,local",
+    "maxTurns": 0,
+    "maxBudgetUsd": 0,
+    "additionalDirectories": ""
+  },
+  {
+    "id": "claude_ws_listener",
+    "type": "websocket-listener",
+    "path": "/claude",
+    "wholemsg": "false"
+  },
+  {
+    "id": "claude_ws_in",
+    "type": "websocket in",
+    "z": "claude_chat_tab",
+    "name": "client -> NR",
+    "server": "claude_ws_listener",
+    "client": "",
+    "x": 120,
+    "y": 140,
+    "wires": [["claude_route_in"]]
+  },
+  {
+    "id": "claude_route_in",
+    "type": "function",
+    "z": "claude_chat_tab",
+    "name": "auth + route in",
+    "func": "let users = flow.get('users');\nif (!users) { users = { alice: 'alice123', bob: 'bob123' }; flow.set('users', users); }\nlet socketToUser = flow.get('socketToUser') || {};\nlet userToSession = flow.get('userToSession') || {};\nconst sid = msg._session && msg._session.id;\nlet data;\ntry { data = JSON.parse(msg.payload); } catch (e) { return [null, null]; }\nconst reply = (obj) => { msg.payload = JSON.stringify(obj); return msg; };\n\nif (data.type === 'login') {\n  if (users[data.username] && users[data.username] === data.password) {\n    socketToUser[sid] = data.username;\n    flow.set('socketToUser', socketToUser);\n    return [null, reply({ type: 'login-ok', user: data.username })];\n  }\n  return [null, reply({ type: 'login-fail' })];\n}\n\nconst user = socketToUser[sid];\nif (!user) return [null, reply({ type: 'need-login' })];\n\nmsg.correlationId = sid;\nif (data.type === 'prompt') {\n  msg.payload = data.text;\n  if (userToSession[user]) msg.sessionId = userToSession[user];\n  return [msg, null];\n}\nif (data.type === 'response') {\n  msg.claudeResponse = { requestId: data.requestId, behavior: data.behavior, answers: data.answers, message: data.message };\n  return [msg, null];\n}\nif (data.type === 'interrupt') {\n  msg.claudeControl = 'interrupt';\n  return [msg, null];\n}\nreturn [null, null];",
+    "outputs": 2,
+    "x": 330,
+    "y": 140,
+    "wires": [["claude_agent"], ["claude_ws_out"]]
+  },
+  {
+    "id": "claude_agent",
+    "type": "claude-agent",
+    "z": "claude_chat_tab",
+    "name": "",
+    "config": "claude_cfg",
+    "prompt": "payload",
+    "promptType": "msg",
+    "responseMode": "stream",
+    "interactive": true,
+    "includePartial": false,
+    "permissionMode": "inherit",
+    "errorPort": true,
+    "completePort": false,
+    "statusPort": false,
+    "x": 540,
+    "y": 140,
+    "wires": [["claude_out_resp"], ["claude_out_ask"], ["claude_out_err"]]
+  },
+  {
+    "id": "claude_out_resp",
+    "type": "function",
+    "z": "claude_chat_tab",
+    "name": "route response",
+    "func": "const out = msg.output || {};\nconst sid = out.correlationId;\nif (out.sessionId && sid) {\n  const socketToUser = flow.get('socketToUser') || {};\n  const user = socketToUser[sid];\n  if (user) {\n    const userToSession = flow.get('userToSession') || {};\n    userToSession[user] = out.sessionId;\n    flow.set('userToSession', userToSession);\n  }\n}\nif (sid) msg._session = { type: 'websocket', id: sid };\nconst type = out.kind === 'result' ? 'result' : 'chunk';\nmsg.payload = JSON.stringify({ type, text: out.payload });\nreturn msg;",
+    "outputs": 1,
+    "x": 760,
+    "y": 100,
+    "wires": [["claude_ws_out"]]
+  },
+  {
+    "id": "claude_out_ask",
+    "type": "function",
+    "z": "claude_chat_tab",
+    "name": "route ask",
+    "func": "const out = msg.output || {};\nconst sid = out.correlationId;\nif (sid) msg._session = { type: 'websocket', id: sid };\nmsg.payload = JSON.stringify(Object.assign({ type: 'ask' }, out.payload));\nreturn msg;",
+    "outputs": 1,
+    "x": 745,
+    "y": 150,
+    "wires": [["claude_ws_out"]]
+  },
+  {
+    "id": "claude_out_err",
+    "type": "function",
+    "z": "claude_chat_tab",
+    "name": "route error",
+    "func": "const e = msg.error || {};\nconst sid = e.correlationId || msg.correlationId;\nif (sid) msg._session = { type: 'websocket', id: sid };\nconst errs = Array.isArray(e.errors) ? e.errors.join('; ') : '';\nconst detail = errs || e.subtype || e.message || 'run failed';\nmsg.payload = JSON.stringify({ type: 'error', text: detail, subtype: e.subtype, errors: e.errors });\nreturn msg;",
+    "outputs": 1,
+    "x": 750,
+    "y": 200,
+    "wires": [["claude_ws_out"]]
+  },
+  {
+    "id": "claude_ws_out",
+    "type": "websocket out",
+    "z": "claude_chat_tab",
+    "name": "NR -> client",
+    "server": "claude_ws_listener",
+    "client": "",
+    "x": 970,
+    "y": 150,
+    "wires": []
+  }
+]

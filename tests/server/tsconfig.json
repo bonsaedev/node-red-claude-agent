@@ -1,0 +1,4 @@
+{
+  "extends": "@bonsae/nrg/tsconfig/test/server/unit.json",
+  "include": ["**/*.ts", "../../src/server/**/*.ts"]
+}

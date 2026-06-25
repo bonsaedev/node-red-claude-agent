@@ -1,0 +1,7 @@
+{
+  "extends": "@bonsae/nrg/tsconfig/base.json",
+  "compilerOptions": {
+    "rootDir": "."
+  },
+  "include": ["vite.config.ts"]
+}

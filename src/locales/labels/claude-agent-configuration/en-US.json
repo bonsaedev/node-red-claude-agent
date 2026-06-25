@@ -1,0 +1,24 @@
+{
+  "label": "claude agent configuration",
+  "configs": {
+    "name": "Name",
+    "provider": "Provider",
+    "model": "Model",
+    "fallbackModel": "Fallback model",
+    "systemPromptPreset": "System prompt",
+    "appendSystemPrompt": "Append to prompt",
+    "customSystemPrompt": "Custom prompt",
+    "cwd": "Working directory",
+    "permissionMode": "Permission mode",
+    "allowedTools": "Allowed tools",
+    "disallowedTools": "Disallowed tools",
+    "settingSources": "Setting sources",
+    "maxTurns": "Max turns",
+    "maxBudgetUsd": "Max budget (USD)",
+    "additionalDirectories": "Additional directories",
+    "supportedDialogKinds": "Dialog kinds"
+  },
+  "credentials": {
+    "apiKey": "API key"
+  }
+}

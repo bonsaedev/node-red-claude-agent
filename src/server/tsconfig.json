@@ -1,0 +1,7 @@
+{
+  "extends": "@bonsae/nrg/tsconfig/core/server.json",
+  "compilerOptions": {
+    "rootDir": "."
+  },
+  "include": ["**/*.ts"]
+}
