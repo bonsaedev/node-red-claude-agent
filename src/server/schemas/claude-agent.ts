@@ -1,5 +1,5 @@
 import { defineSchema, SchemaType } from "@bonsae/nrg/server";
-import ClaudeAgentConfiguration from "../nodes/claude-agent-configuration";
+import type ClaudeAgentConfiguration from "../nodes/claude-agent-configuration";
 
 /**
  * A `claude-agent` node runs the Claude Agent SDK `query()` for an incoming
@@ -10,10 +10,13 @@ import ClaudeAgentConfiguration from "../nodes/claude-agent-configuration";
 export const ConfigsSchema = defineSchema(
   {
     name: SchemaType.String({ default: "", "x-nrg-form": { icon: "tag" } }),
-    config: SchemaType.NodeRef(ClaudeAgentConfiguration, {
-      description: "Claude agent configuration node (auth + run options)",
-      "x-nrg-form": { icon: "cog" },
-    }),
+    config: SchemaType.NodeRef<ClaudeAgentConfiguration>(
+      "claude-agent-configuration",
+      {
+        description: "Claude agent configuration node (auth + run options)",
+        "x-nrg-form": { icon: "cog" },
+      },
+    ),
     prompt: SchemaType.TypedInput<string>({
       description:
         "The prompt to send. Defaults to msg.payload; pick a string or another msg property.",
