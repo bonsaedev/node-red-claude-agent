@@ -242,21 +242,19 @@
             if (m.type === "need-login") { phase.value = "login"; me.value = null; return; }
 
             if (m.type === "chunk") {
-              if (!current) {
-                current = reactive({ role: "assistant", text: "", streaming: true });
-                messages.push(current);
-              }
               // This flow streams full-turn text (includePartial:false), so each
-              // chunk is a COMPLETE turn — replace, not concatenate (appending
-              // ran multiple turns together with no break). The result replaces
-              // it with the final answer at the end.
-              current.text = m.text;
+              // chunk is a COMPLETE assistant turn — render each as its own bubble
+              // so the agent's intermediate narration ("Let me read the file…")
+              // is preserved (concatenating ran turns together; replacing erased
+              // them). The result finalizes the last bubble.
+              current = reactive({ role: "assistant", text: m.text, streaming: true });
+              messages.push(current);
             } else if (m.type === "result") {
-              // The result is the authoritative final answer — replace the
-              // streamed preview (which may concatenate multiple turns).
+              // Finalize the last streamed turn. The result text is usually that
+              // same turn, so only replace the bubble when it actually differs.
               if (current) {
                 current.streaming = false;
-                if (m.text) current.text = m.text;
+                if (m.text && m.text !== current.text) current.text = m.text;
               } else if (m.text) {
                 messages.push({ role: "assistant", text: m.text });
               }
@@ -291,6 +289,10 @@
             if (current) current.streaming = false;
             current = null;
             busy.value = false;
+            // Clear pending ask cards too — the aborted run will never answer
+            // them, and their buttons would fire against a now-dead requestId.
+            asks.length = 0;
+            for (const k in answersByAsk) delete answersByAsk[k];
           }
 
           function allow(ask) {
