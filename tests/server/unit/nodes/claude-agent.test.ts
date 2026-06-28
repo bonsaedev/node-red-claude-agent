@@ -285,6 +285,57 @@ describe("claude-agent", () => {
         node.warned().some((w) => String(w).includes("overloaded")),
       ).toBe(true);
     });
+
+    it.each(["invalid_request", "model_not_found"])(
+      "treats the config error %s as fatal and routes it to the error port",
+      async (code) => {
+        sdk.setMessages([
+          {
+            type: "assistant",
+            session_id: "s1",
+            error: code,
+            message: { content: [] },
+          },
+        ]);
+        const { node } = await createNode(ClaudeAgent, {
+          config: {
+            config: mockConfig(),
+            prompt: { type: "str", value: "hi" },
+          },
+        });
+
+        await expect(node.receive({ payload: "hi" })).rejects.toThrow(code);
+        expect(node.sent("error")[0].error).toMatchObject({
+          name: "AgentRunError",
+          subtype: code,
+        });
+      },
+    );
+
+    it("settles on the error port when the stream ends with no result", async () => {
+      // A run that streams content but never emits a terminal result must not
+      // finish silently — that would hang a UI waiting on result/error.
+      sdk.setMessages([
+        { type: "system", session_id: "s1" },
+        {
+          type: "assistant",
+          session_id: "s1",
+          message: { content: [{ type: "text", text: "partial work" }] },
+        },
+      ]);
+      const { node } = await createNode(ClaudeAgent, {
+        config: { config: mockConfig(), prompt: { type: "str", value: "hi" } },
+      });
+
+      await expect(
+        node.receive({ payload: "hi", correlationId: "c-3" }),
+      ).rejects.toThrow("ended_without_result");
+      expect(node.sent("error")[0].error).toMatchObject({
+        name: "AgentRunError",
+        subtype: "ended_without_result",
+        correlationId: "c-3",
+      });
+    });
   });
 
   describe("streaming", () => {

@@ -37,6 +37,8 @@ const FATAL_ASSISTANT_ERRORS = new Set<string>([
   "authentication_failed",
   "oauth_org_not_allowed",
   "billing_error",
+  "invalid_request",
+  "model_not_found",
 ]);
 
 /** A pending interactive request awaiting an answer routed back to this node. */
@@ -67,7 +69,9 @@ interface ClaudeResponse {
 
 /** An in-flight run: its query plus the AbortController used to stop it. */
 interface RunningQuery {
-  q: ReturnType<typeof query>;
+  // assigned after query() — the run is registered before query() starts so an
+  // interrupt arriving in that window can still abort it.
+  q?: ReturnType<typeof query>;
   controller: AbortController;
 }
 
@@ -206,7 +210,11 @@ export default class ClaudeAgent extends IONode<Config, any, Input, any> {
     // Correlation id rides every emission so a downstream router can return
     // each message to the originating client (captured locally => concurrency-safe).
     const correlationId = m.correlationId;
-    const key = correlationId ?? "default";
+    // A keyless run gets its OWN key — a literal "default" bucket would merge
+    // every keyless run, so one interrupt aborts them all and one client's answer
+    // could resolve another's prompt. Multi-user integrations MUST set
+    // correlationId; keyless runs are isolated but not interruptible.
+    const key = correlationId ?? randomUUID();
 
     // Control: abort this correlation's in-flight run. Aborting the controller
     // tears down the subprocess (q.interrupt() is unsupported for the single-turn
@@ -237,19 +245,41 @@ export default class ClaudeAgent extends IONode<Config, any, Input, any> {
       throw new Error("claude-agent: no configuration node selected");
     }
 
-    const resolved = await this.config.prompt.resolve(msg);
+    // Register the run BEFORE the async prompt.resolve + query() so an interrupt
+    // arriving in that window aborts it instead of finding an empty bucket.
+    // `dropRun` removes it on any exit path (guard throw, abort, or the finally).
+    const runRequestIds = new Set<string>();
+    const controller = new AbortController();
+    const runEntry: RunningQuery = { controller };
+    let runs = this.running.get(key);
+    if (!runs) {
+      runs = new Set<RunningQuery>();
+      this.running.set(key, runs);
+    }
+    runs.add(runEntry);
+    const dropRun = () => {
+      const set = this.running.get(key);
+      if (set) {
+        set.delete(runEntry);
+        if (set.size === 0) this.running.delete(key);
+      }
+    };
+
+    let resolved: unknown;
+    try {
+      resolved = await this.config.prompt.resolve(msg);
+    } catch (err) {
+      dropRun();
+      throw err;
+    }
     const prompt =
       (typeof resolved === "string" && resolved) ||
       (typeof m.payload === "string" ? m.payload : "");
     if (!prompt) {
+      dropRun();
       this.status({ fill: "red", shape: "dot", text: "empty prompt" });
       throw new Error("claude-agent: prompt is empty");
     }
-
-    // Requests this run raises, so the finally can settle any left unanswered.
-    const runRequestIds = new Set<string>();
-
-    const controller = new AbortController();
     const options: Options = {
       ...configNode.buildOptions(),
       abortController: controller,
@@ -347,15 +377,22 @@ export default class ClaudeAgent extends IONode<Config, any, Input, any> {
 
     if (this.config.interactive) {
       options.canUseTool = canUseTool;
-      // canUseTool is never consulted under auto-approving modes, so the ask
-      // port would never fire and a UI awaiting approval would hang.
+      // Fully auto-approving/denying modes never consult canUseTool, so the ask
+      // port can't fire and a UI awaiting approval would hang. (acceptEdits is
+      // excluded: it auto-accepts edits but still prompts for other tools.)
       if (
         options.permissionMode === "bypassPermissions" ||
-        options.permissionMode === "acceptEdits" ||
         options.permissionMode === "dontAsk"
       ) {
         this.warn(
           `claude-agent: interactive is on but permission mode '${options.permissionMode}' auto-approves or auto-denies tools — the ask port will not fire. Use 'default' or 'plan' for interactive approvals.`,
+        );
+      }
+      // Without a correlationId the ask/answer + interrupt routing can't be
+      // isolated per client — fine for one user, unsafe for multi-tenant.
+      if (!correlationId) {
+        this.warn(
+          "claude-agent: interactive run without a correlationId — answers and interrupts can't be isolated per client. Set msg.correlationId for multi-user routing.",
         );
       }
     }
@@ -370,15 +407,17 @@ export default class ClaudeAgent extends IONode<Config, any, Input, any> {
 
     this.status({ fill: "blue", shape: "dot", text: "running" });
 
-    const q = query({ prompt, options });
-    const runEntry: RunningQuery = { q, controller };
-    let runs = this.running.get(key);
-    if (!runs) {
-      runs = new Set<RunningQuery>();
-      this.running.set(key, runs);
+    // An interrupt may have aborted us during the awaits above.
+    if (controller.signal.aborted) {
+      dropRun();
+      this.status({ fill: "grey", shape: "ring", text: "interrupted" });
+      return;
     }
-    runs.add(runEntry);
+
+    const q = query({ prompt, options });
+    runEntry.q = q;
     let sessionId: string | undefined = m.sessionId;
+    let sawResult = false;
 
     try {
       for await (const message of q) {
@@ -444,6 +483,7 @@ export default class ClaudeAgent extends IONode<Config, any, Input, any> {
           }
           case "result": {
             sessionId = message.session_id ?? sessionId;
+            sawResult = true;
             if (message.subtype === "success") {
               this.sendToPort(RESPONSE_PORT, {
                 payload: message.result,
@@ -479,6 +519,16 @@ export default class ClaudeAgent extends IONode<Config, any, Input, any> {
           }
         }
       }
+
+      // The stream ended with no terminal result and we weren't interrupted —
+      // settle on the error port so a waiting UI never hangs.
+      if (!sawResult && !controller.signal.aborted) {
+        this.status({ fill: "red", shape: "dot", text: "no result" });
+        throw new AgentRunError("ended_without_result", {
+          correlationId,
+          sessionId,
+        });
+      }
     } catch (err) {
       // An abort is an interrupt, not a failure — don't route it to the error port.
       if (controller.signal.aborted) {
@@ -500,12 +550,9 @@ export default class ClaudeAgent extends IONode<Config, any, Input, any> {
           }
         }
       }
-      // Drop this run from its correlation bucket; remove the bucket when empty.
-      const runs = this.running.get(key);
-      if (runs) {
-        runs.delete(runEntry);
-        if (runs.size === 0) this.running.delete(key);
-      }
+      // Drop this run from its correlation bucket (idempotent with the dropRun
+      // used on the guard/abort exit paths).
+      dropRun();
     }
   }
 
