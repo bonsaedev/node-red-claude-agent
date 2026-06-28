@@ -165,6 +165,7 @@
           <div class="row">
             <textarea v-model="draft" placeholder="Ask Claude to do something…"
                       @keydown.enter.exact.prevent="send"></textarea>
+            <button v-if="busy" class="deny" @click="stop">Stop</button>
             <button @click="send" :disabled="!connected || !draft.trim() || busy">{{ busy ? '…' : 'Send' }}</button>
           </div>
         </footer>
@@ -208,6 +209,12 @@
               connected.value = false;
               phase.value = "login";
               me.value = null;
+              // A drop mid-run (network blip, flow redeploy, logout) can never
+              // deliver this run's result/error to the now-dead socket, so reset
+              // run state — otherwise busy stays true and Send is disabled forever.
+              busy.value = false;
+              current = null;
+              asks.length = 0;
             };
             ws.onmessage = (e) => handle(JSON.parse(e.data));
           }
@@ -226,6 +233,8 @@
               phase.value = "chat";
               messages.length = 0;
               asks.length = 0;
+              busy.value = false; // clear any stale run state from a prior session
+              current = null;
               password.value = "";
               return;
             }
@@ -237,7 +246,11 @@
                 current = reactive({ role: "assistant", text: "", streaming: true });
                 messages.push(current);
               }
-              current.text += m.text; // live preview; the result replaces it
+              // This flow streams full-turn text (includePartial:false), so each
+              // chunk is a COMPLETE turn — replace, not concatenate (appending
+              // ran multiple turns together with no break). The result replaces
+              // it with the final answer at the end.
+              current.text = m.text;
             } else if (m.type === "result") {
               // The result is the authoritative final answer — replace the
               // streamed preview (which may concatenate multiple turns).
@@ -271,6 +284,15 @@
             scroll();
           }
 
+          function stop() {
+            // The agent node aborts the run on interrupt and emits nothing more,
+            // so clear local run state here rather than waiting for a result.
+            if (ws && connected.value) ws.send(JSON.stringify({ type: "interrupt" }));
+            if (current) current.streaming = false;
+            current = null;
+            busy.value = false;
+          }
+
           function allow(ask) {
             ws.send(JSON.stringify({ type: "response", requestId: ask.requestId, behavior: "allow" }));
             remove(ask);
@@ -297,7 +319,7 @@
           connect();
           return { url, connected, phase, me, username, password, loginError,
                    messages, asks, draft, busy, logEl, connect, login, logout, send,
-                   allow, deny, pick, picked, submitAnswers, pretty };
+                   stop, allow, deny, pick, picked, submitAnswers, pretty };
         },
       }).mount("#app");
     </script>
