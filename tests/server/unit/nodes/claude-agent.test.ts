@@ -235,6 +235,56 @@ describe("claude-agent", () => {
         errors: ["limit"],
       });
     });
+
+    it("forwards a fatal assistant error (auth/billing) to the error port even with no result", async () => {
+      // A fatal auth/billing error may end the stream WITHOUT a result message;
+      // the node must still surface it (structured, with correlationId) instead
+      // of only logging and finishing silently.
+      sdk.setMessages([
+        { type: "system", session_id: "s1" },
+        {
+          type: "assistant",
+          session_id: "s1",
+          error: "authentication_failed",
+          message: { content: [] },
+        },
+      ]);
+      const { node } = await createNode(ClaudeAgent, {
+        config: { config: mockConfig(), prompt: { type: "str", value: "hi" } },
+      });
+
+      await expect(
+        node.receive({ payload: "hi", correlationId: "c-2" }),
+      ).rejects.toThrow("claude-agent: authentication_failed");
+
+      expect(node.sent("error")[0].error).toMatchObject({
+        name: "AgentRunError",
+        subtype: "authentication_failed",
+        correlationId: "c-2",
+      });
+    });
+
+    it("only warns on a transient assistant error and still emits the result", async () => {
+      sdk.setMessages([
+        {
+          type: "assistant",
+          session_id: "s1",
+          error: "overloaded",
+          message: { content: [] },
+        },
+        RESULT_OK,
+      ]);
+      const { node } = await createNode(ClaudeAgent, {
+        config: { config: mockConfig(), prompt: { type: "str", value: "hi" } },
+      });
+
+      await node.receive({ payload: "hi" });
+      expect(node.sent("error")).toHaveLength(0);
+      expect(outputs(node, 0).at(-1)).toMatchObject({ kind: "result" });
+      expect(
+        node.warned().some((w) => String(w).includes("overloaded")),
+      ).toBe(true);
+    });
   });
 
   describe("streaming", () => {

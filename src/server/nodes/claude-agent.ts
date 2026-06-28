@@ -25,6 +25,20 @@ type UserDialogResult = Awaited<ReturnType<OnUserDialog>>;
 const RESPONSE_PORT = 0;
 const ASK_PORT = 1;
 
+/**
+ * Assistant-level error codes that are fatal and user-actionable — the run
+ * won't recover and the stream may end WITHOUT a result message, so these are
+ * forwarded on the error port (with correlationId for routing) immediately
+ * rather than only logged. Transient codes (rate_limit/overloaded/server_error/
+ * max_output_tokens/unknown) are left to the SDK's retries and the terminal
+ * result, so a recoverable run isn't pre-empted.
+ */
+const FATAL_ASSISTANT_ERRORS = new Set<string>([
+  "authentication_failed",
+  "oauth_org_not_allowed",
+  "billing_error",
+]);
+
 /** A pending interactive request awaiting an answer routed back to this node. */
 type PendingRequest =
   | {
@@ -375,8 +389,18 @@ export default class ClaudeAgent extends IONode<Config, any, Input, any> {
           case "assistant": {
             sessionId = message.session_id ?? sessionId;
             if (message.error) {
-              // Surface transient/terminal turn errors for debugging; the
-              // terminal failure still arrives as a result error below.
+              // Fatal auth/billing/access errors won't recover and may not be
+              // followed by a result, so forward them on the error port now
+              // (otherwise the stream can end silently and the UI shows nothing).
+              if (FATAL_ASSISTANT_ERRORS.has(message.error)) {
+                this.status({ fill: "red", shape: "dot", text: message.error });
+                throw new AgentRunError(message.error, {
+                  correlationId,
+                  sessionId,
+                });
+              }
+              // Transient errors: the SDK retries and the terminal result still
+              // arrives below; log for debugging.
               this.warn(`claude-agent: assistant error: ${message.error}`);
             }
             // In stream mode emit each turn's full text — unless partials are
