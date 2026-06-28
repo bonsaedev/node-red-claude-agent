@@ -73,9 +73,12 @@ export const ConfigsSchema = defineSchema(
         SchemaType.Literal("dontAsk"),
       ],
       {
-        default: "bypassPermissions",
+        // Default to the SAFE mode — a freshly-dragged config node must not grant
+        // unattended shell/file access. bypassPermissions stays selectable but
+        // opt-in (set it deliberately, in a sandbox).
+        default: "default",
         description:
-          "How freely the agent uses tools. bypassPermissions = full terminal-like autonomy (use in a sandbox). For interactive approvals use 'default' and enable 'interactive' on the agent node.",
+          "How freely the agent uses tools. 'default' prompts for dangerous operations (safe). bypassPermissions = full terminal-like autonomy — opt in, and only in a sandbox. For interactive approvals use 'default' and enable 'interactive' on the agent node.",
         "x-nrg-form": { icon: "shield" },
       },
     ),

@@ -22,8 +22,9 @@ describe("claude-agent-configuration", () => {
     it("assembles the documented defaults", async () => {
       const o = await buildOptions();
 
-      // permission mode and the claude_code preset come straight from defaults
-      expect(o.permissionMode).toBe("bypassPermissions");
+      // permission mode and the claude_code preset come straight from defaults —
+      // the default is the SAFE "default" mode (bypassPermissions is opt-in)
+      expect(o.permissionMode).toBe("default");
       expect(o.systemPrompt).toEqual({ type: "preset", preset: "claude_code" });
       // "user,project,local" splits into the loaded sources
       expect(o.settingSources).toEqual(["user", "project", "local"]);
