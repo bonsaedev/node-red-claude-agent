@@ -3,7 +3,7 @@ import type { Options } from "@anthropic-ai/claude-agent-sdk";
 import {
   ConfigsSchema,
   CredentialsSchema,
-} from "../../schemas/claude-agent-configuration";
+} from "../../shared/schemas/claude-agent-configuration";
 
 type Config = Infer<typeof ConfigsSchema>;
 type Credentials = Infer<typeof CredentialsSchema>;

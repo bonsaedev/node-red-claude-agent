@@ -11,7 +11,7 @@ import {
   ConfigsSchema,
   InputSchema,
   OutputsSchema,
-} from "../../schemas/claude-agent";
+} from "../../shared/schemas/claude-agent";
 
 type Config = Infer<typeof ConfigsSchema>;
 type Input = Infer<typeof InputSchema>;

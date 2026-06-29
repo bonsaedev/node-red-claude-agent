@@ -1,5 +1,5 @@
 import { defineSchema, SchemaType } from "@bonsae/nrg/schema";
-import type ClaudeAgentConfiguration from "../server/nodes/claude-agent-configuration";
+import type ClaudeAgentConfiguration from "../../server/nodes/claude-agent-configuration";
 
 /**
  * A `claude-agent` node runs the Claude Agent SDK `query()` for an incoming
