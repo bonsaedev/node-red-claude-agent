@@ -1,4 +1,4 @@
-import { defineSchema, SchemaType } from "@bonsae/nrg/server";
+import { defineSchema, SchemaType } from "@bonsae/nrg/schema";
 
 /**
  * Configuration for a Claude agent: auth/provider plus the options that shape

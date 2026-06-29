@@ -1,4 +1,4 @@
-import { defineSchema, SchemaType } from "@bonsae/nrg/server";
+import { defineSchema, SchemaType } from "@bonsae/nrg/schema";
 import type ClaudeAgentConfiguration from "../server/nodes/claude-agent-configuration";
 
 /**
