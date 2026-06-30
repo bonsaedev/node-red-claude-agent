@@ -1,38 +1,6 @@
-import eslint from "@eslint/js";
-import eslintConfigPrettier from "eslint-config-prettier";
-import eslintPluginVue from "eslint-plugin-vue";
-import globals from "globals";
-import typescriptEslint from "typescript-eslint";
+import { nrg } from "@bonsae/nrg/eslint";
 
-export default typescriptEslint.config(
-  {
-    ignores: ["**/*.d.ts", "**/coverage", "**/dist", "**/build"],
-  },
-  {
-    extends: [
-      eslint.configs.recommended,
-      ...typescriptEslint.configs.recommended,
-      ...eslintPluginVue.configs["flat/recommended"],
-    ],
-    files: ["src/**/*.{ts,vue}"],
-    languageOptions: {
-      ecmaVersion: "latest",
-      sourceType: "module",
-      globals: { ...globals["shared-node-browser"] },
-      parserOptions: {
-        parser: typescriptEslint.parser,
-      },
-    },
-    rules: {
-      "@typescript-eslint/no-explicit-any": "off",
-      "vue/no-mutating-props": "off",
-      "@typescript-eslint/consistent-type-imports": [
-        "error",
-        {
-          prefer: "type-imports",
-        },
-      ],
-    },
-  },
-  eslintConfigPrettier,
-);
+// NRG ships a complete, drop-in flat config — recommended JS/TS/Vue rules, the
+// client/server import boundary, the node conventions, and a Prettier reset.
+// Override any default by appending a block: `export default [...nrg, {...}]`.
+export default nrg;
