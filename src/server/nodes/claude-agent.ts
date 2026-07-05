@@ -1,4 +1,5 @@
-import { IONode, type Schema, type Infer } from "@bonsae/nrg/server";
+import { IONode, type Infer } from "@bonsae/nrg/server";
+import type { Schema } from "@bonsae/nrg/schema";
 import { randomUUID } from "node:crypto";
 import {
   query,

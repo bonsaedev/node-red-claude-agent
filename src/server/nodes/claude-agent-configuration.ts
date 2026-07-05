@@ -1,4 +1,5 @@
-import { ConfigNode, type Schema, type Infer } from "@bonsae/nrg/server";
+import { ConfigNode, type Infer } from "@bonsae/nrg/server";
+import type { Schema } from "@bonsae/nrg/schema";
 import type { Options } from "@anthropic-ai/claude-agent-sdk";
 import {
   ConfigsSchema,
