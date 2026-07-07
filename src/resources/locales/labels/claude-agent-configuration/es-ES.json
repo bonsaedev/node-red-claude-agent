@@ -1,0 +1,51 @@
+{
+  "label": "Configuración del agente Claude",
+  "configs": {
+    "name": "Nombre",
+    "provider": "Proveedor",
+    "authMethod": "Método de inicio de sesión",
+    "model": "Modelo",
+    "fallbackModel": "Modelo de respaldo",
+    "systemPromptPreset": "Estilo del asistente",
+    "appendSystemPrompt": "Instrucciones adicionales",
+    "customSystemPrompt": "Instrucciones personalizadas",
+    "cwd": "Carpeta de trabajo",
+    "permissionMode": "Permisos de herramientas",
+    "allowedTools": "Herramientas permitidas",
+    "disallowedTools": "Herramientas bloqueadas",
+    "settingSources": "Ajustes del proyecto a cargar",
+    "maxTurns": "Pasos máximos",
+    "maxBudgetUsd": "Límite de gasto (USD)",
+    "additionalDirectories": "Carpetas adicionales",
+    "supportedDialogKinds": "Tipos de pregunta (avanzado)"
+  },
+  "options": {
+    "provider": {
+      "anthropic": "Anthropic (clave de API o suscripción)",
+      "bedrock": "Amazon Bedrock",
+      "vertex": "Google Vertex AI",
+      "foundry": "Microsoft Azure Foundry"
+    },
+    "authMethod": {
+      "apiKey": "Clave de API (pago por uso)",
+      "subscriptionToken": "Suscripción de Claude (pegar token)",
+      "claudeCodeLogin": "Suscripción de Claude (inicio de sesión de este equipo)"
+    },
+    "systemPromptPreset": {
+      "claude_code": "Claude Code (asistente de programación completo)",
+      "custom": "Personalizado (escribe el tuyo)",
+      "minimal": "Mínimo (sin preajuste)"
+    },
+    "permissionMode": {
+      "default": "Preguntar antes de acciones arriesgadas (lo más seguro)",
+      "acceptEdits": "Aprobar automáticamente las ediciones de archivos",
+      "bypassPermissions": "Autonomía total — nunca preguntar (solo sandbox)",
+      "plan": "Solo planificar (sin hacer cambios)",
+      "dontAsk": "No preguntar (continuar sin avisos)"
+    }
+  },
+  "credentials": {
+    "apiKey": "Clave de API",
+    "oauthToken": "Token de suscripción"
+  }
+}

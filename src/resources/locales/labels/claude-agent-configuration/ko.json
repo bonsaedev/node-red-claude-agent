@@ -1,0 +1,51 @@
+{
+  "label": "Claude 에이전트 구성",
+  "configs": {
+    "name": "이름",
+    "provider": "공급자",
+    "authMethod": "로그인 방법",
+    "model": "모델",
+    "fallbackModel": "예비 모델",
+    "systemPromptPreset": "어시스턴트 스타일",
+    "appendSystemPrompt": "추가 지침",
+    "customSystemPrompt": "사용자 지정 지침",
+    "cwd": "작업 폴더",
+    "permissionMode": "도구 권한",
+    "allowedTools": "허용된 도구",
+    "disallowedTools": "차단된 도구",
+    "settingSources": "불러올 프로젝트 설정",
+    "maxTurns": "최대 단계 수",
+    "maxBudgetUsd": "지출 한도 (USD)",
+    "additionalDirectories": "추가 폴더",
+    "supportedDialogKinds": "질문 유형 (고급)"
+  },
+  "options": {
+    "provider": {
+      "anthropic": "Anthropic (API 키 또는 구독)",
+      "bedrock": "Amazon Bedrock",
+      "vertex": "Google Vertex AI",
+      "foundry": "Microsoft Azure Foundry"
+    },
+    "authMethod": {
+      "apiKey": "API 키 (사용한 만큼 지불)",
+      "subscriptionToken": "Claude 구독 (토큰 붙여넣기)",
+      "claudeCodeLogin": "Claude 구독 (이 컴퓨터의 로그인)"
+    },
+    "systemPromptPreset": {
+      "claude_code": "Claude Code (완전한 코딩 어시스턴트)",
+      "custom": "사용자 지정 (직접 작성)",
+      "minimal": "최소 (프리셋 없음)"
+    },
+    "permissionMode": {
+      "default": "위험한 작업 전에 확인 (가장 안전)",
+      "acceptEdits": "파일 편집 자동 승인",
+      "bypassPermissions": "완전 자율 — 확인하지 않음 (샌드박스 전용)",
+      "plan": "계획만 (변경하지 않음)",
+      "dontAsk": "확인하지 않음 (프롬프트 없이 진행)"
+    }
+  },
+  "credentials": {
+    "apiKey": "API 키",
+    "oauthToken": "구독 토큰"
+  }
+}

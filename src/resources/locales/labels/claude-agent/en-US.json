@@ -4,12 +4,26 @@
     "name": "Name",
     "config": "Configuration",
     "prompt": "Prompt",
-    "responseMode": "Response",
+    "responseMode": "Response style",
     "interactive": "Interactive",
-    "includePartial": "Stream partials",
-    "permissionMode": "Permission mode",
+    "includePartial": "Live typing",
+    "permissionMode": "Tool permissions",
     "errorPort": "Error port",
     "completePort": "Complete port",
     "statusPort": "Status port"
+  },
+  "options": {
+    "responseMode": {
+      "single": "Single reply (final answer only)",
+      "stream": "Streaming (show progress)"
+    },
+    "permissionMode": {
+      "inherit": "Use configuration's setting",
+      "default": "Ask before anything risky",
+      "acceptEdits": "Auto-approve file edits",
+      "bypassPermissions": "Full autonomy — never ask",
+      "plan": "Plan only (make no changes)",
+      "dontAsk": "Don't ask (proceed without prompts)"
+    }
   }
 }

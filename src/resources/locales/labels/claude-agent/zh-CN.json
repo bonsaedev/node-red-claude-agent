@@ -1,0 +1,29 @@
+{
+  "label": "claude 智能体",
+  "configs": {
+    "name": "名称",
+    "config": "配置",
+    "prompt": "提示词",
+    "responseMode": "响应风格",
+    "interactive": "交互式",
+    "includePartial": "实时打字",
+    "permissionMode": "工具权限",
+    "errorPort": "错误端口",
+    "completePort": "完成端口",
+    "statusPort": "状态端口"
+  },
+  "options": {
+    "responseMode": {
+      "single": "单条回复（仅最终答案）",
+      "stream": "流式传输（显示进度）"
+    },
+    "permissionMode": {
+      "inherit": "使用配置的设置",
+      "default": "执行有风险的操作前询问",
+      "acceptEdits": "自动批准文件编辑",
+      "bypassPermissions": "完全自主 — 从不询问",
+      "plan": "仅规划（不做更改）",
+      "dontAsk": "不询问（无提示直接继续）"
+    }
+  }
+}

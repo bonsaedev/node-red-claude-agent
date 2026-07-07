@@ -1,0 +1,51 @@
+{
+  "label": "Claude 代理組態",
+  "configs": {
+    "name": "名稱",
+    "provider": "供應商",
+    "authMethod": "登入方式",
+    "model": "模型",
+    "fallbackModel": "備用模型",
+    "systemPromptPreset": "助理風格",
+    "appendSystemPrompt": "額外指令",
+    "customSystemPrompt": "自訂指令",
+    "cwd": "工作資料夾",
+    "permissionMode": "工具權限",
+    "allowedTools": "允許的工具",
+    "disallowedTools": "封鎖的工具",
+    "settingSources": "要載入的專案設定",
+    "maxTurns": "最大步驟數",
+    "maxBudgetUsd": "支出上限（USD）",
+    "additionalDirectories": "額外資料夾",
+    "supportedDialogKinds": "問題類型（進階）"
+  },
+  "options": {
+    "provider": {
+      "anthropic": "Anthropic（API 金鑰或訂閱）",
+      "bedrock": "Amazon Bedrock",
+      "vertex": "Google Vertex AI",
+      "foundry": "Microsoft Azure Foundry"
+    },
+    "authMethod": {
+      "apiKey": "API 金鑰（按用量計費）",
+      "subscriptionToken": "Claude 訂閱（貼上權杖）",
+      "claudeCodeLogin": "Claude 訂閱（此電腦的登入）"
+    },
+    "systemPromptPreset": {
+      "claude_code": "Claude Code（完整的程式設計助理）",
+      "custom": "自訂（自行撰寫）",
+      "minimal": "最小化（無預設）"
+    },
+    "permissionMode": {
+      "default": "執行有風險的操作前詢問（最安全）",
+      "acceptEdits": "自動核准檔案編輯",
+      "bypassPermissions": "完全自主 — 從不詢問（僅限沙箱）",
+      "plan": "僅規劃（不做變更）",
+      "dontAsk": "不詢問（無提示直接繼續）"
+    }
+  },
+  "credentials": {
+    "apiKey": "API 金鑰",
+    "oauthToken": "訂閱權杖"
+  }
+}

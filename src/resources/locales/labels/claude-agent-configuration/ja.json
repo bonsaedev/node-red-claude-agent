@@ -1,0 +1,51 @@
+{
+  "label": "Claude エージェント設定",
+  "configs": {
+    "name": "名前",
+    "provider": "プロバイダー",
+    "authMethod": "サインイン方法",
+    "model": "モデル",
+    "fallbackModel": "予備モデル",
+    "systemPromptPreset": "アシスタントのスタイル",
+    "appendSystemPrompt": "追加の指示",
+    "customSystemPrompt": "カスタム指示",
+    "cwd": "作業フォルダー",
+    "permissionMode": "ツールの権限",
+    "allowedTools": "許可するツール",
+    "disallowedTools": "ブロックするツール",
+    "settingSources": "読み込むプロジェクト設定",
+    "maxTurns": "最大ステップ数",
+    "maxBudgetUsd": "支出上限（USD）",
+    "additionalDirectories": "追加フォルダー",
+    "supportedDialogKinds": "質問の種類（詳細設定）"
+  },
+  "options": {
+    "provider": {
+      "anthropic": "Anthropic（APIキーまたはサブスクリプション）",
+      "bedrock": "Amazon Bedrock",
+      "vertex": "Google Vertex AI",
+      "foundry": "Microsoft Azure Foundry"
+    },
+    "authMethod": {
+      "apiKey": "APIキー（従量課金）",
+      "subscriptionToken": "Claude サブスクリプション（トークンを貼り付け）",
+      "claudeCodeLogin": "Claude サブスクリプション（このコンピューターのログイン）"
+    },
+    "systemPromptPreset": {
+      "claude_code": "Claude Code（フル機能のコーディングアシスタント）",
+      "custom": "カスタム（独自に記述）",
+      "minimal": "最小限（プリセットなし）"
+    },
+    "permissionMode": {
+      "default": "危険な操作の前に確認（最も安全）",
+      "acceptEdits": "ファイル編集を自動承認",
+      "bypassPermissions": "完全自律 — 確認しない（サンドボックスのみ）",
+      "plan": "計画のみ（変更を加えない）",
+      "dontAsk": "確認しない（プロンプトなしで続行）"
+    }
+  },
+  "credentials": {
+    "apiKey": "APIキー",
+    "oauthToken": "サブスクリプショントークン"
+  }
+}

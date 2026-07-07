@@ -1,0 +1,29 @@
+{
+  "label": "claude agent",
+  "configs": {
+    "name": "Name",
+    "config": "Konfiguration",
+    "prompt": "Prompt",
+    "responseMode": "Antwortstil",
+    "interactive": "Interaktiv",
+    "includePartial": "Live-Tippen",
+    "permissionMode": "Tool-Berechtigungen",
+    "errorPort": "Fehler-Port",
+    "completePort": "Abschluss-Port",
+    "statusPort": "Status-Port"
+  },
+  "options": {
+    "responseMode": {
+      "single": "Einzelne Antwort (nur Endergebnis)",
+      "stream": "Streaming (Fortschritt anzeigen)"
+    },
+    "permissionMode": {
+      "inherit": "Einstellung der Konfiguration verwenden",
+      "default": "Vor riskanten Aktionen nachfragen",
+      "acceptEdits": "Dateibearbeitungen automatisch genehmigen",
+      "bypassPermissions": "Volle Autonomie — nie nachfragen",
+      "plan": "Nur planen (keine Änderungen)",
+      "dontAsk": "Nicht nachfragen (ohne Rückfragen fortfahren)"
+    }
+  }
+}

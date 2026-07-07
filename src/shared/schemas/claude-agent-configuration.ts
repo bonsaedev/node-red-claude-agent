@@ -19,19 +19,33 @@ export const ConfigsSchema = defineSchema(
       {
         default: "anthropic",
         description:
-          "Auth provider: anthropic (API key), or a cloud provider (Bedrock / Vertex / Azure Foundry — cloud credentials must be present in the environment)",
+          "Where Claude runs. 'Anthropic' uses an API key or your Claude subscription (see Sign-in method). The cloud options run Claude through your Amazon, Google, or Microsoft account, whose credentials must already be set on this machine.",
         "x-nrg-form": { icon: "cloud" },
+      },
+    ),
+    authMethod: SchemaType.Union(
+      [
+        SchemaType.Literal("apiKey"),
+        SchemaType.Literal("subscriptionToken"),
+        SchemaType.Literal("claudeCodeLogin"),
+      ],
+      {
+        default: "apiKey",
+        description:
+          "How to sign in when the provider is 'Anthropic' (ignored for cloud providers). 'API key' bills per use. The two subscription options use your own Claude Pro/Max plan — one with a token you paste, one with the login already on this computer. Only use a subscription for your own account; Anthropic's terms don't allow running other people's traffic through it.",
+        "x-nrg-form": { icon: "id-card-o" },
       },
     ),
     model: SchemaType.String({
       default: "",
       description:
-        "Model alias or full id (e.g. claude-opus-4-8). Empty uses the SDK/CLI default.",
+        "Which Claude model to use (for example: claude-opus-4-8). Leave empty for the default.",
       "x-nrg-form": { icon: "microchip" },
     }),
     fallbackModel: SchemaType.String({
       default: "",
-      description: "Model to fall back to if the primary is unavailable",
+      description:
+        "A second model to use automatically if the main one is unavailable. Leave empty for none.",
       "x-nrg-form": { icon: "microchip" },
     }),
     systemPromptPreset: SchemaType.Union(
@@ -43,25 +57,26 @@ export const ConfigsSchema = defineSchema(
       {
         default: "claude_code",
         description:
-          "claude_code = the full Claude Code agent prompt (behaves like the terminal); custom = your own prompt; minimal = no preset",
+          "Which built-in behavior the assistant starts from. 'Claude Code' acts like the coding assistant in the terminal; 'Custom' lets you write your own instructions; 'Minimal' starts with none.",
         "x-nrg-form": { icon: "file-text-o" },
       },
     ),
     appendSystemPrompt: SchemaType.String({
       default: "",
       description:
-        "Text appended to the claude_code preset (extra house rules, persona, constraints)",
+        "Extra instructions added on top of the 'Claude Code' style — house rules, tone, or things it should always do.",
       "x-nrg-form": { icon: "plus" },
     }),
     customSystemPrompt: SchemaType.String({
       default: "",
-      description: "Full system prompt used when the preset is 'custom'",
+      description:
+        "Your own instructions for the assistant. Used only when the style above is set to 'Custom'.",
       "x-nrg-form": { icon: "pencil" },
     }),
     cwd: SchemaType.String({
       default: "",
       description:
-        "Working directory the agent operates in (host file operations are relative to it). Empty uses the Node-RED process directory.",
+        "The folder the assistant works in — any files it reads or writes are relative to this. Leave empty to use the folder Node-RED runs in.",
       "x-nrg-form": { icon: "folder-o" },
     }),
     permissionMode: SchemaType.Union(
@@ -78,51 +93,52 @@ export const ConfigsSchema = defineSchema(
         // opt-in (set it deliberately, in a sandbox).
         default: "default",
         description:
-          "How freely the agent uses tools. 'default' prompts for dangerous operations (safe). bypassPermissions = full terminal-like autonomy — opt in, and only in a sandbox. For interactive approvals use 'default' and enable 'interactive' on the agent node.",
+          "How much the assistant can do on its own. The default asks before anything risky (safest). 'Full autonomy' lets it run and change anything without asking — only use it on a machine you can safely sandbox.",
         "x-nrg-form": { icon: "shield" },
       },
     ),
     allowedTools: SchemaType.String({
       default: "",
       description:
-        "Comma/newline-separated tools to auto-approve (e.g. Read, Glob, Grep, mcp__server__*). Empty = none pre-approved.",
+        "Tools the assistant may use without asking. One per line (for example: Read, Glob, Grep). Leave empty to approve none up front.",
       "x-nrg-form": { icon: "check" },
     }),
     disallowedTools: SchemaType.String({
       default: "",
       description:
-        "Comma/newline-separated tools to deny (e.g. Bash(rm *)). Denials win in every mode.",
+        "Tools the assistant may never use. One per line (for example: Bash(rm *)). A block here always wins.",
       "x-nrg-form": { icon: "ban" },
     }),
     settingSources: SchemaType.String({
       default: "user,project,local",
       description:
-        "Filesystem settings to load (any of user, project, local) — loads CLAUDE.md and .claude/ config like the terminal. Empty loads none.",
+        "Which project settings files to load (any of user, project, local) — reads CLAUDE.md and .claude/ like the terminal does. Leave empty to load none.",
       "x-nrg-form": { icon: "cogs" },
     }),
     maxTurns: SchemaType.Number({
       default: 0,
       minimum: 0,
-      description: "Max agentic turns (tool round-trips). 0 = unlimited.",
+      description:
+        "The most back-and-forth steps the assistant may take before stopping. 0 means no limit.",
       "x-nrg-form": { icon: "refresh" },
     }),
     maxBudgetUsd: SchemaType.Number({
       default: 0,
       minimum: 0,
       description:
-        "Stop when the estimated cost reaches this many USD. 0 = no cap.",
+        "Stop once the estimated cost reaches this many US dollars. 0 means no limit.",
       "x-nrg-form": { icon: "dollar" },
     }),
     additionalDirectories: SchemaType.String({
       default: "",
       description:
-        "Extra directories (comma/newline-separated) the agent may access beyond the working directory",
+        "Other folders the assistant is allowed to open, besides the working folder. One per line.",
       "x-nrg-form": { icon: "folder-open-o" },
     }),
     supportedDialogKinds: SchemaType.String({
       default: "",
       description:
-        "Comma/newline-separated CLI dialog kinds your UI handles (e.g. AskUserQuestion). When set, the agent routes those via the proper onUserDialog channel instead of canUseTool. The CLI fails closed: a kind not listed here is never emitted. Leave empty to keep the canUseTool path.",
+        "Advanced: the kinds of clarifying question your UI can answer (for example: AskUserQuestion). Leave empty unless you know you need this.",
       "x-nrg-form": { icon: "comments-o" },
     }),
   },
@@ -135,7 +151,13 @@ export const CredentialsSchema = defineSchema(
       default: "",
       format: "password",
       description:
-        "ANTHROPIC_API_KEY (for the anthropic provider). Cloud providers read their own credentials from the environment.",
+        "Your Anthropic API key (starts with sk-ant-api…). Used when Sign-in method is 'API key'. Create one at console.anthropic.com.",
+    }),
+    oauthToken: SchemaType.String({
+      default: "",
+      format: "password",
+      description:
+        "Your Claude subscription token (starts with sk-ant-oat…). Used when Sign-in method is 'Claude subscription (paste token)'. Get one by running `claude setup-token` in a terminal; it lasts about a year. Revoke at claude.ai → Settings → Claude Code.",
     }),
   },
   { $id: "claude-agent-configuration:credentials" },

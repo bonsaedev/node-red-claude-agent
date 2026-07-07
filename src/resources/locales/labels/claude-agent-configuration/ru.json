@@ -1,0 +1,51 @@
+{
+  "label": "Конфигурация агента Claude",
+  "configs": {
+    "name": "Имя",
+    "provider": "Провайдер",
+    "authMethod": "Способ входа",
+    "model": "Модель",
+    "fallbackModel": "Резервная модель",
+    "systemPromptPreset": "Стиль ассистента",
+    "appendSystemPrompt": "Дополнительные инструкции",
+    "customSystemPrompt": "Пользовательские инструкции",
+    "cwd": "Рабочая папка",
+    "permissionMode": "Разрешения инструментов",
+    "allowedTools": "Разрешённые инструменты",
+    "disallowedTools": "Заблокированные инструменты",
+    "settingSources": "Загружаемые настройки проекта",
+    "maxTurns": "Макс. шагов",
+    "maxBudgetUsd": "Лимит расходов (USD)",
+    "additionalDirectories": "Дополнительные папки",
+    "supportedDialogKinds": "Типы вопросов (расширенное)"
+  },
+  "options": {
+    "provider": {
+      "anthropic": "Anthropic (API-ключ или подписка)",
+      "bedrock": "Amazon Bedrock",
+      "vertex": "Google Vertex AI",
+      "foundry": "Microsoft Azure Foundry"
+    },
+    "authMethod": {
+      "apiKey": "API-ключ (оплата за использование)",
+      "subscriptionToken": "Подписка Claude (вставьте токен)",
+      "claudeCodeLogin": "Подписка Claude (вход с этого компьютера)"
+    },
+    "systemPromptPreset": {
+      "claude_code": "Claude Code (полноценный помощник по программированию)",
+      "custom": "Пользовательский (напишите свой)",
+      "minimal": "Минимальный (без пресета)"
+    },
+    "permissionMode": {
+      "default": "Спрашивать перед рискованными действиями (безопаснее всего)",
+      "acceptEdits": "Автоматически одобрять изменения файлов",
+      "bypassPermissions": "Полная автономия — никогда не спрашивать (только песочница)",
+      "plan": "Только планирование (без изменений)",
+      "dontAsk": "Не спрашивать (продолжать без запросов)"
+    }
+  },
+  "credentials": {
+    "apiKey": "API-ключ",
+    "oauthToken": "Токен подписки"
+  }
+}

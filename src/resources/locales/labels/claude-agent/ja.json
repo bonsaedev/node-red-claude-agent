@@ -1,0 +1,29 @@
+{
+  "label": "claude エージェント",
+  "configs": {
+    "name": "名前",
+    "config": "設定",
+    "prompt": "プロンプト",
+    "responseMode": "応答スタイル",
+    "interactive": "インタラクティブ",
+    "includePartial": "リアルタイム表示",
+    "permissionMode": "ツールの権限",
+    "errorPort": "エラーポート",
+    "completePort": "完了ポート",
+    "statusPort": "ステータスポート"
+  },
+  "options": {
+    "responseMode": {
+      "single": "単一の応答（最終回答のみ）",
+      "stream": "ストリーミング（進行状況を表示）"
+    },
+    "permissionMode": {
+      "inherit": "設定を継承",
+      "default": "危険な操作の前に確認",
+      "acceptEdits": "ファイル編集を自動承認",
+      "bypassPermissions": "完全自律 — 確認しない",
+      "plan": "計画のみ（変更を加えない）",
+      "dontAsk": "確認しない（プロンプトなしで続行）"
+    }
+  }
+}

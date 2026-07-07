@@ -1,24 +1,51 @@
 {
-  "label": "claude agent configuration",
+  "label": "Claude agent configuration",
   "configs": {
     "name": "Name",
     "provider": "Provider",
+    "authMethod": "Sign-in method",
     "model": "Model",
-    "fallbackModel": "Fallback model",
-    "systemPromptPreset": "System prompt",
-    "appendSystemPrompt": "Append to prompt",
-    "customSystemPrompt": "Custom prompt",
-    "cwd": "Working directory",
-    "permissionMode": "Permission mode",
+    "fallbackModel": "Backup model",
+    "systemPromptPreset": "Assistant style",
+    "appendSystemPrompt": "Extra instructions",
+    "customSystemPrompt": "Custom instructions",
+    "cwd": "Working folder",
+    "permissionMode": "Tool permissions",
     "allowedTools": "Allowed tools",
-    "disallowedTools": "Disallowed tools",
-    "settingSources": "Setting sources",
-    "maxTurns": "Max turns",
-    "maxBudgetUsd": "Max budget (USD)",
-    "additionalDirectories": "Additional directories",
-    "supportedDialogKinds": "Dialog kinds"
+    "disallowedTools": "Blocked tools",
+    "settingSources": "Project settings to load",
+    "maxTurns": "Max steps",
+    "maxBudgetUsd": "Spending limit (USD)",
+    "additionalDirectories": "Extra folders",
+    "supportedDialogKinds": "Question types (advanced)"
+  },
+  "options": {
+    "provider": {
+      "anthropic": "Anthropic (API key or subscription)",
+      "bedrock": "Amazon Bedrock",
+      "vertex": "Google Vertex AI",
+      "foundry": "Microsoft Azure Foundry"
+    },
+    "authMethod": {
+      "apiKey": "API key (pay per use)",
+      "subscriptionToken": "Claude subscription (paste token)",
+      "claudeCodeLogin": "Claude subscription (this computer's login)"
+    },
+    "systemPromptPreset": {
+      "claude_code": "Claude Code (full coding assistant)",
+      "custom": "Custom (write your own)",
+      "minimal": "Minimal (no preset)"
+    },
+    "permissionMode": {
+      "default": "Ask before anything risky (safest)",
+      "acceptEdits": "Auto-approve file edits",
+      "bypassPermissions": "Full autonomy — never ask (sandbox only)",
+      "plan": "Plan only (make no changes)",
+      "dontAsk": "Don't ask (proceed without prompts)"
+    }
   },
   "credentials": {
-    "apiKey": "API key"
+    "apiKey": "API key",
+    "oauthToken": "Subscription token"
   }
 }

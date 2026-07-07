@@ -1,0 +1,51 @@
+{
+  "label": "Claude 智能体配置",
+  "configs": {
+    "name": "名称",
+    "provider": "提供商",
+    "authMethod": "登录方式",
+    "model": "模型",
+    "fallbackModel": "备用模型",
+    "systemPromptPreset": "助手风格",
+    "appendSystemPrompt": "附加指令",
+    "customSystemPrompt": "自定义指令",
+    "cwd": "工作文件夹",
+    "permissionMode": "工具权限",
+    "allowedTools": "允许的工具",
+    "disallowedTools": "禁用的工具",
+    "settingSources": "要加载的项目设置",
+    "maxTurns": "最大步数",
+    "maxBudgetUsd": "支出上限（USD）",
+    "additionalDirectories": "额外文件夹",
+    "supportedDialogKinds": "问题类型（高级）"
+  },
+  "options": {
+    "provider": {
+      "anthropic": "Anthropic（API 密钥或订阅）",
+      "bedrock": "Amazon Bedrock",
+      "vertex": "Google Vertex AI",
+      "foundry": "Microsoft Azure Foundry"
+    },
+    "authMethod": {
+      "apiKey": "API 密钥（按用量付费）",
+      "subscriptionToken": "Claude 订阅（粘贴令牌）",
+      "claudeCodeLogin": "Claude 订阅（本机登录）"
+    },
+    "systemPromptPreset": {
+      "claude_code": "Claude Code（完整的编程助手）",
+      "custom": "自定义（自行编写）",
+      "minimal": "最小化（无预设）"
+    },
+    "permissionMode": {
+      "default": "执行有风险的操作前询问（最安全）",
+      "acceptEdits": "自动批准文件编辑",
+      "bypassPermissions": "完全自主 — 从不询问（仅限沙盒）",
+      "plan": "仅规划（不做更改）",
+      "dontAsk": "不询问（无提示直接继续）"
+    }
+  },
+  "credentials": {
+    "apiKey": "API 密钥",
+    "oauthToken": "订阅令牌"
+  }
+}

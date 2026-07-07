@@ -1,0 +1,29 @@
+{
+  "label": "claude 代理",
+  "configs": {
+    "name": "名稱",
+    "config": "組態",
+    "prompt": "提示詞",
+    "responseMode": "回應風格",
+    "interactive": "互動式",
+    "includePartial": "即時輸入",
+    "permissionMode": "工具權限",
+    "errorPort": "錯誤埠",
+    "completePort": "完成埠",
+    "statusPort": "狀態埠"
+  },
+  "options": {
+    "responseMode": {
+      "single": "單一回覆（僅最終答案）",
+      "stream": "串流（顯示進度）"
+    },
+    "permissionMode": {
+      "inherit": "使用組態的設定",
+      "default": "執行有風險的操作前詢問",
+      "acceptEdits": "自動核准檔案編輯",
+      "bypassPermissions": "完全自主 — 從不詢問",
+      "plan": "僅規劃（不做變更）",
+      "dontAsk": "不詢問（無提示直接繼續）"
+    }
+  }
+}

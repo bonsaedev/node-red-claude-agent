@@ -1,0 +1,29 @@
+{
+  "label": "claude 에이전트",
+  "configs": {
+    "name": "이름",
+    "config": "구성",
+    "prompt": "프롬프트",
+    "responseMode": "응답 스타일",
+    "interactive": "대화형",
+    "includePartial": "실시간 타이핑",
+    "permissionMode": "도구 권한",
+    "errorPort": "오류 포트",
+    "completePort": "완료 포트",
+    "statusPort": "상태 포트"
+  },
+  "options": {
+    "responseMode": {
+      "single": "단일 응답 (최종 답변만)",
+      "stream": "스트리밍 (진행 상황 표시)"
+    },
+    "permissionMode": {
+      "inherit": "구성의 설정 사용",
+      "default": "위험한 작업 전에 확인",
+      "acceptEdits": "파일 편집 자동 승인",
+      "bypassPermissions": "완전 자율 — 확인하지 않음",
+      "plan": "계획만 (변경하지 않음)",
+      "dontAsk": "확인하지 않음 (프롬프트 없이 진행)"
+    }
+  }
+}

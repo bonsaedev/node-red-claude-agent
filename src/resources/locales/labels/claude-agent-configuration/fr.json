@@ -1,0 +1,51 @@
+{
+  "label": "Configuration de l'agent Claude",
+  "configs": {
+    "name": "Nom",
+    "provider": "Fournisseur",
+    "authMethod": "Méthode de connexion",
+    "model": "Modèle",
+    "fallbackModel": "Modèle de secours",
+    "systemPromptPreset": "Style de l'assistant",
+    "appendSystemPrompt": "Instructions supplémentaires",
+    "customSystemPrompt": "Instructions personnalisées",
+    "cwd": "Dossier de travail",
+    "permissionMode": "Autorisations des outils",
+    "allowedTools": "Outils autorisés",
+    "disallowedTools": "Outils bloqués",
+    "settingSources": "Paramètres du projet à charger",
+    "maxTurns": "Étapes max.",
+    "maxBudgetUsd": "Limite de dépenses (USD)",
+    "additionalDirectories": "Dossiers supplémentaires",
+    "supportedDialogKinds": "Types de question (avancé)"
+  },
+  "options": {
+    "provider": {
+      "anthropic": "Anthropic (clé API ou abonnement)",
+      "bedrock": "Amazon Bedrock",
+      "vertex": "Google Vertex AI",
+      "foundry": "Microsoft Azure Foundry"
+    },
+    "authMethod": {
+      "apiKey": "Clé API (paiement à l'usage)",
+      "subscriptionToken": "Abonnement Claude (coller le jeton)",
+      "claudeCodeLogin": "Abonnement Claude (connexion de cet ordinateur)"
+    },
+    "systemPromptPreset": {
+      "claude_code": "Claude Code (assistant de codage complet)",
+      "custom": "Personnalisé (rédigez le vôtre)",
+      "minimal": "Minimal (sans préréglage)"
+    },
+    "permissionMode": {
+      "default": "Demander avant toute action risquée (le plus sûr)",
+      "acceptEdits": "Approuver automatiquement les modifications de fichiers",
+      "bypassPermissions": "Autonomie totale — ne jamais demander (bac à sable uniquement)",
+      "plan": "Planifier uniquement (aucune modification)",
+      "dontAsk": "Ne pas demander (continuer sans invite)"
+    }
+  },
+  "credentials": {
+    "apiKey": "Clé API",
+    "oauthToken": "Jeton d'abonnement"
+  }
+}

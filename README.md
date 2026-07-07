@@ -16,8 +16,10 @@ many agent nodes.
 
 | Field | Notes |
 | --- | --- |
-| **provider** | `anthropic` (API key) or a cloud provider (`bedrock` / `vertex` / `foundry`; their credentials come from the environment) |
-| **API key** | credential — injected as `ANTHROPIC_API_KEY` for the agent process |
+| **provider** | `anthropic` or a cloud provider (`bedrock` / `vertex` / `foundry`; their credentials come from the environment) |
+| **auth method** | for the `anthropic` provider: `apiKey`, `subscriptionToken`, or `claudeCodeLogin` — see [Authentication](#authentication) |
+| **API key** | credential — injected as `ANTHROPIC_API_KEY` for the agent process (auth method `apiKey`) |
+| **Subscription token** | credential — a `claude setup-token` token injected as `CLAUDE_CODE_OAUTH_TOKEN` (auth method `subscriptionToken`) |
 | **model / fallbackModel** | empty = SDK default |
 | **system prompt** | `claude_code` (the full terminal agent prompt), `custom`, or `minimal`; plus an append box |
 | **cwd** | working directory the agent operates in — host file ops are relative to it |
@@ -98,7 +100,49 @@ pnpm build      # bundles the nodes into dist/ (declares @bonsae/nrg-runtime + t
 pnpm dev        # boots a Node-RED editor with the nodes loaded
 ```
 
-Set the API key on the configuration node in the editor before running.
+Configure authentication on the configuration node in the editor before running.
+
+## Authentication
+
+The `anthropic` provider supports three auth methods (cloud providers ignore
+this and read their credentials from the environment):
+
+- **`apiKey`** (default) — paste a Console API key (`sk-ant-api03-…`) into the
+  **API key** credential; it is injected as `ANTHROPIC_API_KEY`. Per-token
+  billing. This is the right mode for shared or production deployments.
+- **`subscriptionToken`** — use your Claude Pro/Max/Team/Enterprise
+  subscription. Run `claude setup-token` in a terminal, and paste the printed
+  token (`sk-ant-oat01-…`, valid ~1 year, inference-only) into the
+  **Subscription token** credential; it is injected as
+  `CLAUDE_CODE_OAUTH_TOKEN`. Runs fail with a clear error if the token is
+  missing (credentials don't travel with exported flows — re-paste after
+  importing). Revoke tokens at claude.ai → Settings → Claude Code.
+- **`claudeCodeLogin`** — use the `claude /login` credentials already stored on
+  the machine running Node-RED (macOS Keychain / `~/.claude/.credentials.json`).
+  Nothing to paste; the CLI refreshes tokens itself. Node-RED must run as the
+  user who logged in.
+
+Both subscription modes scrub host-env vars that would outrank or reroute
+them: `ANTHROPIC_AUTH_TOKEN` / `ANTHROPIC_API_KEY` (the CLI prefers those over
+subscription credentials, so a stray host-level key would silently hijack the
+run and bill the API org), `ANTHROPIC_BASE_URL` (a subscription token must
+only ever reach Anthropic's API, never a gateway), and the
+`CLAUDE_CODE_USE_*` provider flags (a host `CLAUDE_CODE_USE_BEDROCK=1` would
+reroute the run). `claudeCodeLogin` also scrubs `CLAUDE_CODE_OAUTH_TOKEN`. An
+`apiKeyHelper` configured in `~/.claude/settings.json` still outranks the
+subscription token and cannot be scrubbed via env; remove it if you hit auth
+conflicts. In `apiKey` mode, setting the credential also drops a host-level
+`ANTHROPIC_AUTH_TOKEN` so the configured key wins; with no credential set the
+host environment passes through untouched (the pre-existing behavior).
+
+> **Subscription usage is for your own account.** As of mid-2026, Anthropic's
+> help center states that Agent SDK and third-party app usage draws from your
+> subscription's usage limits, but its terms forbid offering claude.ai login
+> from a product or routing other users' traffic through subscription
+> credentials, and the policy has moved several times in 2026 — check the
+> current terms. If this Node-RED instance serves other people, use an API
+> key. Note the token is visible to the agent's own shell environment (a Bash
+> tool call can read it), so treat flows on this instance as trusted.
 
 ## Example: interpret a downloaded CSV (autonomous)
 

@@ -1,0 +1,29 @@
+{
+  "label": "agente claude",
+  "configs": {
+    "name": "Nombre",
+    "config": "Configuración",
+    "prompt": "Prompt",
+    "responseMode": "Estilo de respuesta",
+    "interactive": "Interactivo",
+    "includePartial": "Escritura en vivo",
+    "permissionMode": "Permisos de herramientas",
+    "errorPort": "Puerto de error",
+    "completePort": "Puerto de finalización",
+    "statusPort": "Puerto de estado"
+  },
+  "options": {
+    "responseMode": {
+      "single": "Respuesta única (solo la respuesta final)",
+      "stream": "Streaming (mostrar progreso)"
+    },
+    "permissionMode": {
+      "inherit": "Usar el ajuste de la configuración",
+      "default": "Preguntar antes de acciones arriesgadas",
+      "acceptEdits": "Aprobar automáticamente las ediciones de archivos",
+      "bypassPermissions": "Autonomía total — nunca preguntar",
+      "plan": "Solo planificar (sin hacer cambios)",
+      "dontAsk": "No preguntar (continuar sin avisos)"
+    }
+  }
+}

@@ -23,8 +23,9 @@ function splitList(value: string | undefined): string[] {
 /**
  * Shared configuration for `claude-agent` nodes. Holds auth + the options that
  * shape every run and assembles them into the Agent SDK {@link Options} object
- * via {@link buildOptions}. Credentials (the API key) are injected through the
- * spawned process environment, which is how the SDK authenticates.
+ * via {@link buildOptions}. Credentials (API key or subscription OAuth token)
+ * are injected through the spawned process environment, which is how the SDK
+ * authenticates.
  */
 export default class ClaudeAgentConfiguration extends ConfigNode<
   Config,
@@ -37,8 +38,6 @@ export default class ClaudeAgentConfiguration extends ConfigNode<
   /** Environment for the spawned Claude Code process: host env + auth. */
   private buildEnv(): Record<string, string | undefined> {
     const env: Record<string, string | undefined> = { ...process.env };
-    const apiKey = this.credentials?.apiKey;
-    if (apiKey) env.ANTHROPIC_API_KEY = apiKey;
     switch (this.config.provider) {
       case "bedrock":
         env.CLAUDE_CODE_USE_BEDROCK = "1";
@@ -49,8 +48,67 @@ export default class ClaudeAgentConfiguration extends ConfigNode<
       case "foundry":
         env.CLAUDE_CODE_USE_FOUNDRY = "1";
         break;
+      case "anthropic":
+        this.applyAnthropicAuth(env);
+        break;
     }
     return env;
+  }
+
+  /**
+   * Anthropic-provider auth. The CLI's credential precedence is
+   * ANTHROPIC_AUTH_TOKEN > ANTHROPIC_API_KEY > apiKeyHelper >
+   * CLAUDE_CODE_OAUTH_TOKEN > `claude /login` credentials, so the subscription
+   * modes must scrub the higher-precedence variables inherited from the host —
+   * otherwise a stray host key silently hijacks the run (and bills the API org
+   * instead of the subscription).
+   */
+  private applyAnthropicAuth(env: Record<string, string | undefined>): void {
+    switch (this.config.authMethod) {
+      case "apiKey": {
+        const apiKey = this.credentials?.apiKey;
+        if (apiKey) {
+          env.ANTHROPIC_API_KEY = apiKey;
+          // A host-level bearer token outranks the key pasted into this node.
+          delete env.ANTHROPIC_AUTH_TOKEN;
+        }
+        break;
+      }
+      case "subscriptionToken": {
+        const oauthToken = this.credentials?.oauthToken;
+        // Fail loudly instead of falling through to whatever account is on the
+        // host (credentials do not travel with exported flows, so an imported
+        // flow lands here with an empty credential).
+        if (!oauthToken) {
+          throw new Error(
+            "claude-agent-configuration: auth method is 'subscriptionToken' but no subscription token is set — run `claude setup-token` and paste the token into the node's credentials",
+          );
+        }
+        env.CLAUDE_CODE_OAUTH_TOKEN = oauthToken;
+        this.scrubHostOverrides(env);
+        break;
+      }
+      case "claudeCodeLogin": {
+        delete env.CLAUDE_CODE_OAUTH_TOKEN;
+        this.scrubHostOverrides(env);
+        break;
+      }
+    }
+  }
+
+  /**
+   * Remove host-env vars that would outrank or reroute subscription auth:
+   * higher-precedence credentials, provider-selection flags (a host
+   * CLAUDE_CODE_USE_BEDROCK=1 would silently reroute the run), and a gateway
+   * base URL (a subscription token must only ever reach Anthropic's API).
+   */
+  private scrubHostOverrides(env: Record<string, string | undefined>): void {
+    delete env.ANTHROPIC_AUTH_TOKEN;
+    delete env.ANTHROPIC_API_KEY;
+    delete env.ANTHROPIC_BASE_URL;
+    for (const key of Object.keys(env)) {
+      if (key.startsWith("CLAUDE_CODE_USE_")) delete env[key];
+    }
   }
 
   /**

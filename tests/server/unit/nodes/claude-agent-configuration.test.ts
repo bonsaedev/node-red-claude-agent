@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { createNode } from "@bonsae/nrg/test/server/unit";
 import ClaudeAgentConfiguration from "../../../../src/server/nodes/claude-agent-configuration";
 
@@ -158,6 +158,86 @@ describe("claude-agent-configuration", () => {
     it("omits dialog kinds when empty (keeps the canUseTool path)", async () => {
       const o = await buildOptions({ supportedDialogKinds: "" });
       expect(o.supportedDialogKinds).toBeUndefined();
+    });
+  });
+
+  describe("auth method", () => {
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
+    it("apiKey (default) injects the API key, drops a host bearer token, and passes the rest through", async () => {
+      vi.stubEnv("CLAUDE_CODE_OAUTH_TOKEN", "host-oat");
+      // A host bearer token outranks the configured key — it must not hijack
+      // the run once the user pasted a key into the node.
+      vi.stubEnv("ANTHROPIC_AUTH_TOKEN", "host-bearer");
+      const o = await buildOptions({ authMethod: "apiKey" });
+      expect(o.env?.ANTHROPIC_API_KEY).toBe("sk-test");
+      expect(o.env?.ANTHROPIC_AUTH_TOKEN).toBeUndefined();
+      // everything below the injected key stays pass-through (back-compat)
+      expect(o.env?.CLAUDE_CODE_OAUTH_TOKEN).toBe("host-oat");
+    });
+
+    it("apiKey without a credential is pure pass-through (back-compat with host-env auth)", async () => {
+      vi.stubEnv("ANTHROPIC_API_KEY", "host-key");
+      vi.stubEnv("ANTHROPIC_AUTH_TOKEN", "host-bearer");
+      const o = await buildOptions({ authMethod: "apiKey" }, {});
+      expect(o.env?.ANTHROPIC_API_KEY).toBe("host-key");
+      expect(o.env?.ANTHROPIC_AUTH_TOKEN).toBe("host-bearer");
+    });
+
+    it("subscriptionToken injects CLAUDE_CODE_OAUTH_TOKEN and scrubs everything that outranks or reroutes it", async () => {
+      // The CLI prefers ANTHROPIC_AUTH_TOKEN/ANTHROPIC_API_KEY over the OAuth
+      // token, a host CLAUDE_CODE_USE_* flag reroutes to a cloud provider, and
+      // a gateway ANTHROPIC_BASE_URL would receive the subscription token.
+      vi.stubEnv("ANTHROPIC_API_KEY", "host-key");
+      vi.stubEnv("ANTHROPIC_AUTH_TOKEN", "host-bearer");
+      vi.stubEnv("ANTHROPIC_BASE_URL", "https://gateway.example.com");
+      vi.stubEnv("CLAUDE_CODE_USE_BEDROCK", "1");
+      const o = await buildOptions(
+        { authMethod: "subscriptionToken" },
+        { apiKey: "sk-test", oauthToken: "sk-ant-oat01-test" },
+      );
+      expect(o.env?.CLAUDE_CODE_OAUTH_TOKEN).toBe("sk-ant-oat01-test");
+      expect(o.env?.ANTHROPIC_API_KEY).toBeUndefined();
+      expect(o.env?.ANTHROPIC_AUTH_TOKEN).toBeUndefined();
+      expect(o.env?.ANTHROPIC_BASE_URL).toBeUndefined();
+      expect(o.env?.CLAUDE_CODE_USE_BEDROCK).toBeUndefined();
+    });
+
+    it("subscriptionToken without a token throws instead of billing whoever is logged in on the host", async () => {
+      // Credentials do not travel with exported flows — an imported flow lands
+      // here with an empty credential and must fail loudly.
+      await expect(
+        buildOptions({ authMethod: "subscriptionToken" }, { apiKey: "sk-test" }),
+      ).rejects.toThrow(/subscription token/);
+    });
+
+    it("claudeCodeLogin scrubs every env credential so the /login store wins", async () => {
+      vi.stubEnv("ANTHROPIC_API_KEY", "host-key");
+      vi.stubEnv("ANTHROPIC_AUTH_TOKEN", "host-bearer");
+      vi.stubEnv("CLAUDE_CODE_OAUTH_TOKEN", "host-oat");
+      vi.stubEnv("ANTHROPIC_BASE_URL", "https://gateway.example.com");
+      vi.stubEnv("CLAUDE_CODE_USE_VERTEX", "1");
+      const o = await buildOptions({ authMethod: "claudeCodeLogin" });
+      expect(o.env?.ANTHROPIC_API_KEY).toBeUndefined();
+      expect(o.env?.ANTHROPIC_AUTH_TOKEN).toBeUndefined();
+      expect(o.env?.CLAUDE_CODE_OAUTH_TOKEN).toBeUndefined();
+      expect(o.env?.ANTHROPIC_BASE_URL).toBeUndefined();
+      expect(o.env?.CLAUDE_CODE_USE_VERTEX).toBeUndefined();
+    });
+
+    it("cloud providers ignore the auth method (cloud creds come from the host env)", async () => {
+      vi.stubEnv("ANTHROPIC_API_KEY", undefined);
+      vi.stubEnv("CLAUDE_CODE_OAUTH_TOKEN", undefined);
+      const o = await buildOptions(
+        { provider: "bedrock", authMethod: "subscriptionToken" },
+        { apiKey: "sk-test", oauthToken: "sk-ant-oat01-test" },
+      );
+      expect(o.env?.CLAUDE_CODE_USE_BEDROCK).toBe("1");
+      // neither credential is injected — cloud selection outranks them anyway
+      expect(o.env?.CLAUDE_CODE_OAUTH_TOKEN).toBeUndefined();
+      expect(o.env?.ANTHROPIC_API_KEY).toBeUndefined();
     });
   });
 

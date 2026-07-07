@@ -1,0 +1,51 @@
+{
+  "label": "Claude-Agent-Konfiguration",
+  "configs": {
+    "name": "Name",
+    "provider": "Anbieter",
+    "authMethod": "Anmeldemethode",
+    "model": "Modell",
+    "fallbackModel": "Ersatzmodell",
+    "systemPromptPreset": "Assistenten-Stil",
+    "appendSystemPrompt": "Zusätzliche Anweisungen",
+    "customSystemPrompt": "Eigene Anweisungen",
+    "cwd": "Arbeitsordner",
+    "permissionMode": "Tool-Berechtigungen",
+    "allowedTools": "Erlaubte Tools",
+    "disallowedTools": "Blockierte Tools",
+    "settingSources": "Zu ladende Projekteinstellungen",
+    "maxTurns": "Max. Schritte",
+    "maxBudgetUsd": "Ausgabenlimit (USD)",
+    "additionalDirectories": "Zusätzliche Ordner",
+    "supportedDialogKinds": "Fragetypen (erweitert)"
+  },
+  "options": {
+    "provider": {
+      "anthropic": "Anthropic (API-Schlüssel oder Abonnement)",
+      "bedrock": "Amazon Bedrock",
+      "vertex": "Google Vertex AI",
+      "foundry": "Microsoft Azure Foundry"
+    },
+    "authMethod": {
+      "apiKey": "API-Schlüssel (Bezahlung pro Nutzung)",
+      "subscriptionToken": "Claude-Abonnement (Token einfügen)",
+      "claudeCodeLogin": "Claude-Abonnement (Anmeldung dieses Computers)"
+    },
+    "systemPromptPreset": {
+      "claude_code": "Claude Code (vollständiger Coding-Assistent)",
+      "custom": "Benutzerdefiniert (selbst schreiben)",
+      "minimal": "Minimal (keine Voreinstellung)"
+    },
+    "permissionMode": {
+      "default": "Vor riskanten Aktionen nachfragen (am sichersten)",
+      "acceptEdits": "Dateibearbeitungen automatisch genehmigen",
+      "bypassPermissions": "Volle Autonomie — nie nachfragen (nur Sandbox)",
+      "plan": "Nur planen (keine Änderungen)",
+      "dontAsk": "Nicht nachfragen (ohne Rückfragen fortfahren)"
+    }
+  },
+  "credentials": {
+    "apiKey": "API-Schlüssel",
+    "oauthToken": "Abonnement-Token"
+  }
+}
