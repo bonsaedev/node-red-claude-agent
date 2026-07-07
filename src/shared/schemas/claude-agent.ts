@@ -9,7 +9,6 @@ import type ClaudeAgentConfiguration from "../../server/nodes/claude-agent-confi
  */
 export const ConfigsSchema = defineSchema(
   {
-    name: SchemaType.String({ default: "", "x-nrg-form": { icon: "tag" } }),
     config: SchemaType.NodeRef<ClaudeAgentConfiguration>(
       "claude-agent-configuration",
       {
@@ -66,17 +65,13 @@ export const ConfigsSchema = defineSchema(
         "x-nrg-form": { icon: "shield" },
       },
     ),
+    // errorPort is the one built-in we still declare — it OVERRIDES the framework
+    // default (false) to default the error port ON, which several tests + the
+    // demo flows rely on. name/completePort/statusPort are dropped: the framework
+    // merges them with identical defaults.
     errorPort: SchemaType.Boolean({
       default: true,
       description: "Add a separate output for errors (failed or stopped runs).",
-    }),
-    completePort: SchemaType.Boolean({
-      default: false,
-      description: "Add a separate output that fires when a run finishes.",
-    }),
-    statusPort: SchemaType.Boolean({
-      default: false,
-      description: "Add a separate output for status updates.",
     }),
   },
   { $id: "claude-agent:config" },
