@@ -1,6 +1,6 @@
-import { defineRuntimeSettings } from "@bonsae/nrg";
+import { defineNodeRedSettings } from "@bonsae/nrg/vite";
 
-export default defineRuntimeSettings({
+export default defineNodeRedSettings({
   logging: {
     console: {
       level: "debug",

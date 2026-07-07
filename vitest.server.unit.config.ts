@@ -1,8 +1,8 @@
 import { defineConfig, mergeConfig } from "vitest/config";
-import { defaultConfig } from "@bonsae/nrg/test/server/unit/config";
+import { nrg } from "@bonsae/nrg/test/server/unit/config";
 
 export default mergeConfig(
-  defaultConfig,
+  nrg,
   defineConfig({
     test: {
       include: ["tests/server/**/*.test.ts"],

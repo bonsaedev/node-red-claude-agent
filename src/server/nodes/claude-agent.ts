@@ -1,6 +1,7 @@
-import { IONode, type Infer } from "@bonsae/nrg/server";
+import { IONode, type Infer, type Port } from "@bonsae/nrg/server";
 import type { Schema } from "@bonsae/nrg/schema";
 import { randomUUID } from "node:crypto";
+import { mkdir } from "node:fs/promises";
 import {
   query,
   type Options,
@@ -8,14 +9,55 @@ import {
   type CanUseTool,
 } from "@anthropic-ai/claude-agent-sdk";
 import type ClaudeAgentConfiguration from "./claude-agent-configuration";
-import {
-  ConfigsSchema,
-  InputSchema,
-  OutputsSchema,
-} from "../../shared/schemas/claude-agent";
+import { ConfigsSchema } from "../../shared/schemas/claude-agent";
 
 type Config = Infer<typeof ConfigsSchema>;
-type Input = Infer<typeof InputSchema>;
+
+/** Incoming message. */
+type Input = {
+  /** Prompt to run (when the prompt source is msg.payload). May also carry a
+   * control message: `{ claudeResponse }` answers an 'ask',
+   * `{ claudeControl: 'interrupt' }` aborts the run. */
+  payload?: unknown;
+  /** Opaque token echoed on every emitted message (under output) so a downstream
+   * router can return each message to the right client/connection. */
+  correlationId?: string;
+};
+
+/** Port `response` — the agent's reply (streamed chunks and/or the final result). */
+type Response = {
+  /** Assistant text (stream/result) or the raw SDK message, depending on kind. */
+  payload: unknown;
+  /** assistant | partial | result */
+  kind: string;
+  /** Session id — pass back as msg.sessionId to continue the chat. */
+  sessionId?: string;
+  /** Echoed from the input — used by a router to address the reply. */
+  correlationId?: string;
+  /** SDK result metadata, present on the final `result` message only. */
+  usage?: unknown;
+  total_cost_usd?: number;
+  num_turns?: number;
+  structured_output?: unknown;
+};
+
+/** Port `ask` — an interactive request Claude is waiting on (approval / question). */
+type Ask = {
+  /** Echoed from the input — used by a router to address the request. */
+  correlationId?: string;
+  payload: {
+    requestId: string;
+    /** permission | question */
+    kind: string;
+    [field: string]: unknown;
+  };
+};
+
+/** Two named output ports: `response` (index 0) and `ask` (index 1). */
+type Output = {
+  response: Port<Response>;
+  ask: Port<Ask>;
+};
 
 // The `onUserDialog` channel — the documented way the CLI asks the host to
 // render a blocking dialog (e.g. AskUserQuestion) — derived from the SDK Options
@@ -23,8 +65,8 @@ type Input = Infer<typeof InputSchema>;
 type OnUserDialog = NonNullable<Options["onUserDialog"]>;
 type UserDialogResult = Awaited<ReturnType<OnUserDialog>>;
 
-const RESPONSE_PORT = 0;
-const ASK_PORT = 1;
+const RESPONSE_PORT = "response";
+const ASK_PORT = "ask";
 
 /**
  * Assistant-level error codes that are fatal and user-actionable — the run
@@ -127,13 +169,11 @@ function extractText(message: unknown): string {
   return "";
 }
 
-export default class ClaudeAgent extends IONode<Config, any, Input, any> {
+export default class ClaudeAgent extends IONode<Config, any, Input, Output> {
   static override readonly type = "claude-agent";
   static override readonly category = "claude";
   static override readonly color: `#${string}` = "#D97757";
   static override readonly configSchema: Schema = ConfigsSchema;
-  static override readonly inputSchema: Schema = InputSchema;
-  static override readonly outputsSchema = OutputsSchema as unknown as Schema;
 
   /** Interactive requests awaiting answers, keyed by requestId (globally unique). */
   private readonly pending = new Map<string, PendingRequest>();
@@ -415,6 +455,24 @@ export default class ClaudeAgent extends IONode<Config, any, Input, any> {
       return;
     }
 
+    // The SDK spawns the CLI with cwd set to this directory; if it doesn't
+    // exist, Node's spawn fails with ENOENT and the SDK misreports it as the
+    // native binary failing to launch. Create it up front so the run works and
+    // users don't chase a misleading "binary failed to launch" error.
+    if (options.cwd) {
+      try {
+        await mkdir(options.cwd, { recursive: true });
+      } catch (err) {
+        dropRun();
+        this.status({ fill: "red", shape: "dot", text: "cwd error" });
+        throw new Error(
+          `claude-agent: could not create working directory ${options.cwd}: ${
+            (err as Error).message
+          }`,
+        );
+      }
+    }
+
     const q = query({ prompt, options });
     runEntry.q = q;
     let sessionId: string | undefined = m.sessionId;
@@ -535,6 +593,15 @@ export default class ClaudeAgent extends IONode<Config, any, Input, any> {
       if (controller.signal.aborted) {
         this.status({ fill: "grey", shape: "ring", text: "interrupted" });
         return;
+      }
+      // Reflect the failure on the node before propagating. The AgentRunError
+      // paths above already set a specific red status; any other error (e.g. the
+      // SDK failing to spawn the CLI subprocess) reaches here with the status
+      // still on the blue "running" set before the run — surface it instead of
+      // leaving the node stuck as if it were still working.
+      if (!(err instanceof AgentRunError)) {
+        const text = err instanceof Error ? err.message : "error";
+        this.status({ fill: "red", shape: "dot", text });
       }
       throw err;
     } finally {
