@@ -95,7 +95,7 @@
     "z": "claude_csv_tab",
     "name": "report",
     "active": true,
-    "complete": "output.payload",
+    "complete": "output.text",
     "targetType": "msg",
     "x": 920,
     "y": 100,

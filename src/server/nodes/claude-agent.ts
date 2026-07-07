@@ -7,6 +7,7 @@ import {
   type Options,
   type PermissionResult,
   type CanUseTool,
+  type SDKResultSuccess,
 } from "@anthropic-ai/claude-agent-sdk";
 import type ClaudeAgentConfiguration from "./claude-agent-configuration";
 import { ConfigsSchema } from "../../shared/schemas/claude-agent";
@@ -26,26 +27,28 @@ type Input = {
 
 /** Port `response` — the agent's reply (streamed chunks and/or the final result). */
 type Response = {
-  /** Assistant text (stream/result) or the raw SDK message, depending on kind. */
-  payload: unknown;
-  /** assistant | partial | result */
-  kind: string;
+  /** The assistant's reply text: a full-message chunk (`assistant`), a streamed
+   * delta (`partial`), or the final result string (`result`). */
+  text: string;
+  /** Which kind of reply this message carries. */
+  kind: "assistant" | "partial" | "result";
   /** Session id — pass back as msg.sessionId to continue the chat. */
   sessionId?: string;
   /** Echoed from the input — used by a router to address the reply. */
   correlationId?: string;
   /** SDK result metadata, present on the final `result` message only. */
-  usage?: unknown;
-  total_cost_usd?: number;
-  num_turns?: number;
-  structured_output?: unknown;
+  usage?: SDKResultSuccess["usage"];
+  total_cost_usd?: SDKResultSuccess["total_cost_usd"];
+  num_turns?: SDKResultSuccess["num_turns"];
+  structured_output?: SDKResultSuccess["structured_output"];
 };
 
 /** Port `ask` — an interactive request Claude is waiting on (approval / question). */
 type Ask = {
   /** Echoed from the input — used by a router to address the request. */
   correlationId?: string;
-  payload: {
+  /** The interactive request Claude is waiting on. */
+  request: {
     requestId: string;
     /** permission | question */
     kind: string;
@@ -370,7 +373,7 @@ export default class ClaudeAgent extends IONode<Config, any, Input, Output> {
         });
         this.sendToPort(ASK_PORT, {
           correlationId,
-          payload: {
+          request: {
             requestId,
             kind,
             toolName,
@@ -405,7 +408,7 @@ export default class ClaudeAgent extends IONode<Config, any, Input, Output> {
         });
         this.sendToPort(ASK_PORT, {
           correlationId,
-          payload: {
+          request: {
             requestId,
             kind: "question",
             dialogKind: request.dialogKind,
@@ -507,7 +510,7 @@ export default class ClaudeAgent extends IONode<Config, any, Input, Output> {
               const text = extractText(message.message);
               if (text) {
                 this.sendToPort(RESPONSE_PORT, {
-                  payload: text,
+                  text,
                   kind: "assistant",
                   sessionId,
                   correlationId,
@@ -531,7 +534,7 @@ export default class ClaudeAgent extends IONode<Config, any, Input, Output> {
                   : "";
               if (delta) {
                 this.sendToPort(RESPONSE_PORT, {
-                  payload: delta,
+                  text: delta,
                   kind: "partial",
                   sessionId,
                   correlationId,
@@ -545,7 +548,7 @@ export default class ClaudeAgent extends IONode<Config, any, Input, Output> {
             sawResult = true;
             if (message.subtype === "success") {
               this.sendToPort(RESPONSE_PORT, {
-                payload: message.result,
+                text: message.result,
                 kind: "result",
                 sessionId,
                 correlationId,

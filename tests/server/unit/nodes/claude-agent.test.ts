@@ -165,7 +165,7 @@ describe("claude-agent", () => {
       // single mode suppresses intermediate assistant turns
       expect(node.sent(0)).toHaveLength(1);
       expect(outputs(node, 0)[0]).toMatchObject({
-        payload: "Final answer",
+        text: "Final answer",
         kind: "result",
         sessionId: "s1",
         correlationId: "c-1",
@@ -368,7 +368,7 @@ describe("claude-agent", () => {
         "assistant",
         "result",
       ]);
-      expect(out[0]).toMatchObject({ payload: "part one ", kind: "assistant" });
+      expect(out[0]).toMatchObject({ text: "part one ", kind: "assistant" });
     });
 
     it("emits token deltas (not full turns) when partial streaming is on", async () => {
@@ -404,7 +404,7 @@ describe("claude-agent", () => {
       const out = outputs(node, 0);
       // deltas emit as 'partial'; the full assistant turn is suppressed (no dupes)
       expect(out.map((o) => o.kind)).toEqual(["partial", "partial", "result"]);
-      expect(out.slice(0, 2).map((o) => o.payload)).toEqual(["He", "llo"]);
+      expect(out.slice(0, 2).map((o) => o.text)).toEqual(["He", "llo"]);
       expect(
         sdk.queryMock.mock.calls[0][0].options.includePartialMessages,
       ).toBe(true);
@@ -468,14 +468,14 @@ describe("claude-agent", () => {
       await vi.waitFor(() => expect(node.sent(1).length).toBeGreaterThan(0));
 
       const ask = node.sent(1)[0].output as {
-        payload: {
+        request: {
           requestId: string;
           kind: string;
           toolName: string;
           toolUseId: string;
         };
       };
-      expect(ask.payload).toMatchObject({
+      expect(ask.request).toMatchObject({
         kind: "permission",
         toolName: "Bash",
         // the SDK tool-use id is forwarded for UI/audit correlation
@@ -483,7 +483,7 @@ describe("claude-agent", () => {
       });
 
       await node.receive({
-        claudeResponse: { requestId: ask.payload.requestId, behavior: "allow" },
+        claudeResponse: { requestId: ask.request.requestId, behavior: "allow" },
         correlationId: "owner",
       });
       await run;
@@ -493,7 +493,7 @@ describe("claude-agent", () => {
         updatedInput: { command: "ls" },
       });
       expect(outputs(node, 0)[0]).toMatchObject({
-        payload: "listed",
+        text: "listed",
         kind: "result",
       });
     });
@@ -518,8 +518,8 @@ describe("claude-agent", () => {
       const run = node.receive({ payload: "list", correlationId: "owner" });
       await vi.waitFor(() => expect(node.sent(1).length).toBeGreaterThan(0));
       const requestId = (
-        node.sent(1)[0].output as { payload: { requestId: string } }
-      ).payload.requestId;
+        node.sent(1)[0].output as { request: { requestId: string } }
+      ).request.requestId;
 
       // an unrelated client must not be able to answer
       await node.receive({
@@ -535,7 +535,7 @@ describe("claude-agent", () => {
       });
       await run;
       expect(outputs(node, 0)[0]).toMatchObject({
-        payload: "allow",
+        text: "allow",
         kind: "result",
       });
     });
@@ -565,8 +565,8 @@ describe("claude-agent", () => {
       const run = node.receive({ payload: "list" });
       await vi.waitFor(() => expect(node.sent(1).length).toBeGreaterThan(0));
       const requestId = (
-        node.sent(1)[0].output as { payload: { requestId: string } }
-      ).payload.requestId;
+        node.sent(1)[0].output as { request: { requestId: string } }
+      ).request.requestId;
 
       // an answer that carries a correlationId must NOT resolve the un-correlated run
       await node.receive({
@@ -579,7 +579,7 @@ describe("claude-agent", () => {
       await node.receive({ claudeResponse: { requestId, behavior: "allow" } });
       await run;
       expect(outputs(node, 0)[0]).toMatchObject({
-        payload: "allow",
+        text: "allow",
         kind: "result",
       });
     });
@@ -605,8 +605,8 @@ describe("claude-agent", () => {
       const run = node.receive({ payload: "go", correlationId: "owner" });
       await vi.waitFor(() => expect(node.sent(1).length).toBeGreaterThan(0));
       const requestId = (
-        node.sent(1)[0].output as { payload: { requestId: string } }
-      ).payload.requestId;
+        node.sent(1)[0].output as { request: { requestId: string } }
+      ).request.requestId;
 
       await node.receive({
         claudeResponse: { requestId, behavior: "deny", message: "nope" },
@@ -643,14 +643,14 @@ describe("claude-agent", () => {
       await vi.waitFor(() => expect(node.sent(1).length).toBeGreaterThan(0));
 
       const ask = node.sent(1)[0].output as {
-        payload: {
+        request: {
           requestId: string;
           kind: string;
           dialogKind: string;
           toolUseId: string;
         };
       };
-      expect(ask.payload).toMatchObject({
+      expect(ask.request).toMatchObject({
         kind: "question",
         dialogKind: "AskUserQuestion",
         toolUseId: "tu-1",
@@ -658,7 +658,7 @@ describe("claude-agent", () => {
 
       await node.receive({
         claudeResponse: {
-          requestId: ask.payload.requestId,
+          requestId: ask.request.requestId,
           answers: { choice: "A" },
         },
         correlationId: "c-1",
