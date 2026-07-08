@@ -1,5 +1,4 @@
 import { IONode, type Infer, type Port } from "@bonsae/nrg/server";
-import type { Schema } from "@bonsae/nrg/schema";
 import { randomUUID } from "node:crypto";
 import { mkdir } from "node:fs/promises";
 import {
@@ -175,8 +174,8 @@ function extractText(message: unknown): string {
 export default class ClaudeAgent extends IONode<Config, any, Input, Output> {
   static override readonly type = "claude-agent";
   static override readonly category = "claude";
-  static override readonly color: `#${string}` = "#D97757";
-  static override readonly configSchema: Schema = ConfigsSchema;
+  static override readonly color = "#FFFFFF";
+  static override readonly configSchema = ConfigsSchema;
 
   /** Interactive requests awaiting answers, keyed by requestId (globally unique). */
   private readonly pending = new Map<string, PendingRequest>();

@@ -1,5 +1,4 @@
 import { ConfigNode, type Infer } from "@bonsae/nrg/server";
-import type { Schema } from "@bonsae/nrg/schema";
 import type { Options } from "@anthropic-ai/claude-agent-sdk";
 import {
   ConfigsSchema,
@@ -32,8 +31,8 @@ export default class ClaudeAgentConfiguration extends ConfigNode<
   Credentials
 > {
   static override readonly type = "claude-agent-configuration";
-  static override readonly configSchema: Schema = ConfigsSchema;
-  static override readonly credentialsSchema: Schema = CredentialsSchema;
+  static override readonly configSchema = ConfigsSchema;
+  static override readonly credentialsSchema = CredentialsSchema;
 
   /** Environment for the spawned Claude Code process: host env + auth. */
   private buildEnv(): Record<string, string | undefined> {
