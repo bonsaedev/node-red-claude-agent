@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import { useFormNode } from "@bonsae/nrg/client";
 import type {
   ConfigsSchema,
@@ -10,42 +11,51 @@ const { node } = useFormNode<typeof ConfigsSchema, typeof CredentialsSchema>();
 // Ensure the credentials object exists so v-model bindings are reactive.
 if (!node.credentials) node.credentials = {};
 
-const providers = [
-  { value: "anthropic", label: "Anthropic (API key or subscription)" },
-  { value: "bedrock", label: "Amazon Bedrock" },
-  { value: "vertex", label: "Google Vertex AI" },
-  { value: "foundry", label: "Microsoft Azure Foundry" },
-];
-const authMethods = [
-  { value: "apiKey", label: "API key (pay per use)" },
-  { value: "subscriptionToken", label: "Claude subscription (paste token)" },
+// Translate against this node's locale catalog (configs.* / options.* /
+// credentials.* live in src/resources/locales/labels/claude-agent-configuration).
+const t = (key: string): string => node._(`claude-agent-configuration.${key}`);
+
+const providers = computed(() => [
+  { value: "anthropic", label: t("options.provider.anthropic") },
+  { value: "bedrock", label: t("options.provider.bedrock") },
+  { value: "vertex", label: t("options.provider.vertex") },
+  { value: "foundry", label: t("options.provider.foundry") },
+]);
+const authMethods = computed(() => [
+  { value: "apiKey", label: t("options.authMethod.apiKey") },
+  {
+    value: "subscriptionToken",
+    label: t("options.authMethod.subscriptionToken"),
+  },
   {
     value: "claudeCodeLogin",
-    label: "Claude subscription (this computer's login)",
+    label: t("options.authMethod.claudeCodeLogin"),
   },
-];
-const promptPresets = [
-  { value: "claude_code", label: "Claude Code — the full terminal agent" },
-  { value: "custom", label: "Custom — write your own instructions" },
-  { value: "minimal", label: "Minimal — no preset instructions" },
-];
-const permissionModes = [
-  { value: "default", label: "Ask before anything risky (safest)" },
-  { value: "acceptEdits", label: "Auto-approve file edits" },
+]);
+const promptPresets = computed(() => [
+  { value: "claude_code", label: t("options.systemPromptPreset.claude_code") },
+  { value: "custom", label: t("options.systemPromptPreset.custom") },
+  { value: "minimal", label: t("options.systemPromptPreset.minimal") },
+]);
+const permissionModes = computed(() => [
+  { value: "default", label: t("options.permissionMode.default") },
+  { value: "acceptEdits", label: t("options.permissionMode.acceptEdits") },
   {
     value: "bypassPermissions",
-    label: "Full autonomy — never ask (sandbox only)",
+    label: t("options.permissionMode.bypassPermissions"),
   },
-  { value: "plan", label: "Plan only (make no changes)" },
-  { value: "dontAsk", label: "Don't ask (proceed without prompts)" },
-];
+  { value: "plan", label: t("options.permissionMode.plan") },
+  { value: "dontAsk", label: t("options.permissionMode.dontAsk") },
+]);
 
 const cloudProviderLabel = () =>
-  providers.find((p) => p.value === node.provider)?.label ?? node.provider;
+  providers.value.find((p) => p.value === node.provider)?.label ??
+  node.provider;
 
 // Curated Anthropic model list (maintained in code — drop entries in a future
-// node release as models are retired). Cloud providers use deployment/region-
-// specific IDs, so those keep a free-text field instead.
+// node release as models are retired). Model ids/names are universal, so they
+// are not localized. Cloud providers use deployment/region-specific ids and
+// keep a free-text field instead.
 const ANTHROPIC_MODELS = [
   { value: "claude-opus-4-8", label: "Opus 4.8 — most capable" },
   { value: "claude-opus-4-7", label: "Opus 4.7" },
@@ -69,7 +79,11 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
 
 <template>
   <div class="form-row">
-    <NodeRedInput v-model:value="node.name" label="Name" icon="tag" />
+    <NodeRedInput
+      v-model:value="node.name"
+      :label="t('configs.name')"
+      icon="tag"
+    />
   </div>
 
   <!-- ───────── Sign-in ───────── -->
@@ -78,7 +92,7 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
   <div class="form-row">
     <NodeRedSelectInput
       v-model:value="node.provider"
-      label="Provider"
+      :label="t('configs.provider')"
       icon="cloud"
       :options="providers"
     />
@@ -89,7 +103,7 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
     <div class="form-row">
       <NodeRedSelectInput
         v-model:value="node.authMethod"
-        label="Sign-in method"
+        :label="t('configs.authMethod')"
         icon="id-card-o"
         :options="authMethods"
       />
@@ -99,7 +113,7 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
       <NodeRedInput
         v-model:value="node.credentials.apiKey"
         type="password"
-        label="API key"
+        :label="t('credentials.apiKey')"
         icon="key"
       />
       <div class="cc-tip">
@@ -112,7 +126,7 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
       <NodeRedInput
         v-model:value="node.credentials.oauthToken"
         type="password"
-        label="Subscription token"
+        :label="t('credentials.oauthToken')"
         icon="key"
       />
       <div class="cc-tip">
@@ -143,7 +157,7 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
     <div class="form-row">
       <NodeRedSelectInput
         v-model:value="node.model"
-        label="Model"
+        :label="t('configs.model')"
         icon="microchip"
         :options="modelOptions(node.model, 'Default (SDK chooses)')"
       />
@@ -151,7 +165,7 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
     <div class="form-row">
       <NodeRedSelectInput
         v-model:value="node.fallbackModel"
-        label="Backup model"
+        :label="t('configs.fallbackModel')"
         icon="microchip"
         :options="modelOptions(node.fallbackModel, 'None')"
       />
@@ -167,7 +181,7 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
     <div class="form-row">
       <NodeRedInput
         v-model:value="node.model"
-        label="Model"
+        :label="t('configs.model')"
         icon="microchip"
         placeholder="platform model ID (empty = default)"
       />
@@ -179,7 +193,7 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
     <div class="form-row">
       <NodeRedInput
         v-model:value="node.fallbackModel"
-        label="Backup model"
+        :label="t('configs.fallbackModel')"
         icon="microchip"
         placeholder="platform model ID (optional)"
       />
@@ -192,7 +206,7 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
   <div class="form-row">
     <NodeRedSelectInput
       v-model:value="node.systemPromptPreset"
-      label="Assistant style"
+      :label="t('configs.systemPromptPreset')"
       icon="file-text-o"
       :options="promptPresets"
     />
@@ -201,7 +215,7 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
   <!-- Claude Code preset → append box -->
   <div v-if="node.systemPromptPreset === 'claude_code'" class="form-row">
     <label class="cc-label"
-      ><i class="fa fa-plus"></i> Extra instructions</label
+      ><i class="fa fa-plus"></i> {{ t("configs.appendSystemPrompt") }}</label
     >
     <textarea
       v-model="node.appendSystemPrompt"
@@ -219,7 +233,7 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
   <!-- Custom preset → full prompt box -->
   <div v-else-if="node.systemPromptPreset === 'custom'" class="form-row">
     <label class="cc-label"
-      ><i class="fa fa-pencil"></i> Custom instructions</label
+      ><i class="fa fa-pencil"></i> {{ t("configs.customSystemPrompt") }}</label
     >
     <textarea
       v-model="node.customSystemPrompt"
@@ -245,7 +259,7 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
   <div class="form-row">
     <NodeRedInput
       v-model:value="node.cwd"
-      label="Working folder"
+      :label="t('configs.cwd')"
       icon="folder-o"
       placeholder="defaults to the folder Node-RED runs in"
     />
@@ -254,7 +268,7 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
   <div class="form-row">
     <NodeRedInput
       v-model:value="node.settingSources"
-      label="Project settings to load"
+      :label="t('configs.settingSources')"
       icon="cogs"
       placeholder="user,project,local"
     />
@@ -272,14 +286,16 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
   <div class="form-row">
     <NodeRedSelectInput
       v-model:value="node.permissionMode"
-      label="Tool permissions"
+      :label="t('configs.permissionMode')"
       icon="shield"
       :options="permissionModes"
     />
   </div>
 
   <div class="form-row">
-    <label class="cc-label"><i class="fa fa-check"></i> Allowed tools</label>
+    <label class="cc-label"
+      ><i class="fa fa-check"></i> {{ t("configs.allowedTools") }}</label
+    >
     <textarea
       v-model="node.allowedTools"
       class="cc-textarea"
@@ -293,7 +309,9 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
   </div>
 
   <div class="form-row">
-    <label class="cc-label"><i class="fa fa-ban"></i> Blocked tools</label>
+    <label class="cc-label"
+      ><i class="fa fa-ban"></i> {{ t("configs.disallowedTools") }}</label
+    >
     <textarea
       v-model="node.disallowedTools"
       class="cc-textarea"
@@ -313,7 +331,7 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
     <NodeRedInput
       v-model:value="node.maxTurns"
       type="number"
-      label="Max steps"
+      :label="t('configs.maxTurns')"
       icon="refresh"
     />
     <div class="cc-tip">
@@ -325,7 +343,7 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
     <NodeRedInput
       v-model:value="node.maxBudgetUsd"
       type="number"
-      label="Spending limit (USD)"
+      :label="t('configs.maxBudgetUsd')"
       icon="dollar"
     />
     <div class="cc-tip">
@@ -335,7 +353,8 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
 
   <div class="form-row">
     <label class="cc-label"
-      ><i class="fa fa-folder-open-o"></i> Extra folders</label
+      ><i class="fa fa-folder-open-o"></i>
+      {{ t("configs.additionalDirectories") }}</label
     >
     <textarea
       v-model="node.additionalDirectories"
@@ -354,7 +373,8 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
 
   <div class="form-row">
     <label class="cc-label"
-      ><i class="fa fa-comments-o"></i> Question types</label
+      ><i class="fa fa-comments-o"></i>
+      {{ t("configs.supportedDialogKinds") }}</label
     >
     <textarea
       v-model="node.supportedDialogKinds"
