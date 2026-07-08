@@ -19,7 +19,7 @@
     "build:dev": "vite build --mode development",
     "build": "vite build --mode production",
     "validate": "pnpm validate:tsc && pnpm validate:lint && pnpm validate:format",
-    "validate:tsc": "tsc -p src/server/tsconfig.json --noEmit && tsc -p tests/server/tsconfig.json --noEmit",
+    "validate:tsc": "tsc -p src/server/tsconfig.json --noEmit && tsc -p src/client/tsconfig.json --noEmit && tsc -p tests/server/tsconfig.json --noEmit",
     "validate:lint": "eslint src/",
     "validate:format": "prettier --check \"src/**/*.{ts,vue,json}\"",
     "lint": "eslint src/ --fix",
