@@ -47,6 +47,14 @@ const permissionModes = computed(() => [
   { value: "plan", label: t("options.permissionMode.plan") },
   { value: "dontAsk", label: t("options.permissionMode.dontAsk") },
 ]);
+const effortLevels = computed(() => [
+  { value: "", label: t("options.effort.default") },
+  { value: "low", label: t("options.effort.low") },
+  { value: "medium", label: t("options.effort.medium") },
+  { value: "high", label: t("options.effort.high") },
+  { value: "xhigh", label: t("options.effort.xhigh") },
+  { value: "max", label: t("options.effort.max") },
+]);
 
 const cloudProviderLabel = () =>
   providers.value.find((p) => p.value === node.provider)?.label ??
@@ -199,6 +207,22 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
       />
     </div>
   </template>
+
+  <!-- Reasoning effort (applies to every provider) -->
+  <div class="form-row">
+    <NodeRedSelectInput
+      v-model:value="node.effort"
+      :label="t('configs.effort')"
+      icon="bolt"
+      :options="effortLevels"
+    />
+    <div class="cc-tip">
+      <i class="fa fa-info-circle"></i> How hard the model thinks — higher means
+      deeper reasoning and more tokens. Default lets the SDK decide;
+      <code>xhigh</code> suits agentic/coding work, <code>max</code> when
+      correctness matters most.
+    </div>
+  </div>
 
   <!-- ───────── Assistant behaviour ───────── -->
   <div class="cc-section">Assistant behaviour</div>

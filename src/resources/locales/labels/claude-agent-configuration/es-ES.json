@@ -6,6 +6,7 @@
     "authMethod": "Método de inicio de sesión",
     "model": "Modelo",
     "fallbackModel": "Modelo de respaldo",
+    "effort": "Esfuerzo de razonamiento",
     "systemPromptPreset": "Estilo del asistente",
     "appendSystemPrompt": "Instrucciones adicionales",
     "customSystemPrompt": "Instrucciones personalizadas",
@@ -42,6 +43,14 @@
       "bypassPermissions": "Autonomía total — nunca preguntar (solo sandbox)",
       "plan": "Solo planificar (sin hacer cambios)",
       "dontAsk": "No preguntar (continuar sin avisos)"
+    },
+    "effort": {
+      "default": "Predeterminado (decide el SDK)",
+      "low": "Bajo",
+      "medium": "Medio",
+      "high": "Alto",
+      "xhigh": "Muy alto",
+      "max": "Máximo"
     }
   },
   "credentials": {

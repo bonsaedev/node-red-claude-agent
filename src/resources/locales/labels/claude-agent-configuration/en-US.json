@@ -6,6 +6,7 @@
     "authMethod": "Sign-in method",
     "model": "Model",
     "fallbackModel": "Backup model",
+    "effort": "Reasoning effort",
     "systemPromptPreset": "Assistant style",
     "appendSystemPrompt": "Extra instructions",
     "customSystemPrompt": "Custom instructions",
@@ -42,6 +43,14 @@
       "bypassPermissions": "Full autonomy — never ask (sandbox only)",
       "plan": "Plan only (make no changes)",
       "dontAsk": "Don't ask (proceed without prompts)"
+    },
+    "effort": {
+      "default": "Default (SDK decides)",
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "xhigh": "Extra high",
+      "max": "Max"
     }
   },
   "credentials": {

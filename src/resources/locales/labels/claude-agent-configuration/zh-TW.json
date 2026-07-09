@@ -6,6 +6,7 @@
     "authMethod": "登入方式",
     "model": "模型",
     "fallbackModel": "備用模型",
+    "effort": "推理強度",
     "systemPromptPreset": "助理風格",
     "appendSystemPrompt": "額外指令",
     "customSystemPrompt": "自訂指令",
@@ -42,6 +43,14 @@
       "bypassPermissions": "完全自主 — 從不詢問（僅限沙箱）",
       "plan": "僅規劃（不做變更）",
       "dontAsk": "不詢問（無提示直接繼續）"
+    },
+    "effort": {
+      "default": "預設（由 SDK 決定）",
+      "low": "低",
+      "medium": "中",
+      "high": "高",
+      "xhigh": "極高",
+      "max": "最高"
     }
   },
   "credentials": {

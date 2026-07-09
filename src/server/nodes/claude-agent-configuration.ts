@@ -129,6 +129,9 @@ export default class ClaudeAgentConfiguration extends ConfigNode<
       options.fallbackModel = c.fallbackModel;
     }
 
+    // Reasoning effort. Empty = leave unset so the SDK/model default applies.
+    if (c.effort) options.effort = c.effort;
+
     if (c.systemPromptPreset === "claude_code") {
       options.systemPrompt = {
         type: "preset",

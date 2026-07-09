@@ -6,6 +6,7 @@
     "authMethod": "サインイン方法",
     "model": "モデル",
     "fallbackModel": "予備モデル",
+    "effort": "推論の深さ",
     "systemPromptPreset": "アシスタントのスタイル",
     "appendSystemPrompt": "追加の指示",
     "customSystemPrompt": "カスタム指示",
@@ -42,6 +43,14 @@
       "bypassPermissions": "完全自律 — 確認しない（サンドボックスのみ）",
       "plan": "計画のみ（変更を加えない）",
       "dontAsk": "確認しない（プロンプトなしで続行）"
+    },
+    "effort": {
+      "default": "デフォルト（SDK が判断）",
+      "low": "低",
+      "medium": "中",
+      "high": "高",
+      "xhigh": "非常に高い",
+      "max": "最大"
     }
   },
   "credentials": {

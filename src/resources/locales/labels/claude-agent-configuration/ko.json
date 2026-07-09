@@ -6,6 +6,7 @@
     "authMethod": "로그인 방법",
     "model": "모델",
     "fallbackModel": "예비 모델",
+    "effort": "추론 강도",
     "systemPromptPreset": "어시스턴트 스타일",
     "appendSystemPrompt": "추가 지침",
     "customSystemPrompt": "사용자 지정 지침",
@@ -42,6 +43,14 @@
       "bypassPermissions": "완전 자율 — 확인하지 않음 (샌드박스 전용)",
       "plan": "계획만 (변경하지 않음)",
       "dontAsk": "확인하지 않음 (프롬프트 없이 진행)"
+    },
+    "effort": {
+      "default": "기본값 (SDK가 결정)",
+      "low": "낮음",
+      "medium": "중간",
+      "high": "높음",
+      "xhigh": "매우 높음",
+      "max": "최대"
     }
   },
   "credentials": {

@@ -48,6 +48,23 @@ export const ConfigsSchema = defineSchema(
         "A second model to use automatically if the main one is unavailable. Leave empty for none.",
       "x-nrg-form": { icon: "microchip" },
     }),
+    effort: SchemaType.Union(
+      [
+        SchemaType.Literal(""),
+        SchemaType.Literal("low"),
+        SchemaType.Literal("medium"),
+        SchemaType.Literal("high"),
+        SchemaType.Literal("xhigh"),
+        SchemaType.Literal("max"),
+      ],
+      {
+        // Empty = leave unset so the SDK/model default (high) applies.
+        default: "",
+        description:
+          "How hard the model thinks before acting — higher means deeper reasoning and more tokens. Leave as Default to use the SDK default; 'xhigh' suits most agentic/coding work, 'max' when correctness matters more than cost.",
+        "x-nrg-form": { icon: "bolt" },
+      },
+    ),
     systemPromptPreset: SchemaType.Union(
       [
         SchemaType.Literal("claude_code"),

@@ -6,6 +6,7 @@
     "authMethod": "Anmeldemethode",
     "model": "Modell",
     "fallbackModel": "Ersatzmodell",
+    "effort": "Denkintensität",
     "systemPromptPreset": "Assistenten-Stil",
     "appendSystemPrompt": "Zusätzliche Anweisungen",
     "customSystemPrompt": "Eigene Anweisungen",
@@ -42,6 +43,14 @@
       "bypassPermissions": "Volle Autonomie — nie nachfragen (nur Sandbox)",
       "plan": "Nur planen (keine Änderungen)",
       "dontAsk": "Nicht nachfragen (ohne Rückfragen fortfahren)"
+    },
+    "effort": {
+      "default": "Standard (SDK entscheidet)",
+      "low": "Niedrig",
+      "medium": "Mittel",
+      "high": "Hoch",
+      "xhigh": "Sehr hoch",
+      "max": "Maximal"
     }
   },
   "credentials": {

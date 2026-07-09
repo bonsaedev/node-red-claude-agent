@@ -6,6 +6,7 @@
     "authMethod": "Méthode de connexion",
     "model": "Modèle",
     "fallbackModel": "Modèle de secours",
+    "effort": "Effort de réflexion",
     "systemPromptPreset": "Style de l'assistant",
     "appendSystemPrompt": "Instructions supplémentaires",
     "customSystemPrompt": "Instructions personnalisées",
@@ -42,6 +43,14 @@
       "bypassPermissions": "Autonomie totale — ne jamais demander (bac à sable uniquement)",
       "plan": "Planifier uniquement (aucune modification)",
       "dontAsk": "Ne pas demander (continuer sans invite)"
+    },
+    "effort": {
+      "default": "Par défaut (choisi par le SDK)",
+      "low": "Faible",
+      "medium": "Moyen",
+      "high": "Élevé",
+      "xhigh": "Très élevé",
+      "max": "Maximal"
     }
   },
   "credentials": {

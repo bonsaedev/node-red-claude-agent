@@ -6,6 +6,7 @@
     "authMethod": "Método de login",
     "model": "Modelo",
     "fallbackModel": "Modelo reserva",
+    "effort": "Esforço de raciocínio",
     "systemPromptPreset": "Estilo do assistente",
     "appendSystemPrompt": "Instruções adicionais",
     "customSystemPrompt": "Instruções personalizadas",
@@ -42,6 +43,14 @@
       "bypassPermissions": "Autonomia total — nunca perguntar (somente sandbox)",
       "plan": "Apenas planejar (sem fazer alterações)",
       "dontAsk": "Não perguntar (prosseguir sem avisos)"
+    },
+    "effort": {
+      "default": "Padrão (o SDK decide)",
+      "low": "Baixo",
+      "medium": "Médio",
+      "high": "Alto",
+      "xhigh": "Extra alto",
+      "max": "Máximo"
     }
   },
   "credentials": {
