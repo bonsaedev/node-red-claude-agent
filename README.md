@@ -195,3 +195,14 @@ real user store / token before exposing it.
 > host (files, shell). Run it in a container/sandbox, or use `default` +
 > `interactive` (approve each tool) or `dontAsk` + an `allowedTools` allowlist
 > when you need guardrails.
+
+## License
+
+[Business Source License 1.1](./LICENSE) (BUSL-1.1).
+
+Free for personal, non-profit, academic, evaluation, and non-production use.
+**Commercial or production use by a for-profit organization, or use in any
+product or service that generates revenue, requires a commercial license** —
+contact allanoricil@duck.com.
+
+Each released version converts to the MIT License four years after its release.
