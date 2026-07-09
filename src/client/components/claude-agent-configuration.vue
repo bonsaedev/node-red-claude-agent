@@ -11,6 +11,7 @@ import {
   type UploadFile,
   type UploadMode,
 } from "../api/claude-agent";
+import { ANTHROPIC_MODELS } from "../../shared/models";
 
 const { node } = useFormNode<typeof ConfigsSchema, typeof CredentialsSchema>();
 
@@ -65,28 +66,20 @@ const cloudProviderLabel = () =>
   providers.value.find((p) => p.value === node.provider)?.label ??
   node.provider;
 
-// Curated Anthropic model list (maintained in code — drop entries in a future
-// node release as models are retired). Model ids/names are universal, so they
-// are not localized. Cloud providers use deployment/region-specific ids and
-// keep a free-text field instead.
-const ANTHROPIC_MODELS = [
-  { value: "claude-opus-4-8", label: "Opus 4.8 — most capable" },
-  { value: "claude-opus-4-7", label: "Opus 4.7" },
-  { value: "claude-opus-4-6", label: "Opus 4.6" },
-  { value: "claude-sonnet-4-6", label: "Sonnet 4.6 — balanced" },
-  { value: "claude-haiku-4-5", label: "Haiku 4.5 — fast" },
-  { value: "claude-fable-5", label: "Fable 5" },
-];
-
-// Build the select options, keeping a not-yet-listed saved value selectable so
-// upgrading/downgrading the list never silently drops a configured model.
+// Build the select options from the shared curated list (see ../../shared/models),
+// keeping a not-yet-listed saved value selectable so upgrading/downgrading the
+// list never silently drops a configured model. Cloud providers use
+// deployment/region-specific ids and keep a free-text field instead.
 function modelOptions(current: string | undefined, emptyLabel: string) {
   const opts = [{ value: "", label: emptyLabel }];
-  const known = new Set(ANTHROPIC_MODELS.map((m) => m.value));
+  const known = new Set(ANTHROPIC_MODELS.map((m) => m.id));
   if (current && !known.has(current)) {
     opts.push({ value: current, label: `${current} (custom)` });
   }
-  return [...opts, ...ANTHROPIC_MODELS];
+  return [
+    ...opts,
+    ...ANTHROPIC_MODELS.map((m) => ({ value: m.id, label: m.label })),
+  ];
 }
 
 // ── Uploaded .claude folder ───────────────────────────────────────────────

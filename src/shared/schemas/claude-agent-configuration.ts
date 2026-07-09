@@ -1,4 +1,14 @@
 import { defineSchema, SchemaType } from "@bonsae/nrg/schema";
+import { ANTHROPIC_MODELS } from "../models";
+
+// Enum members for the model fields: an empty option (= SDK default) plus one
+// literal per curated Anthropic model. Cloud providers use their own ids, so a
+// free-text value there just logs a soft config warning (validation never
+// blocks deploy) — the editor form renders free text for those providers.
+const MODEL_LITERALS = [
+  SchemaType.Literal(""),
+  ...ANTHROPIC_MODELS.map((model) => SchemaType.Literal(model.id)),
+];
 
 /**
  * Configuration for a Claude agent: auth/provider plus the options that shape
@@ -36,13 +46,13 @@ export const ConfigsSchema = defineSchema(
         "x-nrg-form": { icon: "id-card-o" },
       },
     ),
-    model: SchemaType.String({
+    model: SchemaType.Union(MODEL_LITERALS, {
       default: "",
       description:
         "Which Claude model to use (for example: claude-opus-4-8). Leave empty for the default.",
       "x-nrg-form": { icon: "microchip" },
     }),
-    fallbackModel: SchemaType.String({
+    fallbackModel: SchemaType.Union(MODEL_LITERALS, {
       default: "",
       description:
         "A second model to use automatically if the main one is unavailable. Leave empty for none.",
