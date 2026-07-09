@@ -158,6 +158,13 @@ export const ConfigsSchema = defineSchema(
         "Advanced: the kinds of clarifying question your UI can answer (for example: AskUserQuestion). Leave empty unless you know you need this.",
       "x-nrg-form": { icon: "comments-o" },
     }),
+    // Uploaded-.claude metadata. Set by the folder uploader (not edited by
+    // hand); the actual files live on disk under <userDir>/claude-agent/<id>.
+    // Contents never travel in the flow export — only this lightweight status.
+    claudeFolderUploaded: SchemaType.Boolean({ default: false }),
+    claudeFolderFileCount: SchemaType.Number({ default: 0, minimum: 0 }),
+    claudeFolderBytes: SchemaType.Number({ default: 0, minimum: 0 }),
+    claudeFolderUploadedAt: SchemaType.String({ default: "" }),
   },
   { $id: "claude-agent-configuration:config" },
 );

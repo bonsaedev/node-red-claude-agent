@@ -1,9 +1,16 @@
-import { ConfigNode, type Infer } from "@bonsae/nrg/server";
+import { ConfigNode, type Infer, type RED } from "@bonsae/nrg/server";
 import type { Options } from "@anthropic-ai/claude-agent-sdk";
 import {
   ConfigsSchema,
   CredentialsSchema,
 } from "../../shared/schemas/claude-agent-configuration";
+import { initRoutes } from "../api";
+import {
+  hasFolder,
+  managedDir,
+  syncInto,
+  clear as clearClaudeFolder,
+} from "../lib/claude-folder-store";
 
 type Config = Infer<typeof ConfigsSchema>;
 type Credentials = Infer<typeof CredentialsSchema>;
@@ -33,6 +40,23 @@ export default class ClaudeAgentConfiguration extends ConfigNode<
   static override readonly type = "claude-agent-configuration";
   static override readonly configSchema = ConfigsSchema;
   static override readonly credentialsSchema = CredentialsSchema;
+
+  /** Register the admin endpoints for the uploaded `.claude` folder (once). */
+  static override async registered(RED: RED): Promise<void> {
+    initRoutes(RED);
+  }
+
+  /** Remove the node's uploaded `.claude` folder from disk on delete (but keep
+   *  it across ordinary redeploys). */
+  override closed(removed?: boolean): void {
+    if (removed) {
+      try {
+        clearClaudeFolder(this.RED, this.id);
+      } catch {
+        // best effort — nothing to clean up if it was never uploaded
+      }
+    }
+  }
 
   /** Environment for the spawned Claude Code process: host env + auth. */
   private buildEnv(): Record<string, string | undefined> {
@@ -156,6 +180,21 @@ export default class ClaudeAgentConfiguration extends ConfigNode<
       (s): s is SettingSource =>
         s === "user" || s === "project" || s === "local",
     );
+
+    // Uploaded `.claude` folder. The SDK only reads project `.claude`/CLAUDE.md
+    // relative to cwd, so: with no Working folder, point cwd at the per-node
+    // managed dir; with one set, copy the managed folder into it. Either way,
+    // force `project` on so CLAUDE.md is actually loaded.
+    if (hasFolder(this.RED, this.id)) {
+      if (options.cwd) {
+        syncInto(this.RED, this.id, options.cwd);
+      } else {
+        options.cwd = managedDir(this.RED, this.id);
+      }
+      if (!options.settingSources.includes("project")) {
+        options.settingSources = [...options.settingSources, "project"];
+      }
+    }
 
     if (c.maxTurns > 0) options.maxTurns = c.maxTurns;
     if (c.maxBudgetUsd > 0) options.maxBudgetUsd = c.maxBudgetUsd;
