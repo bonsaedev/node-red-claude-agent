@@ -53,6 +53,23 @@
       "max": "Máximo"
     }
   },
+  "sections": {
+    "signIn": "Login",
+    "model": "Modelo",
+    "assistant": "Comportamento do assistente",
+    "workspace": "Pasta de trabalho e configurações do projeto",
+    "tools": "Ferramentas e permissões",
+    "limits": "Limites",
+    "advanced": "Avançado"
+  },
+  "upload": {
+    "label": "Enviar pasta .claude",
+    "upload": "Enviar",
+    "uploading": "Enviando…",
+    "remove": "Remover",
+    "replace": "Substituir",
+    "merge": "Mesclar"
+  },
   "credentials": {
     "apiKey": "Chave de API",
     "oauthToken": "Token de assinatura"

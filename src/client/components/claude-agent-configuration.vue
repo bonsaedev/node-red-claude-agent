@@ -61,7 +61,6 @@ const effortLevels = computed(() => [
   { value: "xhigh", label: t("options.effort.xhigh") },
   { value: "max", label: t("options.effort.max") },
 ]);
-
 const cloudProviderLabel = () =>
   providers.value.find((p) => p.value === node.provider)?.label ??
   node.provider;
@@ -219,7 +218,7 @@ onMounted(async () => {
   </div>
 
   <!-- ───────── Sign-in ───────── -->
-  <div class="cc-section">Sign-in</div>
+  <div class="cc-section">{{ t("sections.signIn") }}</div>
 
   <div class="form-row">
     <NodeRedSelectInput
@@ -282,7 +281,7 @@ onMounted(async () => {
   </div>
 
   <!-- ───────── Model ───────── -->
-  <div class="cc-section">Model</div>
+  <div class="cc-section">{{ t("sections.model") }}</div>
 
   <!-- Anthropic: curated model dropdowns (empty = SDK default) -->
   <template v-if="node.provider === 'anthropic'">
@@ -349,7 +348,7 @@ onMounted(async () => {
   </div>
 
   <!-- ───────── Assistant behaviour ───────── -->
-  <div class="cc-section">Assistant behaviour</div>
+  <div class="cc-section">{{ t("sections.assistant") }}</div>
 
   <div class="form-row">
     <NodeRedSelectInput
@@ -402,7 +401,7 @@ onMounted(async () => {
   </div>
 
   <!-- ───────── Working folder & project settings ───────── -->
-  <div class="cc-section">Working folder &amp; project settings</div>
+  <div class="cc-section">{{ t("sections.workspace") }}</div>
 
   <div class="form-row">
     <NodeRedInput
@@ -431,7 +430,7 @@ onMounted(async () => {
   <!-- Upload a .claude folder (stored per node; fed to the run via cwd) -->
   <div class="form-row">
     <label class="cc-label"
-      ><i class="fa fa-upload"></i> Upload .claude folder</label
+      ><i class="fa fa-upload"></i> {{ t("upload.label") }}</label
     >
     <input
       type="file"
@@ -472,11 +471,11 @@ onMounted(async () => {
       <div style="margin-top: 6px; display: flex; gap: 12px">
         <label
           ><input v-model="uploadMode" type="radio" value="overwrite" />
-          Replace</label
+          {{ t("upload.replace") }}</label
         >
         <label
           ><input v-model="uploadMode" type="radio" value="merge" />
-          Merge</label
+          {{ t("upload.merge") }}</label
         >
       </div>
     </div>
@@ -488,7 +487,8 @@ onMounted(async () => {
         :disabled="busy || !pending.length || !node.id"
         @click="doUpload"
       >
-        <i class="fa fa-upload"></i> {{ busy ? "Uploading…" : "Upload" }}
+        <i class="fa fa-upload"></i>
+        {{ busy ? t("upload.uploading") : t("upload.upload") }}
       </button>
       <button
         v-if="folderStatus && folderStatus.exists"
@@ -497,13 +497,20 @@ onMounted(async () => {
         :disabled="busy"
         @click="doRemove"
       >
-        <i class="fa fa-trash"></i> Remove
+        <i class="fa fa-trash"></i> {{ t("upload.remove") }}
       </button>
+    </div>
+
+    <div class="cc-tip">
+      <i class="fa fa-info-circle"></i> Used automatically when the node runs:
+      if a Working folder is set above, these files are copied into it;
+      otherwise the assistant runs in a private per-node folder holding just
+      this upload.
     </div>
   </div>
 
   <!-- ───────── Tools &amp; permissions ───────── -->
-  <div class="cc-section">Tools &amp; permissions</div>
+  <div class="cc-section">{{ t("sections.tools") }}</div>
 
   <div class="form-row">
     <NodeRedSelectInput
@@ -547,7 +554,7 @@ onMounted(async () => {
   </div>
 
   <!-- ───────── Limits ───────── -->
-  <div class="cc-section">Limits</div>
+  <div class="cc-section">{{ t("sections.limits") }}</div>
 
   <div class="form-row">
     <NodeRedInput
@@ -591,7 +598,7 @@ onMounted(async () => {
   </div>
 
   <!-- ───────── Advanced ───────── -->
-  <div class="cc-section">Advanced</div>
+  <div class="cc-section">{{ t("sections.advanced") }}</div>
 
   <div class="form-row">
     <label class="cc-label"

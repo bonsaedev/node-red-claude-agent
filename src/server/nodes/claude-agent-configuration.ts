@@ -182,9 +182,9 @@ export default class ClaudeAgentConfiguration extends ConfigNode<
     );
 
     // Uploaded `.claude` folder. The SDK only reads project `.claude`/CLAUDE.md
-    // relative to cwd, so: with no Working folder, point cwd at the per-node
-    // managed dir; with one set, copy the managed folder into it. Either way,
-    // force `project` on so CLAUDE.md is actually loaded.
+    // relative to cwd, so route it automatically: with a Working folder set,
+    // copy the uploaded files into it; with none, point cwd at the per-node
+    // managed dir. Either way, force `project` on so CLAUDE.md is loaded.
     if (hasFolder(this.RED, this.id)) {
       if (options.cwd) {
         syncInto(this.RED, this.id, options.cwd);

@@ -53,6 +53,23 @@
       "max": "Máximo"
     }
   },
+  "sections": {
+    "signIn": "Inicio de sesión",
+    "model": "Modelo",
+    "assistant": "Comportamiento del asistente",
+    "workspace": "Carpeta de trabajo y ajustes del proyecto",
+    "tools": "Herramientas y permisos",
+    "limits": "Límites",
+    "advanced": "Avanzado"
+  },
+  "upload": {
+    "label": "Subir carpeta .claude",
+    "upload": "Subir",
+    "uploading": "Subiendo…",
+    "remove": "Eliminar",
+    "replace": "Reemplazar",
+    "merge": "Combinar"
+  },
   "credentials": {
     "apiKey": "Clave de API",
     "oauthToken": "Token de suscripción"

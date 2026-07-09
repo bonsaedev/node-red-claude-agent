@@ -53,6 +53,23 @@
       "max": "Maximal"
     }
   },
+  "sections": {
+    "signIn": "Anmeldung",
+    "model": "Modell",
+    "assistant": "Assistenten-Verhalten",
+    "workspace": "Arbeitsordner & Projekteinstellungen",
+    "tools": "Tools & Berechtigungen",
+    "limits": "Limits",
+    "advanced": "Erweitert"
+  },
+  "upload": {
+    "label": "Ordner .claude hochladen",
+    "upload": "Hochladen",
+    "uploading": "Wird hochgeladen…",
+    "remove": "Entfernen",
+    "replace": "Ersetzen",
+    "merge": "Zusammenführen"
+  },
   "credentials": {
     "apiKey": "API-Schlüssel",
     "oauthToken": "Abonnement-Token"

@@ -53,6 +53,23 @@
       "max": "最大"
     }
   },
+  "sections": {
+    "signIn": "サインイン",
+    "model": "モデル",
+    "assistant": "アシスタントの動作",
+    "workspace": "作業フォルダーとプロジェクト設定",
+    "tools": "ツールと権限",
+    "limits": "制限",
+    "advanced": "詳細設定"
+  },
+  "upload": {
+    "label": ".claude フォルダーをアップロード",
+    "upload": "アップロード",
+    "uploading": "アップロード中…",
+    "remove": "削除",
+    "replace": "置き換え",
+    "merge": "マージ"
+  },
   "credentials": {
     "apiKey": "APIキー",
     "oauthToken": "サブスクリプショントークン"

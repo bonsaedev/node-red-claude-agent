@@ -53,6 +53,23 @@
       "max": "最高"
     }
   },
+  "sections": {
+    "signIn": "登录",
+    "model": "模型",
+    "assistant": "助手行为",
+    "workspace": "工作文件夹与项目设置",
+    "tools": "工具与权限",
+    "limits": "限制",
+    "advanced": "高级"
+  },
+  "upload": {
+    "label": "上传 .claude 文件夹",
+    "upload": "上传",
+    "uploading": "上传中…",
+    "remove": "移除",
+    "replace": "替换",
+    "merge": "合并"
+  },
   "credentials": {
     "apiKey": "API 密钥",
     "oauthToken": "订阅令牌"

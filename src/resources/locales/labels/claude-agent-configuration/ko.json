@@ -53,6 +53,23 @@
       "max": "최대"
     }
   },
+  "sections": {
+    "signIn": "로그인",
+    "model": "모델",
+    "assistant": "어시스턴트 동작",
+    "workspace": "작업 폴더 및 프로젝트 설정",
+    "tools": "도구 및 권한",
+    "limits": "한도",
+    "advanced": "고급"
+  },
+  "upload": {
+    "label": ".claude 폴더 업로드",
+    "upload": "업로드",
+    "uploading": "업로드 중…",
+    "remove": "제거",
+    "replace": "교체",
+    "merge": "병합"
+  },
   "credentials": {
     "apiKey": "API 키",
     "oauthToken": "구독 토큰"

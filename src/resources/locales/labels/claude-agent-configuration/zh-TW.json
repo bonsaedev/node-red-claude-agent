@@ -53,6 +53,23 @@
       "max": "最高"
     }
   },
+  "sections": {
+    "signIn": "登入",
+    "model": "模型",
+    "assistant": "助理行為",
+    "workspace": "工作資料夾與專案設定",
+    "tools": "工具與權限",
+    "limits": "限制",
+    "advanced": "進階"
+  },
+  "upload": {
+    "label": "上傳 .claude 資料夾",
+    "upload": "上傳",
+    "uploading": "上傳中…",
+    "remove": "移除",
+    "replace": "取代",
+    "merge": "合併"
+  },
   "credentials": {
     "apiKey": "API 金鑰",
     "oauthToken": "訂閱權杖"

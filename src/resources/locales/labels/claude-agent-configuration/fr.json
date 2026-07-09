@@ -53,6 +53,23 @@
       "max": "Maximal"
     }
   },
+  "sections": {
+    "signIn": "Connexion",
+    "model": "Modèle",
+    "assistant": "Comportement de l'assistant",
+    "workspace": "Dossier de travail et paramètres du projet",
+    "tools": "Outils et autorisations",
+    "limits": "Limites",
+    "advanced": "Avancé"
+  },
+  "upload": {
+    "label": "Téléverser le dossier .claude",
+    "upload": "Téléverser",
+    "uploading": "Téléversement…",
+    "remove": "Supprimer",
+    "replace": "Remplacer",
+    "merge": "Fusionner"
+  },
   "credentials": {
     "apiKey": "Clé API",
     "oauthToken": "Jeton d'abonnement"

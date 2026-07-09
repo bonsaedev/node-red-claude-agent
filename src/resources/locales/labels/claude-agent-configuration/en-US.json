@@ -53,6 +53,23 @@
       "max": "Max"
     }
   },
+  "sections": {
+    "signIn": "Sign-in",
+    "model": "Model",
+    "assistant": "Assistant behaviour",
+    "workspace": "Working folder & project settings",
+    "tools": "Tools & permissions",
+    "limits": "Limits",
+    "advanced": "Advanced"
+  },
+  "upload": {
+    "label": "Upload .claude folder",
+    "upload": "Upload",
+    "uploading": "Uploading…",
+    "remove": "Remove",
+    "replace": "Replace",
+    "merge": "Merge"
+  },
   "credentials": {
     "apiKey": "API key",
     "oauthToken": "Subscription token"
