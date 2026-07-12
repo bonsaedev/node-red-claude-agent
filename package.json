@@ -1,5 +1,5 @@
 {
-  "name": "@bonsae/node-red-claude",
+  "name": "@bonsae/node-red-claude-agent",
   "version": "0.0.0",
   "description": "Claude Agent nodes for Node-RED built with @bonsae/nrg",
   "author": "Allan Oricil <allanoricil@duck.com>",
