@@ -11,7 +11,8 @@
   },
   "keywords": [
     "node-red",
-    "nrg"
+    "nrg",
+    "bonsae"
   ],
   "scripts": {
     "debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode development",
