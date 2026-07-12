@@ -8,3 +8,4 @@ coverage
 .nrg
 pnpm-workspace.yaml
 .env
+examples/
