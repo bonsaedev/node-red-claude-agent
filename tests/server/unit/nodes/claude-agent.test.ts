@@ -84,7 +84,10 @@ describe("claude-agent", () => {
         config: { config: "", prompt: { type: "str", value: "hi" } },
       });
 
-      await expect(node.receive({ payload: "hi" })).rejects.toThrow(
+      // errorPort is on (default), so nrg routes the thrown failure to the error
+      // port and `receive()` resolves — the message rides `error.message`.
+      await node.receive({ payload: "hi" });
+      expect(node.sent("error")[0].error.message).toContain(
         "no configuration node selected",
       );
       expect(node.statuses().at(-1)).toMatchObject({
@@ -98,9 +101,8 @@ describe("claude-agent", () => {
         config: { config: mockConfig(), prompt: { type: "str", value: "" } },
       });
 
-      await expect(node.receive({ payload: 123 })).rejects.toThrow(
-        "prompt is empty",
-      );
+      await node.receive({ payload: 123 });
+      expect(node.sent("error")[0].error.message).toContain("prompt is empty");
       expect(node.statuses().at(-1)).toMatchObject({ text: "empty prompt" });
     });
   });
@@ -223,9 +225,9 @@ describe("claude-agent", () => {
         config: { config: mockConfig(), prompt: { type: "str", value: "hi" } },
       });
 
-      await expect(
-        node.receive({ payload: "hi", correlationId: "c-1" }),
-      ).rejects.toThrow("claude-agent: error_max_turns");
+      // errorPort is on, so nrg routes the thrown AgentRunError to the error port
+      // and `receive()` resolves — the structured detail rides the error port.
+      await node.receive({ payload: "hi", correlationId: "c-1" });
 
       expect(node.sent("error")[0].error).toMatchObject({
         name: "AgentRunError",
@@ -253,9 +255,7 @@ describe("claude-agent", () => {
         config: { config: mockConfig(), prompt: { type: "str", value: "hi" } },
       });
 
-      await expect(
-        node.receive({ payload: "hi", correlationId: "c-2" }),
-      ).rejects.toThrow("claude-agent: authentication_failed");
+      await node.receive({ payload: "hi", correlationId: "c-2" });
 
       expect(node.sent("error")[0].error).toMatchObject({
         name: "AgentRunError",
@@ -281,9 +281,9 @@ describe("claude-agent", () => {
       await node.receive({ payload: "hi" });
       expect(node.sent("error")).toHaveLength(0);
       expect(outputs(node, 0).at(-1)).toMatchObject({ kind: "result" });
-      expect(
-        node.warned().some((w) => String(w).includes("overloaded")),
-      ).toBe(true);
+      expect(node.warned().some((w) => String(w).includes("overloaded"))).toBe(
+        true,
+      );
     });
 
     it.each(["invalid_request", "model_not_found"])(
@@ -304,7 +304,7 @@ describe("claude-agent", () => {
           },
         });
 
-        await expect(node.receive({ payload: "hi" })).rejects.toThrow(code);
+        await node.receive({ payload: "hi" });
         expect(node.sent("error")[0].error).toMatchObject({
           name: "AgentRunError",
           subtype: code,
@@ -327,9 +327,7 @@ describe("claude-agent", () => {
         config: { config: mockConfig(), prompt: { type: "str", value: "hi" } },
       });
 
-      await expect(
-        node.receive({ payload: "hi", correlationId: "c-3" }),
-      ).rejects.toThrow("ended_without_result");
+      await node.receive({ payload: "hi", correlationId: "c-3" });
       expect(node.sent("error")[0].error).toMatchObject({
         name: "AgentRunError",
         subtype: "ended_without_result",

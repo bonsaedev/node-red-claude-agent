@@ -13,8 +13,8 @@ importers:
         version: 0.3.187(@anthropic-ai/sdk@0.105.0(zod@4.4.3))(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(zod@4.4.3)
     devDependencies:
       '@bonsae/nrg':
-        specifier: ^0.35.0
-        version: 0.35.0(@types/node@22.20.0)(@typescript-eslint/parser@8.62.0(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.4(jiti@2.6.1))(rollup@4.62.2)(vite@6.4.3(@types/node@22.20.0)(jiti@2.6.1)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9(@types/node@22.20.0)(vite@6.4.3(@types/node@22.20.0)(jiti@2.6.1)(tsx@4.22.4)(yaml@2.9.0)))(vue-eslint-parser@10.4.1(eslint@9.39.4(jiti@2.6.1)))(vue@3.5.38(typescript@5.9.3))
+        specifier: ^0.39.0
+        version: 0.39.0(@types/node@22.20.0)(@typescript-eslint/parser@8.62.0(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.4(jiti@2.6.1))(rollup@4.62.2)(vite@6.4.3(@types/node@22.20.0)(jiti@2.6.1)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9(@types/node@22.20.0)(vite@6.4.3(@types/node@22.20.0)(jiti@2.6.1)(tsx@4.22.4)(yaml@2.9.0)))(vue-eslint-parser@10.4.1(eslint@9.39.4(jiti@2.6.1)))(vue@3.5.38(typescript@5.9.3))
       '@commitlint/cli':
         specifier: ^20.5.0
         version: 20.5.3(@types/node@22.20.0)(conventional-commits-parser@6.4.0)(typescript@5.9.3)
@@ -139,8 +139,8 @@ packages:
     resolution: {integrity: sha512-4zBIxpPzowiZpusoFkyGVwakdRJUyuH5PxQ/PrqghfdFWWasvnCdPfQXHrenDai+gyLARulZjZowCOj6fjT4pA==}
     engines: {node: '>=6.9.0'}
 
-  '@bonsae/nrg@0.35.0':
-    resolution: {integrity: sha512-Vrp7iJFFNpvBRCQWpsw21UmL9JdvEcNM2qLPWepHS0Ti3QT33t9jlf9FqU4L1jqRjM0PLSUpZMkGLyeN8jTXqw==}
+  '@bonsae/nrg@0.39.0':
+    resolution: {integrity: sha512-2aCUNaYZ0j5BANlp4F9MUNOTqCmzWh2ebnh64K4fJRzVCT4MSAW2S9j6802h3J4Xx1ur2eupWJYDOI5GC/Jl3Q==}
     engines: {node: '>=20.19', pnpm: '>=10.11.0'}
     peerDependencies:
       '@vitest/browser-playwright': ^4.0.0
@@ -1938,10 +1938,6 @@ packages:
     resolution: {integrity: sha512-9fSjSaos/fRIVIp+xSJlE6lfwhES7LNtKaCBIamHsjr2na1BiABJPo0mOjjz8GJDURarmCPGqaiVg5mfjb98CQ==}
     engines: {node: '>= 0.4'}
 
-  get-port@7.2.0:
-    resolution: {integrity: sha512-afP4W205ONCuMoPBqcR6PSXnzX35KTcJygfJfcp+QY+uwm3p20p1YczWXhlICIzGMCxYBQcySEcOgsJcrkyobg==}
-    engines: {node: '>=16'}
-
   get-proto@1.0.1:
     resolution: {integrity: sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g==}
     engines: {node: '>= 0.4'}
@@ -3349,7 +3345,7 @@ snapshots:
       '@babel/helper-string-parser': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
 
-  '@bonsae/nrg@0.35.0(@types/node@22.20.0)(@typescript-eslint/parser@8.62.0(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.4(jiti@2.6.1))(rollup@4.62.2)(vite@6.4.3(@types/node@22.20.0)(jiti@2.6.1)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9(@types/node@22.20.0)(vite@6.4.3(@types/node@22.20.0)(jiti@2.6.1)(tsx@4.22.4)(yaml@2.9.0)))(vue-eslint-parser@10.4.1(eslint@9.39.4(jiti@2.6.1)))(vue@3.5.38(typescript@5.9.3))':
+  '@bonsae/nrg@0.39.0(@types/node@22.20.0)(@typescript-eslint/parser@8.62.0(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.4(jiti@2.6.1))(rollup@4.62.2)(vite@6.4.3(@types/node@22.20.0)(jiti@2.6.1)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9(@types/node@22.20.0)(vite@6.4.3(@types/node@22.20.0)(jiti@2.6.1)(tsx@4.22.4)(yaml@2.9.0)))(vue-eslint-parser@10.4.1(eslint@9.39.4(jiti@2.6.1)))(vue@3.5.38(typescript@5.9.3))':
     dependencies:
       '@clack/prompts': 1.6.0
       '@eslint/js': 9.39.4
@@ -3365,7 +3361,6 @@ snapshots:
       eslint: 9.39.4(jiti@2.6.1)
       eslint-config-prettier: 10.1.8(eslint@9.39.4(jiti@2.6.1))
       eslint-plugin-vue: 10.9.2(@typescript-eslint/parser@8.62.0(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.4(jiti@2.6.1))(vue-eslint-parser@10.4.1(eslint@9.39.4(jiti@2.6.1)))
-      get-port: 7.2.0
       globals: 16.5.0
       jsonpointer: 5.0.1
       mime-types: 3.0.2
@@ -5293,8 +5288,6 @@ snapshots:
       has-symbols: 1.1.0
       hasown: 2.0.4
       math-intrinsics: 1.1.0
-
-  get-port@7.2.0: {}
 
   get-proto@1.0.1:
     dependencies:

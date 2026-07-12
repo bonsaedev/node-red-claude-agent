@@ -1,4 +1,10 @@
-import { IONode, type Infer, type Port } from "@bonsae/nrg/server";
+import {
+  IONode,
+  type Infer,
+  type Port,
+  type Input,
+  type Outputs,
+} from "@bonsae/nrg/server";
 import { randomUUID } from "node:crypto";
 import { mkdir } from "node:fs/promises";
 import {
@@ -14,15 +20,17 @@ import { ConfigsSchema } from "../../shared/schemas/claude-agent";
 type Config = Infer<typeof ConfigsSchema>;
 
 /** Incoming message. */
-type Input = {
-  /** Prompt to run (when the prompt source is msg.payload). May also carry a
-   * control message: `{ claudeResponse }` answers an 'ask',
-   * `{ claudeControl: 'interrupt' }` aborts the run. */
-  payload?: unknown;
-  /** Opaque token echoed on every emitted message (under output) so a downstream
-   * router can return each message to the right client/connection. */
-  correlationId?: string;
-};
+type ClaudeAgentInput = Input<
+  Port<{
+    /** Prompt to run (when the prompt source is msg.payload). May also carry a
+     * control message: `{ claudeResponse }` answers an 'ask',
+     * `{ claudeControl: 'interrupt' }` aborts the run. */
+    payload?: unknown;
+    /** Opaque token echoed on every emitted message (under output) so a downstream
+     * router can return each message to the right client/connection. */
+    correlationId?: string;
+  }>
+>;
 
 /** Port `response` — the agent's reply (streamed chunks and/or the final result). */
 type Response = {
@@ -56,10 +64,10 @@ type Ask = {
 };
 
 /** Two named output ports: `response` (index 0) and `ask` (index 1). */
-type Output = {
+type ClaudeAgentOutputs = Outputs<{
   response: Port<Response>;
   ask: Port<Ask>;
-};
+}>;
 
 // The `onUserDialog` channel — the documented way the CLI asks the host to
 // render a blocking dialog (e.g. AskUserQuestion) — derived from the SDK Options
@@ -171,7 +179,12 @@ function extractText(message: unknown): string {
   return "";
 }
 
-export default class ClaudeAgent extends IONode<Config, any, Input, Output> {
+export default class ClaudeAgent extends IONode<
+  Config,
+  any,
+  ClaudeAgentInput,
+  ClaudeAgentOutputs
+> {
   static override readonly type = "claude-agent";
   static override readonly category = "claude";
   static override readonly color = "#FFFFFF";
@@ -242,8 +255,8 @@ export default class ClaudeAgent extends IONode<Config, any, Input, Output> {
     });
   }
 
-  override async input(msg: Input): Promise<void> {
-    const m = msg as Input & {
+  override async input(msg: ClaudeAgentInput): Promise<void> {
+    const m = msg as ClaudeAgentInput & {
       claudeControl?: string;
       claudeResponse?: ClaudeResponse;
       sessionId?: string;
@@ -370,7 +383,7 @@ export default class ClaudeAgent extends IONode<Config, any, Input, Output> {
           shape: "ring",
           text: `awaiting ${kind}`,
         });
-        this.sendToPort(ASK_PORT, {
+        this.send(ASK_PORT, {
           correlationId,
           request: {
             requestId,
@@ -405,7 +418,7 @@ export default class ClaudeAgent extends IONode<Config, any, Input, Output> {
           shape: "ring",
           text: "awaiting question",
         });
-        this.sendToPort(ASK_PORT, {
+        this.send(ASK_PORT, {
           correlationId,
           request: {
             requestId,
@@ -508,7 +521,7 @@ export default class ClaudeAgent extends IONode<Config, any, Input, Output> {
             if (stream && !this.config.includePartial) {
               const text = extractText(message.message);
               if (text) {
-                this.sendToPort(RESPONSE_PORT, {
+                this.send(RESPONSE_PORT, {
                   text,
                   kind: "assistant",
                   sessionId,
@@ -532,7 +545,7 @@ export default class ClaudeAgent extends IONode<Config, any, Input, Output> {
                   ? (event.delta?.text ?? "")
                   : "";
               if (delta) {
-                this.sendToPort(RESPONSE_PORT, {
+                this.send(RESPONSE_PORT, {
                   text: delta,
                   kind: "partial",
                   sessionId,
@@ -546,7 +559,7 @@ export default class ClaudeAgent extends IONode<Config, any, Input, Output> {
             sessionId = message.session_id ?? sessionId;
             sawResult = true;
             if (message.subtype === "success") {
-              this.sendToPort(RESPONSE_PORT, {
+              this.send(RESPONSE_PORT, {
                 text: message.result,
                 kind: "result",
                 sessionId,
