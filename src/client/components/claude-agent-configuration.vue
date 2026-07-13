@@ -1,17 +1,13 @@
 <script setup lang="ts">
-import { computed, ref, onMounted } from "vue";
+import { computed } from "vue";
 import { useFormNode } from "@bonsae/nrg/client";
 import type {
   ConfigsSchema,
   CredentialsSchema,
 } from "../../shared/schemas/claude-agent-configuration";
-import {
-  claudeAgentApi,
-  type FolderStatus,
-  type UploadFile,
-  type UploadMode,
-} from "../api/claude-agent";
+import type { FolderStatus } from "../api/claude-agent";
 import { ANTHROPIC_MODELS } from "../../shared/models";
+import ClaudeFolderUpload from "./upload/claude-folder-upload.vue";
 
 const { node } = useFormNode<typeof ConfigsSchema, typeof CredentialsSchema>();
 
@@ -82,123 +78,15 @@ function modelOptions(current: string | undefined, emptyLabel: string) {
   ];
 }
 
-// ── Uploaded .claude folder ───────────────────────────────────────────────
-// Only CLAUDE.md, .claude/** and .mcp.json are kept; everything else is dropped.
-const KEEP = (rel: string) =>
-  rel === "CLAUDE.md" || rel === ".mcp.json" || rel.startsWith(".claude/");
-
-const folderStatus = ref<FolderStatus | null>(null);
-const pending = ref<Array<UploadFile & { size: number }>>([]);
-const droppedCount = ref(0);
-const uploadMode = ref<UploadMode>("overwrite");
-const busy = ref(false);
-
-const humanBytes = (n: number) =>
-  n < 1024
-    ? `${n} B`
-    : n < 1048576
-      ? `${(n / 1024).toFixed(1)} KB`
-      : `${(n / 1048576).toFixed(1)} MB`;
-
-const fmtDate = (iso: string | null) =>
-  iso ? new Date(iso).toLocaleString() : "";
-
-function fileToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const r = reader.result as string;
-      resolve(r.slice(r.indexOf(",") + 1));
-    };
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
-  });
-}
-
-async function onPickFolder(event: Event) {
-  const input = event.target as HTMLInputElement;
-  const files = Array.from(input.files ?? []);
-  const kept: Array<UploadFile & { size: number }> = [];
-  let dropped = 0;
-  for (const file of files) {
-    // webkitRelativePath is "<picked-folder>/rest…"; strip the top segment.
-    const raw = (file as File & { webkitRelativePath?: string })
-      .webkitRelativePath;
-    const rel = (raw || file.name).split("/").slice(1).join("/") || file.name;
-    if (!KEEP(rel)) {
-      dropped++;
-      continue;
-    }
-    kept.push({
-      path: rel,
-      contentBase64: await fileToBase64(file),
-      size: file.size,
-    });
-  }
-  pending.value = kept;
-  droppedCount.value = dropped;
-  input.value = ""; // allow re-picking the same folder
-}
-
-const pendingBytes = computed(() =>
-  pending.value.reduce((sum, f) => sum + f.size, 0),
-);
-
-async function doUpload() {
-  if (!node.id || pending.value.length === 0) return;
-  busy.value = true;
-  try {
-    const status = await claudeAgentApi.upload(
-      node.id,
-      pending.value.map((f) => ({
-        path: f.path,
-        contentBase64: f.contentBase64,
-      })),
-      uploadMode.value,
-    );
-    applyStatus(status);
-    pending.value = [];
-    droppedCount.value = 0;
-    RED.notify(`Uploaded .claude (${status.fileCount} files)`, "success");
-  } catch (err) {
-    RED.notify(`Upload failed: ${(err as Error).message}`, "error");
-  } finally {
-    busy.value = false;
-  }
-}
-
-async function doRemove() {
-  if (!node.id) return;
-  busy.value = true;
-  try {
-    await claudeAgentApi.clear(node.id);
-    applyStatus({ exists: false, fileCount: 0, bytes: 0, uploadedAt: null });
-    RED.notify("Removed the uploaded .claude folder", "success");
-  } catch (err) {
-    RED.notify(`Remove failed: ${(err as Error).message}`, "error");
-  } finally {
-    busy.value = false;
-  }
-}
-
-// Mirror the on-disk status into the node config so the flow can tell an upload
-// exists (contents stay on disk; only this metadata travels with the flow).
-function applyStatus(status: FolderStatus) {
-  folderStatus.value = status;
+// Mirror the uploaded-folder status into the node config so the flow can tell an
+// upload exists (contents stay on disk; only this metadata travels with the
+// flow). ClaudeFolderUpload owns the pick/upload/remove UI and reports here.
+function applyStatus(status: FolderStatus): void {
   node.claudeFolderUploaded = status.exists;
   node.claudeFolderFileCount = status.fileCount;
   node.claudeFolderBytes = status.bytes;
   node.claudeFolderUploadedAt = status.uploadedAt ?? "";
 }
-
-onMounted(async () => {
-  if (!node.id) return;
-  try {
-    folderStatus.value = await claudeAgentApi.getStatus(node.id);
-  } catch {
-    // no server route yet (fresh node) — leave status null
-  }
-});
 </script>
 
 <template>
@@ -354,9 +242,7 @@ onMounted(async () => {
 
   <!-- Claude Code preset → append box -->
   <div v-if="node.systemPromptPreset === 'claude_code'" class="form-row">
-    <label class="cc-label"
-      ><i class="fa fa-plus"></i> {{ t("configs.appendSystemPrompt") }}</label
-    >
+    <NodeRedInputLabel :label="t('configs.appendSystemPrompt')" icon="plus" />
     <textarea
       v-model="node.appendSystemPrompt"
       class="cc-textarea"
@@ -372,9 +258,7 @@ onMounted(async () => {
 
   <!-- Custom preset → full prompt box -->
   <div v-else-if="node.systemPromptPreset === 'custom'" class="form-row">
-    <label class="cc-label"
-      ><i class="fa fa-pencil"></i> {{ t("configs.customSystemPrompt") }}</label
-    >
+    <NodeRedInputLabel :label="t('configs.customSystemPrompt')" icon="pencil" />
     <textarea
       v-model="node.customSystemPrompt"
       class="cc-textarea"
@@ -422,84 +306,7 @@ onMounted(async () => {
 
   <!-- Upload a .claude folder (stored per node; fed to the run via cwd) -->
   <div class="form-row">
-    <label class="cc-label"
-      ><i class="fa fa-upload"></i> {{ t("upload.label") }}</label
-    >
-    <input
-      type="file"
-      webkitdirectory
-      multiple
-      :disabled="busy || !node.id"
-      @change="onPickFolder"
-    />
-    <div class="cc-tip">
-      <i class="fa fa-info-circle"></i> Pick your project folder (or the
-      <code>.claude</code> folder itself). Only <code>CLAUDE.md</code>,
-      <code>.claude/</code> and <code>.mcp.json</code> are kept and used for
-      this node's runs.
-      <strong
-        >Uploaded scripts (hooks, commands, skills) can run during a
-        session</strong
-      >
-      — only upload content you trust.
-    </div>
-
-    <div v-if="!node.id" class="cc-tip">
-      <i class="fa fa-info-circle"></i> Deploy the node once to enable upload.
-    </div>
-
-    <div v-if="folderStatus && folderStatus.exists" class="cc-tip">
-      <i class="fa fa-check-circle" style="color: #22c55e"></i> Uploaded:
-      {{ folderStatus.fileCount }} files ({{ humanBytes(folderStatus.bytes) }})
-      <span v-if="folderStatus.uploadedAt">
-        · {{ fmtDate(folderStatus.uploadedAt) }}</span
-      >
-    </div>
-
-    <div v-if="pending.length" class="cc-tip">
-      Selected {{ pending.length }} files ({{ humanBytes(pendingBytes) }})
-      <span v-if="droppedCount"
-        >· {{ droppedCount }} ignored (outside .claude)</span
-      >
-      <div style="margin-top: 6px; display: flex; gap: 12px">
-        <label
-          ><input v-model="uploadMode" type="radio" value="overwrite" />
-          {{ t("upload.replace") }}</label
-        >
-        <label
-          ><input v-model="uploadMode" type="radio" value="merge" />
-          {{ t("upload.merge") }}</label
-        >
-      </div>
-    </div>
-
-    <div style="margin-top: 6px; display: flex; gap: 8px">
-      <button
-        type="button"
-        class="red-ui-button"
-        :disabled="busy || !pending.length || !node.id"
-        @click="doUpload"
-      >
-        <i class="fa fa-upload"></i>
-        {{ busy ? t("upload.uploading") : t("upload.upload") }}
-      </button>
-      <button
-        v-if="folderStatus && folderStatus.exists"
-        type="button"
-        class="red-ui-button"
-        :disabled="busy"
-        @click="doRemove"
-      >
-        <i class="fa fa-trash"></i> {{ t("upload.remove") }}
-      </button>
-    </div>
-
-    <div class="cc-tip">
-      <i class="fa fa-info-circle"></i> Used automatically when the node runs:
-      if a Working folder is set above, these files are copied into it;
-      otherwise the assistant runs in a private per-node folder holding just
-      this upload.
-    </div>
+    <ClaudeFolderUpload :node-id="node.id" :t="t" @change="applyStatus" />
   </div>
 
   <!-- ───────── Tools &amp; permissions ───────── -->
@@ -515,9 +322,7 @@ onMounted(async () => {
   </div>
 
   <div class="form-row">
-    <label class="cc-label"
-      ><i class="fa fa-check"></i> {{ t("configs.allowedTools") }}</label
-    >
+    <NodeRedInputLabel :label="t('configs.allowedTools')" icon="check" />
     <textarea
       v-model="node.allowedTools"
       class="cc-textarea"
@@ -531,9 +336,7 @@ onMounted(async () => {
   </div>
 
   <div class="form-row">
-    <label class="cc-label"
-      ><i class="fa fa-ban"></i> {{ t("configs.disallowedTools") }}</label
-    >
+    <NodeRedInputLabel :label="t('configs.disallowedTools')" icon="ban" />
     <textarea
       v-model="node.disallowedTools"
       class="cc-textarea"
@@ -574,10 +377,10 @@ onMounted(async () => {
   </div>
 
   <div class="form-row">
-    <label class="cc-label"
-      ><i class="fa fa-folder-open-o"></i>
-      {{ t("configs.additionalDirectories") }}</label
-    >
+    <NodeRedInputLabel
+      :label="t('configs.additionalDirectories')"
+      icon="folder-open-o"
+    />
     <textarea
       v-model="node.additionalDirectories"
       class="cc-textarea"
@@ -594,10 +397,10 @@ onMounted(async () => {
   <div class="cc-section">{{ t("sections.advanced") }}</div>
 
   <div class="form-row">
-    <label class="cc-label"
-      ><i class="fa fa-comments-o"></i>
-      {{ t("configs.supportedDialogKinds") }}</label
-    >
+    <NodeRedInputLabel
+      :label="t('configs.supportedDialogKinds')"
+      icon="comments-o"
+    />
     <textarea
       v-model="node.supportedDialogKinds"
       class="cc-textarea"
@@ -619,11 +422,6 @@ onMounted(async () => {
   padding-bottom: 4px;
   border-bottom: 1px solid var(--red-ui-secondary-border-color, #ddd);
   color: var(--red-ui-header-text-color, #333);
-}
-.cc-label {
-  display: block;
-  margin-bottom: 4px;
-  font-weight: 500;
 }
 .cc-textarea {
   width: 100%;

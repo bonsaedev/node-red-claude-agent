@@ -22,7 +22,7 @@
   },
   "options": {
     "provider": {
-      "anthropic": "Anthropic (API key or subscription)",
+      "anthropic": "Anthropic",
       "bedrock": "Amazon Bedrock",
       "vertex": "Google Vertex AI",
       "foundry": "Microsoft Azure Foundry"
@@ -33,7 +33,7 @@
       "claudeCodeLogin": "Claude subscription (this computer's login)"
     },
     "systemPromptPreset": {
-      "claude_code": "Claude Code (full coding assistant)",
+      "claude_code": "Claude Code (full agent)",
       "custom": "Custom (write your own)",
       "minimal": "Minimal (no preset)"
     },
@@ -68,7 +68,8 @@
     "uploading": "Uploading…",
     "remove": "Remove",
     "replace": "Replace",
-    "merge": "Merge"
+    "merge": "Merge",
+    "cancel": "Cancel"
   },
   "credentials": {
     "apiKey": "API key",
