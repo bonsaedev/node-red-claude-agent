@@ -223,8 +223,8 @@ function applyStatus(status: FolderStatus): void {
     <div class="cc-tip">
       <i class="fa fa-info-circle"></i> How hard the model thinks — higher means
       deeper reasoning and more tokens. Default lets the SDK decide;
-      <code>xhigh</code> suits agentic/coding work, <code>max</code> when
-      correctness matters most.
+      <code>xhigh</code> suits agentic work, <code>max</code> when correctness
+      matters most.
     </div>
   </div>
 
@@ -250,9 +250,10 @@ function applyStatus(status: FolderStatus): void {
       placeholder="Added on top of the Claude Code prompt — house rules, tone, things it should always do."
     ></textarea>
     <div class="cc-tip">
-      <i class="fa fa-info-circle"></i> Claude Code gives the assistant the full
-      terminal-agent behaviour. This box <em>adds</em> your instructions on top
-      — leave it empty to use Claude Code as-is.
+      <i class="fa fa-info-circle"></i> Claude Code gives the assistant its full
+      set of tools — reading and writing files, running commands, browsing the
+      web — for any task. This box <em>adds</em> your instructions on top —
+      leave it empty to use it as-is.
     </div>
   </div>
 

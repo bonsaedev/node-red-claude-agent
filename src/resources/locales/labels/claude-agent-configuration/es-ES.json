@@ -22,18 +22,18 @@
   },
   "options": {
     "provider": {
-      "anthropic": "Anthropic (clave de API o suscripción)",
+      "anthropic": "Anthropic",
       "bedrock": "Amazon Bedrock",
       "vertex": "Google Vertex AI",
       "foundry": "Microsoft Azure Foundry"
     },
     "authMethod": {
-      "apiKey": "Clave de API (pago por uso)",
+      "apiKey": "Clave de API",
       "subscriptionToken": "Suscripción de Claude (pegar token)",
       "claudeCodeLogin": "Suscripción de Claude (inicio de sesión de este equipo)"
     },
     "systemPromptPreset": {
-      "claude_code": "Claude Code (asistente de programación completo)",
+      "claude_code": "Claude Code (agente completo)",
       "custom": "Personalizado (escribe el tuyo)",
       "minimal": "Mínimo (sin preajuste)"
     },
@@ -68,7 +68,8 @@
     "uploading": "Subiendo…",
     "remove": "Eliminar",
     "replace": "Reemplazar",
-    "merge": "Combinar"
+    "merge": "Combinar",
+    "cancel": "Cancelar"
   },
   "credentials": {
     "apiKey": "Clave de API",

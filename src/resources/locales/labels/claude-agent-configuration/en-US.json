@@ -28,7 +28,7 @@
       "foundry": "Microsoft Azure Foundry"
     },
     "authMethod": {
-      "apiKey": "API key (pay per use)",
+      "apiKey": "API key",
       "subscriptionToken": "Claude subscription (paste token)",
       "claudeCodeLogin": "Claude subscription (this computer's login)"
     },

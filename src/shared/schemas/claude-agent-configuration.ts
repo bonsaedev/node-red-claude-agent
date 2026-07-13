@@ -84,7 +84,7 @@ export const ConfigsSchema = defineSchema(
       {
         default: "claude_code",
         description:
-          "Which built-in behavior the assistant starts from. 'Claude Code' acts like the coding assistant in the terminal; 'Custom' lets you write your own instructions; 'Minimal' starts with none.",
+          "Which built-in behavior the assistant starts from. 'Claude Code' is the full-capability agent — it reads and writes files, runs commands, and browses the web for research, writing, data, automation, and coding; 'Custom' lets you write your own instructions; 'Minimal' starts with none.",
         "x-nrg-form": { icon: "file-text-o" },
       },
     ),
