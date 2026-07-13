@@ -29,8 +29,8 @@
     },
     "authMethod": {
       "apiKey": "API key",
-      "subscriptionToken": "Claude subscription (paste token)",
-      "claudeCodeLogin": "Claude subscription (this computer's login)"
+      "subscriptionToken": "Claude subscription (OAuth token)",
+      "claudeCodeLogin": "Claude subscription (local login)"
     },
     "systemPromptPreset": {
       "claude_code": "Claude Code (full agent)",

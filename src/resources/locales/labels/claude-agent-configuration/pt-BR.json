@@ -29,8 +29,8 @@
     },
     "authMethod": {
       "apiKey": "Chave de API",
-      "subscriptionToken": "Assinatura Claude (colar token)",
-      "claudeCodeLogin": "Assinatura Claude (login deste computador)"
+      "subscriptionToken": "Assinatura Claude (token OAuth)",
+      "claudeCodeLogin": "Assinatura Claude (login local)"
     },
     "systemPromptPreset": {
       "claude_code": "Claude Code (agente completo)",

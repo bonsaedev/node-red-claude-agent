@@ -29,8 +29,8 @@
     },
     "authMethod": {
       "apiKey": "APIキー",
-      "subscriptionToken": "Claude サブスクリプション（トークンを貼り付け）",
-      "claudeCodeLogin": "Claude サブスクリプション（このコンピューターのログイン）"
+      "subscriptionToken": "Claude サブスクリプション（OAuthトークン）",
+      "claudeCodeLogin": "Claude サブスクリプション（ローカルログイン）"
     },
     "systemPromptPreset": {
       "claude_code": "Claude Code（フル機能のエージェント）",

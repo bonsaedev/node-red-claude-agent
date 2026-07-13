@@ -29,8 +29,8 @@
     },
     "authMethod": {
       "apiKey": "API 金鑰",
-      "subscriptionToken": "Claude 訂閱（貼上權杖）",
-      "claudeCodeLogin": "Claude 訂閱（此電腦的登入）"
+      "subscriptionToken": "Claude 訂閱（OAuth 權杖）",
+      "claudeCodeLogin": "Claude 訂閱（本機登入）"
     },
     "systemPromptPreset": {
       "claude_code": "Claude Code（完整智慧代理）",

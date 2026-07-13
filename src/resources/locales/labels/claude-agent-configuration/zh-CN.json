@@ -29,7 +29,7 @@
     },
     "authMethod": {
       "apiKey": "API 密钥",
-      "subscriptionToken": "Claude 订阅（粘贴令牌）",
+      "subscriptionToken": "Claude 订阅（OAuth 令牌）",
       "claudeCodeLogin": "Claude 订阅（本机登录）"
     },
     "systemPromptPreset": {

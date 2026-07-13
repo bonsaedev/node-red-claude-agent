@@ -29,8 +29,8 @@
     },
     "authMethod": {
       "apiKey": "API 키",
-      "subscriptionToken": "Claude 구독 (토큰 붙여넣기)",
-      "claudeCodeLogin": "Claude 구독 (이 컴퓨터의 로그인)"
+      "subscriptionToken": "Claude 구독 (OAuth 토큰)",
+      "claudeCodeLogin": "Claude 구독 (로컬 로그인)"
     },
     "systemPromptPreset": {
       "claude_code": "Claude Code (완전한 에이전트)",

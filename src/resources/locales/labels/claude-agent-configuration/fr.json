@@ -29,8 +29,8 @@
     },
     "authMethod": {
       "apiKey": "Clé API",
-      "subscriptionToken": "Abonnement Claude (coller le jeton)",
-      "claudeCodeLogin": "Abonnement Claude (connexion de cet ordinateur)"
+      "subscriptionToken": "Abonnement Claude (jeton OAuth)",
+      "claudeCodeLogin": "Abonnement Claude (connexion locale)"
     },
     "systemPromptPreset": {
       "claude_code": "Claude Code (agent complet)",

@@ -29,8 +29,8 @@
     },
     "authMethod": {
       "apiKey": "Clave de API",
-      "subscriptionToken": "Suscripción de Claude (pegar token)",
-      "claudeCodeLogin": "Suscripción de Claude (inicio de sesión de este equipo)"
+      "subscriptionToken": "Suscripción de Claude (token OAuth)",
+      "claudeCodeLogin": "Suscripción de Claude (inicio de sesión local)"
     },
     "systemPromptPreset": {
       "claude_code": "Claude Code (agente completo)",

@@ -29,8 +29,8 @@
     },
     "authMethod": {
       "apiKey": "API-ключ",
-      "subscriptionToken": "Подписка Claude (вставьте токен)",
-      "claudeCodeLogin": "Подписка Claude (вход с этого компьютера)"
+      "subscriptionToken": "Подписка Claude (OAuth-токен)",
+      "claudeCodeLogin": "Подписка Claude (локальный вход)"
     },
     "systemPromptPreset": {
       "claude_code": "Claude Code (полноценный агент)",
