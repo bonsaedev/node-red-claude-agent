@@ -1,5 +1,8 @@
 {
   "label": "Claude agent configuration",
+  "links": {
+    "learnMore": "Learn more"
+  },
   "configs": {
     "name": "Name",
     "provider": "Provider",

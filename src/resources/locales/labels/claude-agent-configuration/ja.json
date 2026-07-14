@@ -1,5 +1,8 @@
 {
   "label": "Claude エージェント設定",
+  "links": {
+    "learnMore": "詳細"
+  },
   "configs": {
     "name": "名前",
     "provider": "プロバイダー",

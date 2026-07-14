@@ -1,5 +1,8 @@
 {
   "label": "Claude 에이전트 구성",
+  "links": {
+    "learnMore": "자세히 보기"
+  },
   "configs": {
     "name": "이름",
     "provider": "공급자",

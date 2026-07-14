@@ -1,5 +1,8 @@
 {
   "label": "Configuração do agente Claude",
+  "links": {
+    "learnMore": "Saiba mais"
+  },
   "configs": {
     "name": "Nome",
     "provider": "Provedor",

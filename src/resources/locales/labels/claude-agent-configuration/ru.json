@@ -1,5 +1,8 @@
 {
   "label": "Конфигурация агента Claude",
+  "links": {
+    "learnMore": "Подробнее"
+  },
   "configs": {
     "name": "Имя",
     "provider": "Провайдер",

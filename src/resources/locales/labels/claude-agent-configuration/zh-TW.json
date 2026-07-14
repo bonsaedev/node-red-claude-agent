@@ -1,5 +1,8 @@
 {
   "label": "Claude 代理組態",
+  "links": {
+    "learnMore": "瞭解更多"
+  },
   "configs": {
     "name": "名稱",
     "provider": "供應商",

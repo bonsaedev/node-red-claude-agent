@@ -1,5 +1,8 @@
 {
   "label": "Claude 智能体配置",
+  "links": {
+    "learnMore": "了解更多"
+  },
   "configs": {
     "name": "名称",
     "provider": "提供商",

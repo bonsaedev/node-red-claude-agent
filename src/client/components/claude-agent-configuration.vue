@@ -15,8 +15,22 @@ const { node } = useFormNode<typeof ConfigsSchema, typeof CredentialsSchema>();
 if (!node.credentials) node.credentials = {};
 
 // Translate against this node's locale catalog (configs.* / options.* /
-// credentials.* live in src/resources/locales/labels/claude-agent-configuration).
+// credentials.* / links.* live in src/resources/locales/labels/claude-agent-configuration).
 const t = (key: string): string => node._(`claude-agent-configuration.${key}`);
+
+// Official Claude Agent SDK / Claude Code documentation, one reference per
+// section — the page that documents that section's options. Rendered as a
+// "Learn more" link on each section heading.
+const DOCS = {
+  signIn: "https://code.claude.com/docs/en/agent-sdk/overview",
+  model: "https://code.claude.com/docs/en/agent-sdk/typescript",
+  assistant:
+    "https://code.claude.com/docs/en/agent-sdk/modifying-system-prompts",
+  workspace: "https://code.claude.com/docs/en/agent-sdk/claude-code-features",
+  tools: "https://code.claude.com/docs/en/agent-sdk/permissions",
+  limits: "https://code.claude.com/docs/en/agent-sdk/typescript",
+  advanced: "https://code.claude.com/docs/en/agent-sdk/user-input",
+} as const;
 
 const providers = computed(() => [
   { value: "anthropic", label: t("options.provider.anthropic") },
@@ -99,7 +113,16 @@ function applyStatus(status: FolderStatus): void {
   </div>
 
   <!-- ───────── Sign-in ───────── -->
-  <div class="cc-section">{{ t("sections.signIn") }}</div>
+  <div class="cc-section">
+    <span>{{ t("sections.signIn") }}</span>
+    <a
+      class="cc-doc-link"
+      :href="DOCS.signIn"
+      target="_blank"
+      rel="noopener noreferrer"
+      >{{ t("links.learnMore") }} ↗</a
+    >
+  </div>
 
   <div class="form-row">
     <NodeRedSelectInput
@@ -162,7 +185,16 @@ function applyStatus(status: FolderStatus): void {
   </div>
 
   <!-- ───────── Model ───────── -->
-  <div class="cc-section">{{ t("sections.model") }}</div>
+  <div class="cc-section">
+    <span>{{ t("sections.model") }}</span>
+    <a
+      class="cc-doc-link"
+      :href="DOCS.model"
+      target="_blank"
+      rel="noopener noreferrer"
+      >{{ t("links.learnMore") }} ↗</a
+    >
+  </div>
 
   <!-- Anthropic: curated model dropdowns (empty = SDK default) -->
   <template v-if="node.provider === 'anthropic'">
@@ -229,7 +261,16 @@ function applyStatus(status: FolderStatus): void {
   </div>
 
   <!-- ───────── Assistant behaviour ───────── -->
-  <div class="cc-section">{{ t("sections.assistant") }}</div>
+  <div class="cc-section">
+    <span>{{ t("sections.assistant") }}</span>
+    <a
+      class="cc-doc-link"
+      :href="DOCS.assistant"
+      target="_blank"
+      rel="noopener noreferrer"
+      >{{ t("links.learnMore") }} ↗</a
+    >
+  </div>
 
   <div class="form-row">
     <NodeRedSelectInput
@@ -279,7 +320,16 @@ function applyStatus(status: FolderStatus): void {
   </div>
 
   <!-- ───────── Working folder & project settings ───────── -->
-  <div class="cc-section">{{ t("sections.workspace") }}</div>
+  <div class="cc-section">
+    <span>{{ t("sections.workspace") }}</span>
+    <a
+      class="cc-doc-link"
+      :href="DOCS.workspace"
+      target="_blank"
+      rel="noopener noreferrer"
+      >{{ t("links.learnMore") }} ↗</a
+    >
+  </div>
 
   <div class="form-row">
     <NodeRedInput
@@ -311,7 +361,16 @@ function applyStatus(status: FolderStatus): void {
   </div>
 
   <!-- ───────── Tools &amp; permissions ───────── -->
-  <div class="cc-section">{{ t("sections.tools") }}</div>
+  <div class="cc-section">
+    <span>{{ t("sections.tools") }}</span>
+    <a
+      class="cc-doc-link"
+      :href="DOCS.tools"
+      target="_blank"
+      rel="noopener noreferrer"
+      >{{ t("links.learnMore") }} ↗</a
+    >
+  </div>
 
   <div class="form-row">
     <NodeRedSelectInput
@@ -351,7 +410,16 @@ function applyStatus(status: FolderStatus): void {
   </div>
 
   <!-- ───────── Limits ───────── -->
-  <div class="cc-section">{{ t("sections.limits") }}</div>
+  <div class="cc-section">
+    <span>{{ t("sections.limits") }}</span>
+    <a
+      class="cc-doc-link"
+      :href="DOCS.limits"
+      target="_blank"
+      rel="noopener noreferrer"
+      >{{ t("links.learnMore") }} ↗</a
+    >
+  </div>
 
   <div class="form-row">
     <NodeRedInput
@@ -395,7 +463,16 @@ function applyStatus(status: FolderStatus): void {
   </div>
 
   <!-- ───────── Advanced ───────── -->
-  <div class="cc-section">{{ t("sections.advanced") }}</div>
+  <div class="cc-section">
+    <span>{{ t("sections.advanced") }}</span>
+    <a
+      class="cc-doc-link"
+      :href="DOCS.advanced"
+      target="_blank"
+      rel="noopener noreferrer"
+      >{{ t("links.learnMore") }} ↗</a
+    >
+  </div>
 
   <div class="form-row">
     <NodeRedInputLabel
@@ -417,12 +494,22 @@ function applyStatus(status: FolderStatus): void {
 
 <style scoped>
 .cc-section {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
   font-weight: 600;
   font-size: 0.95em;
   margin: 16px 0 8px;
   padding-bottom: 4px;
   border-bottom: 1px solid var(--red-ui-secondary-border-color, #ddd);
   color: var(--red-ui-header-text-color, #333);
+}
+.cc-doc-link {
+  font-weight: 400;
+  font-size: 12px;
+  white-space: nowrap;
+  flex: none;
 }
 .cc-textarea {
   width: 100%;
