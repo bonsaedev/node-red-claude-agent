@@ -26,9 +26,11 @@
     "lint": "eslint src/ --fix",
     "format": "prettier --write \"src/**/*.{ts,vue,json}\"",
     "test": "pnpm test:server",
-    "test:server": "pnpm test:server:unit",
+    "test:server": "pnpm test:server:unit && pnpm test:server:integration",
     "test:server:unit": "vitest run --config vitest.server.unit.config.ts",
     "test:server:unit:watch": "vitest --config vitest.server.unit.config.ts",
+    "test:server:integration": "vitest run --config vitest.server.integration.config.ts",
+    "test:server:integration:watch": "vitest --config vitest.server.integration.config.ts",
     "prepare": "husky"
   },
   "lint-staged": {
