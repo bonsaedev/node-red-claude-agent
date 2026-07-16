@@ -1,0 +1,20 @@
+{
+  "label": "MCP tool out",
+  "configs": {
+    "name": "Name",
+    "format": "Return format",
+    "errorPort": "Error port",
+    "completePort": "Complete port",
+    "statusPort": "Status port"
+  },
+  "options": {
+    "format": {
+      "text": "Text (a plain text block)",
+      "json": "JSON (machine-readable structured content)"
+    }
+  },
+  "input": {
+    "label": "Return",
+    "description": "The flow's answer to an MCP tool call. The value rides msg.output.payload; set msg.output.isError to return an error to the client."
+  }
+}

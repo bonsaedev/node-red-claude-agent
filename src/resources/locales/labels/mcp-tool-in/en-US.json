@@ -1,0 +1,20 @@
+{
+  "label": "MCP tool in",
+  "configs": {
+    "name": "Tool name",
+    "server": "Server",
+    "description": "Description",
+    "params": "Parameters",
+    "timeoutSeconds": "Timeout (seconds)",
+    "readOnly": "Read-only",
+    "errorPort": "Error port",
+    "completePort": "Complete port",
+    "statusPort": "Status port"
+  },
+  "outputs": {
+    "call": {
+      "label": "Call",
+      "description": "Fires when a client calls this tool — carries the tool arguments under payload. Wire the flow's answer back to an MCP tool out node."
+    }
+  }
+}

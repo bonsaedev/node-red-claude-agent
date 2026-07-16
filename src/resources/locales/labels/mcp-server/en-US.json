@@ -1,0 +1,8 @@
+{
+  "label": "MCP server",
+  "configs": {
+    "name": "Name",
+    "serverName": "Server name",
+    "path": "HTTP path"
+  }
+}
