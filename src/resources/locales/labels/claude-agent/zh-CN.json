@@ -25,5 +25,19 @@
       "plan": "仅规划（不做更改）",
       "dontAsk": "不询问（无提示直接继续）"
     }
+  },
+  "input": {
+    "label": "提示词",
+    "description": "要运行的提示词（来自 msg.payload）。也可以携带控制消息，用于回答待处理的提问或中止运行。"
+  },
+  "outputs": {
+    "response": {
+      "label": "响应",
+      "description": "代理的回复 — 流式片段和/或最终结果。"
+    },
+    "ask": {
+      "label": "提问",
+      "description": "Claude 正在等待的交互式请求 — 权限批准或问题。"
+    }
   }
 }

@@ -25,5 +25,19 @@
       "plan": "僅規劃（不做變更）",
       "dontAsk": "不詢問（無提示直接繼續）"
     }
+  },
+  "input": {
+    "label": "提示詞",
+    "description": "要執行的提示詞（來自 msg.payload）。也可以攜帶控制訊息，用於回答待處理的提問或中止執行。"
+  },
+  "outputs": {
+    "response": {
+      "label": "回應",
+      "description": "代理的回覆 — 串流片段和/或最終結果。"
+    },
+    "ask": {
+      "label": "提問",
+      "description": "Claude 正在等待的互動式請求 — 權限核准或問題。"
+    }
   }
 }

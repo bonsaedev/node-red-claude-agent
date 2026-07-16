@@ -25,5 +25,19 @@
       "plan": "Planifier uniquement (aucune modification)",
       "dontAsk": "Ne pas demander (continuer sans invite)"
     }
+  },
+  "input": {
+    "label": "Invite",
+    "description": "L'invite à exécuter (depuis msg.payload). Peut aussi porter un message de contrôle qui répond à une demande en attente ou interrompt l'exécution."
+  },
+  "outputs": {
+    "response": {
+      "label": "Réponse",
+      "description": "La réponse de l'agent — fragments en streaming et/ou le résultat final."
+    },
+    "ask": {
+      "label": "Demande",
+      "description": "Une requête interactive en attente de Claude — une approbation d'autorisation ou une question."
+    }
   }
 }

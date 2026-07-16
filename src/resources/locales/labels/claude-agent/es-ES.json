@@ -25,5 +25,19 @@
       "plan": "Solo planificar (sin hacer cambios)",
       "dontAsk": "No preguntar (continuar sin avisos)"
     }
+  },
+  "input": {
+    "label": "Prompt",
+    "description": "El prompt a ejecutar (desde msg.payload). También puede llevar un mensaje de control que responde a una consulta pendiente o aborta la ejecución."
+  },
+  "outputs": {
+    "response": {
+      "label": "Respuesta",
+      "description": "La respuesta del agente: fragmentos en streaming y/o el resultado final."
+    },
+    "ask": {
+      "label": "Consulta",
+      "description": "Una solicitud interactiva que Claude está esperando: una aprobación de permiso o una pregunta."
+    }
   }
 }

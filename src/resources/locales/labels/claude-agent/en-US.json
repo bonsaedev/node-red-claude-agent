@@ -25,5 +25,19 @@
       "plan": "Plan only (make no changes)",
       "dontAsk": "Don't ask (proceed without prompts)"
     }
+  },
+  "input": {
+    "label": "Prompt",
+    "description": "The prompt to run (from msg.payload). Can also carry a control message that answers a pending Ask or interrupts the run."
+  },
+  "outputs": {
+    "response": {
+      "label": "Response",
+      "description": "The agent's reply — streamed chunks and/or the final result."
+    },
+    "ask": {
+      "label": "Ask",
+      "description": "An interactive request Claude is waiting on — a permission approval or a question."
+    }
   }
 }

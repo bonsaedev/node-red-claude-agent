@@ -25,5 +25,19 @@
       "plan": "Nur planen (keine Änderungen)",
       "dontAsk": "Nicht nachfragen (ohne Rückfragen fortfahren)"
     }
+  },
+  "input": {
+    "label": "Prompt",
+    "description": "Der auszuführende Prompt (aus msg.payload). Kann auch eine Steuernachricht enthalten, die eine offene Rückfrage beantwortet oder den Lauf abbricht."
+  },
+  "outputs": {
+    "response": {
+      "label": "Antwort",
+      "description": "Die Antwort des Agenten – gestreamte Teile und/oder das Endergebnis."
+    },
+    "ask": {
+      "label": "Rückfrage",
+      "description": "Eine interaktive Anfrage, auf die Claude wartet – eine Berechtigungsfreigabe oder eine Frage."
+    }
   }
 }
