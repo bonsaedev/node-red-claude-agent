@@ -12,13 +12,32 @@
 
 Run **Claude as an autonomous agent** inside your Node-RED flows. These nodes wrap the [Claude Agent SDK](https://code.claude.com/docs/en/agent-sdk/overview) — the same agent loop and built-in tools that power Claude Code in the terminal (read/write files, run commands, search the web) — so a flow sends a prompt, the agent does the work, and the result comes back.
 
-## Quick start
+## Nodes
 
-> Not on npm yet — build from source for now. _(Once published: in Node-RED, **Manage Palette → Install → `@bonsae/node-red-claude-agent`**.)_
+| Node | Description |
+| --- | --- |
+| **Claude Agent** | Runs Claude as an autonomous agent once per incoming message — prompt in, result out |
+| **Claude Agent Configuration** | Config node holding auth and the options every agent run shares (provider, model, permission mode, tools, working directory) |
+
+## Prerequisites
+
+- [Node.js](https://nodejs.org/) >= 22
+- [Node-RED](https://nodered.org/) >= 5
+- An **Anthropic API key** (`sk-ant-…`), a Claude Pro/Max **subscription token**, or a local `claude /login` — see [Authentication](#authentication)
+
+## Installation
+
+Not on npm yet — build from source:
 
 ```bash
-pnpm install && pnpm build && pnpm dev   # opens a Node-RED editor with the nodes loaded
+git clone https://github.com/bonsaedev/node-red-claude-agent
+cd node-red-claude-agent
+pnpm install && pnpm build
 ```
+
+Install the built package into your Node-RED user directory (`~/.node-red`), then **restart Node-RED**. Or run `pnpm dev` from the repo to open a Node-RED editor with the nodes already loaded. _Once published:_ `npm install @bonsae/node-red-claude-agent` into `~/.node-red`, or in Node-RED **Manage Palette → Install → `@bonsae/node-red-claude-agent`**.
+
+## Quick start
 
 1. Drag a **Claude Agent** node onto a flow and open it.
 2. Next to **Configuration**, click ✎ to create a config node, paste your **Anthropic API key** (`sk-ant-…`), and Done. _(Defaults: Anthropic provider, API-key auth.)_
@@ -32,7 +51,7 @@ That's the whole happy path — **prompt in on `msg.payload`, answer out on `msg
 
 Want it to work with files or run commands? Give the config node a **Working directory** and a **Permission mode** (see [Safety](#safety)). Want a human in the loop? Turn on [Interactive](#interactive--approvals).
 
-## The nodes
+## Node reference
 
 ### `claude-agent` (action)
 
@@ -157,6 +176,32 @@ These nodes wrap the [Claude Agent SDK](https://code.claude.com/docs/en/agent-sd
 - [Sessions](https://code.claude.com/docs/en/agent-sdk/sessions) — resuming a conversation via `msg.sessionId`
 - [TypeScript SDK reference](https://code.claude.com/docs/en/agent-sdk/typescript) — every option (model, working directory, limits, …)
 - Cloud providers: [Amazon Bedrock](https://code.claude.com/docs/en/amazon-bedrock) · [Google Vertex AI](https://code.claude.com/docs/en/google-vertex-ai) · [Microsoft Foundry](https://code.claude.com/docs/en/microsoft-foundry)
+
+## Development
+
+```bash
+pnpm install
+pnpm dev        # boots a Node-RED editor with the nodes loaded
+pnpm build      # bundles the nodes into dist/
+
+pnpm validate   # tsc + eslint + prettier
+pnpm test       # server unit tests
+```
+
+## Locales
+
+Labels and auto-generated help docs are available in:
+
+- English (en-US)
+- German (de)
+- Spanish (es-ES)
+- French (fr)
+- Japanese (ja)
+- Korean (ko)
+- Portuguese (pt-BR)
+- Russian (ru)
+- Chinese Simplified (zh-CN)
+- Chinese Traditional (zh-TW)
 
 ## License
 
