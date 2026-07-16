@@ -1,0 +1,27 @@
+{
+  "label": "claude MCP",
+  "configs": {
+    "name": "Имя",
+    "agent": "Агент",
+    "serverName": "Имя сервера",
+    "transport": "Транспорт",
+    "command": "Команда",
+    "args": "Аргументы",
+    "url": "URL",
+    "headerName": "Заголовок авторизации (http/sse)",
+    "envName": "Переменная окружения (stdio)",
+    "timeout": "Тайм-аут (ms)",
+    "alwaysLoad": "Всегда загружать инструменты",
+    "preApproveAll": "Предварительно одобрить все инструменты"
+  },
+  "options": {
+    "transport": {
+      "stdio": "Локальная команда (stdio)",
+      "http": "Удалённый URL (HTTP)",
+      "sse": "Удалённый URL (SSE)"
+    }
+  },
+  "credentials": {
+    "secret": "Токен / API-ключ"
+  }
+}

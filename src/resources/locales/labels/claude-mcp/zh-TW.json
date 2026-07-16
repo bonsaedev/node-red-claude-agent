@@ -1,0 +1,27 @@
+{
+  "label": "claude MCP",
+  "configs": {
+    "name": "名稱",
+    "agent": "代理",
+    "serverName": "伺服器名稱",
+    "transport": "傳輸方式",
+    "command": "命令",
+    "args": "引數",
+    "url": "URL",
+    "headerName": "驗證標頭 (http/sse)",
+    "envName": "環境變數 (stdio)",
+    "timeout": "逾時 (ms)",
+    "alwaysLoad": "一律載入工具",
+    "preApproveAll": "預先核准所有工具"
+  },
+  "options": {
+    "transport": {
+      "stdio": "本機命令 (stdio)",
+      "http": "遠端 URL (HTTP)",
+      "sse": "遠端 URL (SSE)"
+    }
+  },
+  "credentials": {
+    "secret": "權杖 / API 金鑰"
+  }
+}

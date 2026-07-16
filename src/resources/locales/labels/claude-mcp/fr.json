@@ -1,0 +1,27 @@
+{
+  "label": "claude MCP",
+  "configs": {
+    "name": "Nom",
+    "agent": "Agent",
+    "serverName": "Nom du serveur",
+    "transport": "Transport",
+    "command": "Commande",
+    "args": "Arguments",
+    "url": "URL",
+    "headerName": "En-tête d'authentification (http/sse)",
+    "envName": "Variable d'environnement (stdio)",
+    "timeout": "Délai d'expiration (ms)",
+    "alwaysLoad": "Toujours charger les outils",
+    "preApproveAll": "Pré-approuver tous les outils"
+  },
+  "options": {
+    "transport": {
+      "stdio": "Commande locale (stdio)",
+      "http": "URL distante (HTTP)",
+      "sse": "URL distante (SSE)"
+    }
+  },
+  "credentials": {
+    "secret": "Jeton / clé API"
+  }
+}

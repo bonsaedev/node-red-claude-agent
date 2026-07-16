@@ -1,0 +1,27 @@
+{
+  "label": "claude MCP",
+  "configs": {
+    "name": "名前",
+    "agent": "エージェント",
+    "serverName": "サーバー名",
+    "transport": "トランスポート",
+    "command": "コマンド",
+    "args": "引数",
+    "url": "URL",
+    "headerName": "認証ヘッダー (http/sse)",
+    "envName": "環境変数 (stdio)",
+    "timeout": "タイムアウト (ms)",
+    "alwaysLoad": "常にツールを読み込む",
+    "preApproveAll": "すべてのツールを事前承認"
+  },
+  "options": {
+    "transport": {
+      "stdio": "ローカルコマンド (stdio)",
+      "http": "リモート URL (HTTP)",
+      "sse": "リモート URL (SSE)"
+    }
+  },
+  "credentials": {
+    "secret": "トークン / API キー"
+  }
+}

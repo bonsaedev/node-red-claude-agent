@@ -1,0 +1,27 @@
+{
+  "label": "claude MCP",
+  "configs": {
+    "name": "이름",
+    "agent": "에이전트",
+    "serverName": "서버 이름",
+    "transport": "전송 방식",
+    "command": "명령",
+    "args": "인수",
+    "url": "URL",
+    "headerName": "인증 헤더 (http/sse)",
+    "envName": "환경 변수 (stdio)",
+    "timeout": "제한 시간 (ms)",
+    "alwaysLoad": "항상 도구 불러오기",
+    "preApproveAll": "모든 도구 사전 승인"
+  },
+  "options": {
+    "transport": {
+      "stdio": "로컬 명령 (stdio)",
+      "http": "원격 URL (HTTP)",
+      "sse": "원격 URL (SSE)"
+    }
+  },
+  "credentials": {
+    "secret": "토큰 / API 키"
+  }
+}

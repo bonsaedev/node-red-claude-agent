@@ -2,7 +2,9 @@ import { ConfigNode, type Infer, type RED } from "@bonsae/nrg/server";
 import type { Options } from "@anthropic-ai/claude-agent-sdk";
 import { createSdkMcpServer } from "@anthropic-ai/claude-agent-sdk";
 import ClaudeTool from "./claude-tool";
+import ClaudeMcp from "./claude-mcp";
 import type { RunContext } from "../lib/tool-dispatch";
+import { splitList } from "../lib/split-list";
 import {
   ConfigsSchema,
   CredentialsSchema,
@@ -19,15 +21,6 @@ type Config = Infer<typeof ConfigsSchema>;
 type Credentials = Infer<typeof CredentialsSchema>;
 
 type SettingSource = "user" | "project" | "local";
-
-/** Split a comma/newline-separated field into a trimmed, non-empty list. */
-function splitList(value: string | undefined): string[] {
-  if (!value) return [];
-  return value
-    .split(/[\n,]/)
-    .map((entry) => entry.trim())
-    .filter((entry) => entry.length > 0);
-}
 
 /** The first value that appears more than once, or undefined if all unique. */
 function firstDuplicate(values: string[]): string | undefined {
@@ -109,28 +102,52 @@ export default class ClaudeAgentConfiguration extends ConfigNode<
     return this.users.filter((n): n is ClaudeTool => n instanceof ClaudeTool);
   }
 
+  /** External MCP servers (`claude-mcp`) bound to this config, from the same
+   *  `_users` index. Folded into `options.mcpServers` alongside the flow server. */
+  get mcps(): ClaudeMcp[] {
+    return this.users.filter((n): n is ClaudeMcp => n instanceof ClaudeMcp);
+  }
+
   /** The single reserved in-process MCP server key. */
   static readonly #FLOW_SERVER = "flow";
 
   /**
    * Build the per-run contributions the agent merges into its `query()` options:
-   * the in-process "flow" MCP server (one SDK tool per `claude-tool` bound here)
-   * and the pre-approved `allowedTools`. Throws loudly at run time on a duplicate
-   * tool name (a deploy-time config error, surfaced before `query()`).
+   * the in-process "flow" MCP server (one SDK tool per `claude-tool` bound here),
+   * every external `claude-mcp` server under its own key, and the pre-approved
+   * `allowedTools`. Throws loudly at run time on a duplicate/reserved server name
+   * or duplicate tool name (a deploy-time config error, surfaced before `query()`).
    */
   assembleContributions(run: RunContext): {
     mcpServers: NonNullable<Options["mcpServers"]>;
     allowedTools: string[];
   } {
+    const FLOW = ClaudeAgentConfiguration.#FLOW_SERVER;
+
     const toolNodes = this.tools;
-    const dup = firstDuplicate(toolNodes.map((t) => t.config.name));
-    if (dup) {
+    const dupTool = firstDuplicate(toolNodes.map((t) => t.config.name));
+    if (dupTool) {
       throw new Error(
-        `claude-agent: two claude-tool nodes on this configuration are both named "${dup}" — tool names must be unique`,
+        `claude-agent: two claude-tool nodes on this configuration are both named "${dupTool}" — tool names must be unique`,
       );
     }
 
-    const FLOW = ClaudeAgentConfiguration.#FLOW_SERVER;
+    // External MCP server-name collisions are silent Record overwrites, so guard
+    // loudly before query(): unique among themselves, and never the reserved key.
+    const mcpNodes = this.mcps;
+    const mcpNames = mcpNodes.map((m) => m.serverName);
+    const dupMcp = firstDuplicate(mcpNames);
+    if (dupMcp) {
+      throw new Error(
+        `claude-agent: two claude-mcp nodes on this configuration both use server name "${dupMcp}" — server names must be unique (a duplicate silently overwrites)`,
+      );
+    }
+    if (mcpNames.includes(FLOW)) {
+      throw new Error(
+        `claude-agent: a claude-mcp node on this configuration uses the reserved server name "${FLOW}" — rename it (that key is owned by flow-tools)`,
+      );
+    }
+
     const mcpServers: NonNullable<Options["mcpServers"]> = {};
     if (toolNodes.length) {
       mcpServers[FLOW] = createSdkMcpServer({
@@ -138,12 +155,18 @@ export default class ClaudeAgentConfiguration extends ConfigNode<
         tools: toolNodes.map((t) => t.toSdkTool(run)),
       });
     }
+    for (const m of mcpNodes) mcpServers[m.serverName] = m.toConfig();
 
     return {
       mcpServers,
-      allowedTools: toolNodes
-        .filter((t) => t.config.preApproved)
-        .map((t) => `mcp__${FLOW}__${t.config.name}`),
+      allowedTools: [
+        ...toolNodes
+          .filter((t) => t.config.preApproved)
+          .map((t) => `mcp__${FLOW}__${t.config.name}`),
+        ...mcpNodes
+          .map((m) => m.allowedToolGrant())
+          .filter((g): g is string => g !== undefined),
+      ],
     };
   }
 
