@@ -94,6 +94,25 @@ describe("mcp-tool-in", () => {
       await expect(p).resolves.toEqual(answer("sunny"));
       expect(node.statuses().at(-1)).toMatchObject({ text: "get_weather ok" });
     });
+
+    it("detaches its abort listeners on normal settlement (no leak on the shared server signal)", async () => {
+      // closeSignal is the mcp-server's long-lived teardown signal, shared across
+      // every call — a listener left attached per call leaks for the whole deploy.
+      const close = new AbortController();
+      const removeSpy = vi.spyOn(close.signal, "removeEventListener");
+      const { node } = await createNode(McpToolIn, { config: TOOL_CONFIG });
+
+      const p = node.dispatch(
+        { city: "SF" },
+        SERVER_INFO,
+        undefined,
+        close.signal,
+      );
+      resolverOf(node.sent("call")[0])(answer("sunny"));
+      await p;
+
+      expect(removeSpy).toHaveBeenCalledWith("abort", expect.any(Function));
+    });
   });
 
   describe("register", () => {

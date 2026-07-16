@@ -113,6 +113,26 @@ describe("claude-agent", () => {
       expect(node.sent("error")[0].error.message).toContain("prompt is empty");
       expect(node.statuses().at(-1)).toMatchObject({ text: "empty prompt" });
     });
+
+    it("drops the run when assembleContributions throws, so a later interrupt is a no-op", async () => {
+      const cfg = mockConfig();
+      cfg.assembleContributions = vi.fn(() => {
+        throw new Error("two claude-tool nodes both named x — must be unique");
+      });
+      const { node } = await createNode(ClaudeAgent, {
+        config: { config: cfg, prompt: { type: "str", value: "go" } },
+      });
+
+      // The config error rides the error port (errorPort is on by default).
+      await node.receive({ payload: "go", correlationId: "c-1" });
+      expect(node.sent("error")[0].error.message).toContain("must be unique");
+      expect(sdk.queryMock).not.toHaveBeenCalled();
+
+      // The run was dropped on the throw, so a later interrupt finds no in-flight
+      // run and must NOT report "interrupted" (the leaked-entry bug would).
+      await node.receive({ claudeControl: "interrupt", correlationId: "c-1" });
+      expect(node.statuses().some((s) => s.text === "interrupted")).toBe(false);
+    });
   });
 
   describe("prompt source", () => {

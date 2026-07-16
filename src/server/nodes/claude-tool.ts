@@ -153,8 +153,13 @@ export default class ClaudeTool extends IONode<
         });
         settle(new Error("run aborted"));
       };
+      // Detach on ANY settlement path (not just when abort fires): `{ once: true }`
+      // only auto-removes on fire, and run.signal outlives a single call, so the
+      // return-sink path would otherwise leak a listener per call for the whole run.
       mcpSignal?.addEventListener("abort", onAbort, { once: true });
+      settle.onCleanup(() => mcpSignal?.removeEventListener("abort", onAbort));
       run.signal.addEventListener("abort", onAbort, { once: true });
+      settle.onCleanup(() => run.signal.removeEventListener("abort", onAbort));
 
       this.#pending.set(callId, settle);
       PendingIndex.put(callId, settle);

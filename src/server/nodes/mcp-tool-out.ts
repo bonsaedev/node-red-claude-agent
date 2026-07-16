@@ -49,15 +49,17 @@ export default class McpToolOut extends IONode<
   static override readonly configSchema = ReturnSchema;
 
   override input(msg: ToolReturnInput): void {
-    const src = (msg.output ?? msg) as {
-      payload?: unknown;
-      isError?: boolean;
-      mcpTool?: { callId?: string };
-    };
+    // The author's answer is at top-level `payload` when a core Node-RED node set
+    // it (`msg.payload = result; return msg`); `msg.output` still holds the SOURCE's
+    // original tool ARGS, so preferring it would silently return the args back to
+    // the model. An nrg node re-wraps the answer under `output` and leaves top-level
+    // `payload` unset, so the fallback to `msg.output` covers that path. `callId`
+    // provenance is separate — it always rides `msg.output.mcpTool`.
+    const answeredAtRoot = msg.payload !== undefined;
     const answer: ToolAnswer = {
-      value: src.payload,
+      value: answeredAtRoot ? msg.payload : msg.output?.payload,
       format: this.config.format,
-      isError: !!src.isError,
+      isError: answeredAtRoot ? !!msg.isError : !!msg.output?.isError,
     };
 
     // Path 1 (PRIMARY): the live resolver on the private channel, keyed by _msgid,
@@ -70,9 +72,7 @@ export default class McpToolOut extends IONode<
     }
 
     // Path 1-fallback: a FRESH-message answer carrying callId.
-    const callId =
-      src.mcpTool?.callId ??
-      (msg.mcpTool as { callId?: string } | undefined)?.callId;
+    const callId = msg.output?.mcpTool?.callId ?? msg.mcpTool?.callId;
     const settle = callId ? PendingIndex.take(callId) : undefined;
     if (!settle) {
       this.status({ fill: "yellow", shape: "dot", text: "no pending call" });

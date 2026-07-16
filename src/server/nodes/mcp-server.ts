@@ -35,8 +35,14 @@ export default class McpServer extends ConfigNode<Config> {
 
   #app?: UserHttpServer;
   #path?: string;
+  // The exact Express route layers THIS node registered, so teardown removes only
+  // ours — never a co-path sibling server's routes.
+  readonly #layers = new Set<object>();
   // Aborted on teardown so in-flight tool calls settle instead of hanging.
   readonly #close = new AbortController();
+  // path -> owning node id, so a second server on the same path is caught loudly
+  // (Express is first-match-wins, so it would otherwise silently shadow the tools).
+  static readonly #pathOwners = new Map<string, string>();
 
   /** The tools bound to this server, pulled from the native `_users` reverse index
    *  — no registration protocol, recomputed from flow config every request. */
@@ -48,17 +54,37 @@ export default class McpServer extends ConfigNode<Config> {
     const path = normalizePath(this.config.path);
     const httpNode = this.RED.httpNode as UserHttpServer;
 
+    // Loud (non-fatal) guard: two mcp-server nodes on one path silently shadow —
+    // Express is first-match-wins, so the second's tools become unreachable.
+    const owner = McpServer.#pathOwners.get(path);
+    if (owner && owner !== this.id) {
+      this.RED.log.warn(
+        `mcp-server: path "${path}" is already served by another mcp-server node — requests may be shadowed; give each server a distinct path.`,
+      );
+    } else {
+      McpServer.#pathOwners.set(path, this.id);
+    }
+
+    // Capture the layer each registration appends, so closed() removes exactly ours.
+    const captureLast = () => {
+      const stack = httpNode._router?.stack;
+      const layer = stack?.[stack.length - 1];
+      if (layer) this.#layers.add(layer);
+    };
     // POST: stateless MCP request/response (initialize, tools/list, tools/call).
     httpNode.post(path, (req: IncomingMessage, res: ServerResponse) => {
       void this.#handlePost(req as ExpressRequest, res);
     });
+    captureLast();
     // GET/DELETE: stateless mode has no standalone SSE stream or session teardown.
     httpNode.get(path, (_req: IncomingMessage, res: ServerResponse) =>
       methodNotAllowed(res),
     );
+    captureLast();
     httpNode.delete(path, (_req: IncomingMessage, res: ServerResponse) =>
       methodNotAllowed(res),
     );
+    captureLast();
 
     this.#app = httpNode;
     this.#path = path;
@@ -66,13 +92,19 @@ export default class McpServer extends ConfigNode<Config> {
 
   override async closed(): Promise<void> {
     // Settle any in-flight tool calls (their handlers listen on this signal), then
-    // splice our routes off the Express stack so a redeploy doesn't stack them.
+    // remove ONLY the exact route layers we registered (by identity) so a co-path
+    // sibling keeps its routes and a redeploy doesn't stack ours.
     this.#close.abort();
-    const stack = this.#app?._router?.stack;
-    if (!stack) return;
-    for (let i = stack.length - 1; i >= 0; i--) {
-      if (stack[i]?.route?.path === this.#path) stack.splice(i, 1);
+    if (this.#path && McpServer.#pathOwners.get(this.#path) === this.id) {
+      McpServer.#pathOwners.delete(this.#path);
     }
+    const stack = this.#app?._router?.stack;
+    if (stack) {
+      for (let i = stack.length - 1; i >= 0; i--) {
+        if (this.#layers.has(stack[i])) stack.splice(i, 1);
+      }
+    }
+    this.#layers.clear();
   }
 
   /** Build a fresh MCP server with every bound tool registered. Cheap enough to do

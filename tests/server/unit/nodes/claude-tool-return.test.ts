@@ -75,6 +75,27 @@ describe("claude-tool-return", () => {
         expect.objectContaining({ value: "raw" }),
       );
     });
+
+    it("prefers the author's top-level payload over the source's stale output args", async () => {
+      // A core Node-RED node did `msg.payload = answer; return msg` — msg.output
+      // still holds the source's ORIGINAL tool args. The answer must be the fresh
+      // top-level payload, not the echoed args.
+      const { node } = await createNode(ClaudeToolReturn, { config: {} });
+      const settle = settleSpy();
+
+      await node.receive(
+        {
+          _msgid: "sig-1",
+          payload: "the answer",
+          output: { payload: { city: "SF" }, claudeTool: { callId: "c-1" } },
+        },
+        { private: { claudeReturn: settle } },
+      );
+
+      expect(settle).toHaveBeenCalledWith(
+        expect.objectContaining({ value: "the answer" }),
+      );
+    });
   });
 
   describe("callId fallback path", () => {

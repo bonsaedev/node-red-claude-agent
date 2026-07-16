@@ -273,10 +273,41 @@ describe("mcp-server HTTP round-trip (real MCP client over real Node-RED)", () =
       });
       expect(result.isError).toBeFalsy();
       expect(result.structuredContent).toEqual({ tempF: 72, city: "SF" });
+      // A model only receives structuredContent when the tool declares an
+      // outputSchema (flow-authored tools don't), so the data MUST also ride a
+      // text block or the model sees nothing.
+      expect(result.content).toEqual([
+        { type: "text", text: JSON.stringify({ tempF: 72, city: "SF" }) },
+      ]);
     } finally {
       await client.close();
       await flow.clear();
     }
+  });
+
+  it("removes its HTTP route on teardown (no stale endpoint after redeploy)", async () => {
+    const flow = runtime.flow();
+    const server = flow.addNode(McpServer, {
+      serverName: "flowtools",
+      path: "/teardown",
+    });
+    flow.addNode(McpToolIn, {
+      server: server.id,
+      name: "get_weather",
+      description: "Look up the weather",
+      params: TOOL_PARAMS,
+      timeoutSeconds: 20,
+    });
+    await flow.deploy();
+
+    // Route exists: our handler answers GET with 405 (not 404).
+    expect((await fetch(`${baseUrl}/teardown`)).status).toBe(405);
+
+    await flow.clear();
+
+    // Route removed: Express now 404s. (Proves the identity splice actually runs —
+    // the mock-based unit test never exercised it.)
+    expect((await fetch(`${baseUrl}/teardown`)).status).toBe(404);
   });
 
   it("a flow that reports failure surfaces as an isError result the model sees", async () => {

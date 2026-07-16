@@ -130,7 +130,13 @@ export function toCallToolResult(
     return { content: [{ type: "text", text }], isError: true };
   }
   if (format === "json" && value && typeof value === "object") {
-    return { content: [], structuredContent: value as Record<string, unknown> };
+    // Mirror the data as a text block too: a model only receives structuredContent
+    // when the tool declares an outputSchema (which flow-authored tools don't), so
+    // an empty content[] would make the JSON invisible to the model.
+    return {
+      content: [{ type: "text", text: JSON.stringify(value) }],
+      structuredContent: value as Record<string, unknown>,
+    };
   }
   const text =
     typeof value === "string" ? value : JSON.stringify(value ?? null);

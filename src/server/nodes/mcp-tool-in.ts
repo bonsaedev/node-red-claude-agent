@@ -167,8 +167,16 @@ export default class McpToolIn extends IONode<
         });
         settle(new Error("request aborted"));
       };
+      // Detach on ANY settlement path (not just when abort fires): `{ once: true }`
+      // only auto-removes on fire, and closeSignal is the server's long-lived
+      // teardown signal shared across every call — the return-sink path would
+      // otherwise leak one listener per call for the whole deploy.
       mcpSignal?.addEventListener("abort", onAbort, { once: true });
+      settle.onCleanup(() => mcpSignal?.removeEventListener("abort", onAbort));
       closeSignal?.addEventListener("abort", onAbort, { once: true });
+      settle.onCleanup(() =>
+        closeSignal?.removeEventListener("abort", onAbort),
+      );
 
       this.#pending.set(callId, settle);
       PendingIndex.put(callId, settle);

@@ -350,9 +350,21 @@ export default class ClaudeAgent extends IONode<
         sessionId: m.sessionId,
       }),
     };
-    // Throws loudly (before query()) on a duplicate flow-tool name.
-    const contrib = configNode.assembleContributions(run);
-    const base = configNode.buildOptions();
+    // assembleContributions throws (before query()) on a duplicate/reserved tool
+    // or server name; buildOptions throws on a subscription auth method with no
+    // token. Either would otherwise leave this run registered in `running` with an
+    // un-aborted controller — leaking the entry and corrupting interrupt semantics
+    // (a later interrupt would abort a query that never started and report
+    // "interrupted"). Drop the run on the way out so every exit path is clean.
+    let contrib: ReturnType<ClaudeAgentConfiguration["assembleContributions"]>;
+    let base: ReturnType<ClaudeAgentConfiguration["buildOptions"]>;
+    try {
+      contrib = configNode.assembleContributions(run);
+      base = configNode.buildOptions();
+    } catch (err) {
+      dropRun();
+      throw err;
+    }
     const mcpServers = { ...base.mcpServers, ...contrib.mcpServers };
     const options: Options = { ...base, abortController: controller };
     if (Object.keys(mcpServers).length) options.mcpServers = mcpServers;

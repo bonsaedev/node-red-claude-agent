@@ -105,6 +105,20 @@ describe("claude-tool", () => {
       await expect(p).resolves.toEqual(answer("sunny"));
       expect(node.statuses().at(-1)).toMatchObject({ text: "get_weather ok" });
     });
+
+    it("detaches its abort listeners on normal settlement (no per-run leak)", async () => {
+      // run.signal outlives a single call (one agent run makes many tool calls),
+      // so a listener left attached per call leaks for the whole run.
+      const ctrl = new AbortController();
+      const removeSpy = vi.spyOn(ctrl.signal, "removeEventListener");
+      const { node } = await createNode(ClaudeTool, { config: TOOL_CONFIG });
+
+      const p = node.dispatch({ city: "SF" }, makeRun({ signal: ctrl.signal }));
+      resolverOf(node.sent("call")[0])(answer("sunny"));
+      await p;
+
+      expect(removeSpy).toHaveBeenCalledWith("abort", expect.any(Function));
+    });
   });
 
   describe("toSdkTool", () => {
