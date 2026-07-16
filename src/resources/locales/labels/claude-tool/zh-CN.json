@@ -1,0 +1,21 @@
+{
+  "label": "claude 工具",
+  "configs": {
+    "name": "工具名称",
+    "agent": "智能体",
+    "description": "描述",
+    "params": "参数",
+    "timeoutSeconds": "超时（秒）",
+    "preApproved": "预先批准",
+    "readOnly": "只读",
+    "errorPort": "错误端口",
+    "completePort": "完成端口",
+    "statusPort": "状态端口"
+  },
+  "outputs": {
+    "call": {
+      "label": "调用",
+      "description": "当 Claude 调用此工具时触发 —— 在 payload 中携带工具参数。请将流程的答复连接回 claude 工具返回节点。"
+    }
+  }
+}

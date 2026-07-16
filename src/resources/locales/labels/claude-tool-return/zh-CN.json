@@ -1,0 +1,20 @@
+{
+  "label": "claude 工具返回",
+  "configs": {
+    "name": "名称",
+    "format": "返回格式",
+    "errorPort": "错误端口",
+    "completePort": "完成端口",
+    "statusPort": "状态端口"
+  },
+  "options": {
+    "format": {
+      "text": "文本（纯文本块）",
+      "json": "JSON（机器可读的结构化内容）"
+    }
+  },
+  "input": {
+    "label": "返回",
+    "description": "流程对 Claude 工具调用的答复。值通过 msg.output.payload 传递；设置 msg.output.isError 可向模型返回错误。"
+  }
+}

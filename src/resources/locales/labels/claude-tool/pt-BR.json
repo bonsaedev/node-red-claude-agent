@@ -1,0 +1,21 @@
+{
+  "label": "ferramenta claude",
+  "configs": {
+    "name": "Nome da ferramenta",
+    "agent": "Agente",
+    "description": "Descrição",
+    "params": "Parâmetros",
+    "timeoutSeconds": "Tempo limite (segundos)",
+    "preApproved": "Pré-aprovada",
+    "readOnly": "Somente leitura",
+    "errorPort": "Porta de erro",
+    "completePort": "Porta de conclusão",
+    "statusPort": "Porta de status"
+  },
+  "outputs": {
+    "call": {
+      "label": "Chamada",
+      "description": "Dispara quando o Claude chama esta ferramenta — carrega os argumentos da ferramenta em payload. Conecte a resposta do fluxo de volta a um nó retorno de ferramenta claude."
+    }
+  }
+}

@@ -1,5 +1,8 @@
 import { ConfigNode, type Infer, type RED } from "@bonsae/nrg/server";
 import type { Options } from "@anthropic-ai/claude-agent-sdk";
+import { createSdkMcpServer } from "@anthropic-ai/claude-agent-sdk";
+import ClaudeTool from "./claude-tool";
+import type { RunContext } from "../lib/tool-dispatch";
 import {
   ConfigsSchema,
   CredentialsSchema,
@@ -24,6 +27,16 @@ function splitList(value: string | undefined): string[] {
     .split(/[\n,]/)
     .map((entry) => entry.trim())
     .filter((entry) => entry.length > 0);
+}
+
+/** The first value that appears more than once, or undefined if all unique. */
+function firstDuplicate(values: string[]): string | undefined {
+  const seen = new Set<string>();
+  for (const v of values) {
+    if (seen.has(v)) return v;
+    seen.add(v);
+  }
+  return undefined;
 }
 
 /**
@@ -75,7 +88,63 @@ export default class ClaudeAgentConfiguration extends ConfigNode<
         this.applyAnthropicAuth(env);
         break;
     }
+
+    // Bump the ~60s stream-close ONLY when a flow-tool legitimately needs >55s.
+    // Must be inside this { ...process.env } spread — options.env REPLACES the
+    // subprocess env entirely, so a host-only value would not be inherited.
+    const longestMs = Math.max(
+      0,
+      ...this.tools.map((t) => t.config.timeoutSeconds * 1000),
+    );
+    if (longestMs > 55_000) {
+      env.CLAUDE_CODE_STREAM_CLOSE_TIMEOUT = String(longestMs + 10_000);
+    }
+
     return env;
+  }
+
+  /** Flow-tools bound to this config, pulled from the native `_users` reverse
+   *  index — no registration protocol, recomputed from flow config every deploy. */
+  get tools(): ClaudeTool[] {
+    return this.users.filter((n): n is ClaudeTool => n instanceof ClaudeTool);
+  }
+
+  /** The single reserved in-process MCP server key. */
+  static readonly #FLOW_SERVER = "flow";
+
+  /**
+   * Build the per-run contributions the agent merges into its `query()` options:
+   * the in-process "flow" MCP server (one SDK tool per `claude-tool` bound here)
+   * and the pre-approved `allowedTools`. Throws loudly at run time on a duplicate
+   * tool name (a deploy-time config error, surfaced before `query()`).
+   */
+  assembleContributions(run: RunContext): {
+    mcpServers: NonNullable<Options["mcpServers"]>;
+    allowedTools: string[];
+  } {
+    const toolNodes = this.tools;
+    const dup = firstDuplicate(toolNodes.map((t) => t.config.name));
+    if (dup) {
+      throw new Error(
+        `claude-agent: two claude-tool nodes on this configuration are both named "${dup}" — tool names must be unique`,
+      );
+    }
+
+    const FLOW = ClaudeAgentConfiguration.#FLOW_SERVER;
+    const mcpServers: NonNullable<Options["mcpServers"]> = {};
+    if (toolNodes.length) {
+      mcpServers[FLOW] = createSdkMcpServer({
+        name: FLOW,
+        tools: toolNodes.map((t) => t.toSdkTool(run)),
+      });
+    }
+
+    return {
+      mcpServers,
+      allowedTools: toolNodes
+        .filter((t) => t.config.preApproved)
+        .map((t) => `mcp__${FLOW}__${t.config.name}`),
+    };
   }
 
   /**

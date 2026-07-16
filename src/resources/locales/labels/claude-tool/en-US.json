@@ -1,0 +1,21 @@
+{
+  "label": "claude tool",
+  "configs": {
+    "name": "Tool name",
+    "agent": "Agent",
+    "description": "Description",
+    "params": "Parameters",
+    "timeoutSeconds": "Timeout (seconds)",
+    "preApproved": "Pre-approved",
+    "readOnly": "Read-only",
+    "errorPort": "Error port",
+    "completePort": "Complete port",
+    "statusPort": "Status port"
+  },
+  "outputs": {
+    "call": {
+      "label": "Call",
+      "description": "Fires when Claude calls this tool — carries the tool arguments under payload. Wire the flow's answer back to a claude tool return node."
+    }
+  }
+}

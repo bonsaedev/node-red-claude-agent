@@ -1,0 +1,21 @@
+{
+  "label": "outil claude",
+  "configs": {
+    "name": "Nom de l'outil",
+    "agent": "Agent",
+    "description": "Description",
+    "params": "Paramètres",
+    "timeoutSeconds": "Délai d'expiration (secondes)",
+    "preApproved": "Pré-approuvé",
+    "readOnly": "Lecture seule",
+    "errorPort": "Port d'erreur",
+    "completePort": "Port de fin",
+    "statusPort": "Port de statut"
+  },
+  "outputs": {
+    "call": {
+      "label": "Appel",
+      "description": "Se déclenche lorsque Claude appelle cet outil — porte les arguments de l'outil sous payload. Reliez la réponse du flux à un nœud retour d'outil claude."
+    }
+  }
+}

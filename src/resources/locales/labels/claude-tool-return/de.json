@@ -1,0 +1,20 @@
+{
+  "label": "claude tool return",
+  "configs": {
+    "name": "Name",
+    "format": "Rückgabeformat",
+    "errorPort": "Fehler-Port",
+    "completePort": "Abschluss-Port",
+    "statusPort": "Status-Port"
+  },
+  "options": {
+    "format": {
+      "text": "Text (ein reiner Textblock)",
+      "json": "JSON (maschinenlesbarer strukturierter Inhalt)"
+    }
+  },
+  "input": {
+    "label": "Rückgabe",
+    "description": "Die Antwort des Flows auf einen Claude-Tool-Aufruf. Der Wert reist in msg.output.payload; setze msg.output.isError, um dem Modell einen Fehler zurückzugeben."
+  }
+}

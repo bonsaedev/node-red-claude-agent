@@ -1,0 +1,21 @@
+{
+  "label": "claude 도구",
+  "configs": {
+    "name": "도구 이름",
+    "agent": "에이전트",
+    "description": "설명",
+    "params": "매개변수",
+    "timeoutSeconds": "제한 시간(초)",
+    "preApproved": "사전 승인됨",
+    "readOnly": "읽기 전용",
+    "errorPort": "오류 포트",
+    "completePort": "완료 포트",
+    "statusPort": "상태 포트"
+  },
+  "outputs": {
+    "call": {
+      "label": "호출",
+      "description": "Claude가 이 도구를 호출할 때 실행되며 — 도구 인수를 payload에 담아 전달합니다. 플로우의 응답을 claude 도구 반환 노드로 연결하세요."
+    }
+  }
+}

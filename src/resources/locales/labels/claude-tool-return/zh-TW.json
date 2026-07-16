@@ -1,0 +1,20 @@
+{
+  "label": "claude 工具回傳",
+  "configs": {
+    "name": "名稱",
+    "format": "回傳格式",
+    "errorPort": "錯誤埠",
+    "completePort": "完成埠",
+    "statusPort": "狀態埠"
+  },
+  "options": {
+    "format": {
+      "text": "文字（純文字區塊）",
+      "json": "JSON（機器可讀的結構化內容）"
+    }
+  },
+  "input": {
+    "label": "回傳",
+    "description": "流程對 Claude 工具呼叫的回覆。值透過 msg.output.payload 傳遞；設定 msg.output.isError 可向模型回傳錯誤。"
+  }
+}

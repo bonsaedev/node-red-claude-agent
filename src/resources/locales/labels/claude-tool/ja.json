@@ -1,0 +1,21 @@
+{
+  "label": "claude ツール",
+  "configs": {
+    "name": "ツール名",
+    "agent": "エージェント",
+    "description": "説明",
+    "params": "パラメーター",
+    "timeoutSeconds": "タイムアウト（秒）",
+    "preApproved": "事前承認済み",
+    "readOnly": "読み取り専用",
+    "errorPort": "エラーポート",
+    "completePort": "完了ポート",
+    "statusPort": "ステータスポート"
+  },
+  "outputs": {
+    "call": {
+      "label": "呼び出し",
+      "description": "Claude がこのツールを呼び出したときに発火し、ツールの引数を payload に載せて渡します。フローの回答は claude ツール返却ノードに配線してください。"
+    }
+  }
+}

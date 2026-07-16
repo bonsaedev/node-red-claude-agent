@@ -1,0 +1,21 @@
+{
+  "label": "claude 工具",
+  "configs": {
+    "name": "工具名稱",
+    "agent": "代理",
+    "description": "說明",
+    "params": "參數",
+    "timeoutSeconds": "逾時（秒）",
+    "preApproved": "預先核准",
+    "readOnly": "唯讀",
+    "errorPort": "錯誤埠",
+    "completePort": "完成埠",
+    "statusPort": "狀態埠"
+  },
+  "outputs": {
+    "call": {
+      "label": "呼叫",
+      "description": "當 Claude 呼叫此工具時觸發 —— 在 payload 中攜帶工具引數。請將流程的回覆連接回 claude 工具回傳節點。"
+    }
+  }
+}

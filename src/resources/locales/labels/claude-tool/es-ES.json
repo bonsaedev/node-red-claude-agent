@@ -1,0 +1,21 @@
+{
+  "label": "herramienta claude",
+  "configs": {
+    "name": "Nombre de la herramienta",
+    "agent": "Agente",
+    "description": "Descripción",
+    "params": "Parámetros",
+    "timeoutSeconds": "Tiempo de espera (segundos)",
+    "preApproved": "Preaprobada",
+    "readOnly": "Solo lectura",
+    "errorPort": "Puerto de error",
+    "completePort": "Puerto de finalización",
+    "statusPort": "Puerto de estado"
+  },
+  "outputs": {
+    "call": {
+      "label": "Llamada",
+      "description": "Se activa cuando Claude llama a esta herramienta: lleva los argumentos de la herramienta en payload. Conecta la respuesta del flujo de vuelta a un nodo herramienta claude retorno."
+    }
+  }
+}

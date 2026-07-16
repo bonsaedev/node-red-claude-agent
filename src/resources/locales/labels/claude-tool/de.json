@@ -1,0 +1,21 @@
+{
+  "label": "claude tool",
+  "configs": {
+    "name": "Tool-Name",
+    "agent": "Agent",
+    "description": "Beschreibung",
+    "params": "Parameter",
+    "timeoutSeconds": "Zeitlimit (Sekunden)",
+    "preApproved": "Vorab genehmigt",
+    "readOnly": "Nur lesen",
+    "errorPort": "Fehler-Port",
+    "completePort": "Abschluss-Port",
+    "statusPort": "Status-Port"
+  },
+  "outputs": {
+    "call": {
+      "label": "Aufruf",
+      "description": "Wird ausgelöst, wenn Claude dieses Tool aufruft – trägt die Tool-Argumente unter payload. Verdrahte die Antwort des Flows zurück zu einem claude tool return-Node."
+    }
+  }
+}

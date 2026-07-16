@@ -1,0 +1,20 @@
+{
+  "label": "claude ツール返却",
+  "configs": {
+    "name": "名前",
+    "format": "返却形式",
+    "errorPort": "エラーポート",
+    "completePort": "完了ポート",
+    "statusPort": "ステータスポート"
+  },
+  "options": {
+    "format": {
+      "text": "テキスト（プレーンテキストのブロック）",
+      "json": "JSON（機械可読な構造化データ）"
+    }
+  },
+  "input": {
+    "label": "返却",
+    "description": "Claude のツール呼び出しに対するフローの回答です。値は msg.output.payload に載せます。モデルにエラーを返すには msg.output.isError を設定してください。"
+  }
+}

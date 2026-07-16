@@ -1,0 +1,20 @@
+{
+  "label": "herramienta claude retorno",
+  "configs": {
+    "name": "Nombre",
+    "format": "Formato de retorno",
+    "errorPort": "Puerto de error",
+    "completePort": "Puerto de finalización",
+    "statusPort": "Puerto de estado"
+  },
+  "options": {
+    "format": {
+      "text": "Texto (un bloque de texto sin formato)",
+      "json": "JSON (contenido estructurado legible por máquina)"
+    }
+  },
+  "input": {
+    "label": "Retorno",
+    "description": "La respuesta del flujo a una llamada de herramienta de Claude. El valor viaja en msg.output.payload; establece msg.output.isError para devolver un error al modelo."
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "label": "retour d'outil claude",
+  "configs": {
+    "name": "Nom",
+    "format": "Format de retour",
+    "errorPort": "Port d'erreur",
+    "completePort": "Port de fin",
+    "statusPort": "Port de statut"
+  },
+  "options": {
+    "format": {
+      "text": "Texte (un bloc de texte brut)",
+      "json": "JSON (contenu structuré lisible par machine)"
+    }
+  },
+  "input": {
+    "label": "Retour",
+    "description": "La réponse du flux à un appel d'outil Claude. La valeur circule dans msg.output.payload ; définissez msg.output.isError pour renvoyer une erreur au modèle."
+  }
+}

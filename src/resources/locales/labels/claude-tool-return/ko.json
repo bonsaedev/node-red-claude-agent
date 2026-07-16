@@ -1,0 +1,20 @@
+{
+  "label": "claude 도구 반환",
+  "configs": {
+    "name": "이름",
+    "format": "반환 형식",
+    "errorPort": "오류 포트",
+    "completePort": "완료 포트",
+    "statusPort": "상태 포트"
+  },
+  "options": {
+    "format": {
+      "text": "텍스트 (일반 텍스트 블록)",
+      "json": "JSON (기계가 읽을 수 있는 구조화된 콘텐츠)"
+    }
+  },
+  "input": {
+    "label": "반환",
+    "description": "Claude 도구 호출에 대한 플로우의 응답입니다. 값은 msg.output.payload에 실려 전달됩니다. 모델에 오류를 반환하려면 msg.output.isError를 설정하세요."
+  }
+}

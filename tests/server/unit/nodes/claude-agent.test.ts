@@ -43,7 +43,11 @@ vi.mock("@anthropic-ai/claude-agent-sdk", () => ({ query: sdk.queryMock }));
 // Imported after the mock is registered.
 import ClaudeAgent from "../../../../src/server/nodes/claude-agent";
 
-/** A stand-in configuration node — the agent only calls buildOptions(). */
+/**
+ * A stand-in configuration node. The agent calls `buildOptions()` for the base
+ * SDK options and `assembleContributions(run)` for the flow-tool MCP server +
+ * allowedTools (empty here — no tools bound in these unit tests).
+ */
 function mockConfig(options: Record<string, unknown> = {}) {
   return {
     id: "cfg-1",
@@ -54,6 +58,10 @@ function mockConfig(options: Record<string, unknown> = {}) {
       permissionMode: "default",
       env: {},
       ...options,
+    })),
+    assembleContributions: vi.fn(() => ({
+      mcpServers: {},
+      allowedTools: [],
     })),
   };
 }

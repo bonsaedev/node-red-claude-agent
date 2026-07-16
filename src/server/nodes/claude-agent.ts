@@ -15,6 +15,7 @@ import {
   type SDKResultSuccess,
 } from "@anthropic-ai/claude-agent-sdk";
 import type ClaudeAgentConfiguration from "./claude-agent-configuration";
+import type { RunContext } from "../lib/tool-dispatch";
 import { ConfigsSchema } from "../../shared/schemas/claude-agent";
 
 type Config = Infer<typeof ConfigsSchema>;
@@ -336,10 +337,29 @@ export default class ClaudeAgent extends IONode<
       this.status({ fill: "red", shape: "dot", text: "empty prompt" });
       throw new Error("claude-agent: prompt is empty");
     }
-    const options: Options = {
-      ...configNode.buildOptions(),
-      abortController: controller,
+    // Per-run context for the flow-tools bound to this config: the tool handlers
+    // close over run.signal (this run's AbortController) and public() (the
+    // clone-safe provenance each emit carries).
+    const run: RunContext = {
+      correlationId,
+      signal: controller.signal,
+      agentNodeId: this.id,
+      public: () => ({
+        nodeId: this.id,
+        correlationId,
+        sessionId: m.sessionId,
+      }),
     };
+    // Throws loudly (before query()) on a duplicate flow-tool name.
+    const contrib = configNode.assembleContributions(run);
+    const base = configNode.buildOptions();
+    const mcpServers = { ...base.mcpServers, ...contrib.mcpServers };
+    const options: Options = { ...base, abortController: controller };
+    if (Object.keys(mcpServers).length) options.mcpServers = mcpServers;
+    const allowedTools = [
+      ...new Set([...(base.allowedTools ?? []), ...contrib.allowedTools]),
+    ];
+    if (allowedTools.length) options.allowedTools = allowedTools;
     if (this.config.permissionMode !== "inherit") {
       options.permissionMode = this.config.permissionMode;
     }
