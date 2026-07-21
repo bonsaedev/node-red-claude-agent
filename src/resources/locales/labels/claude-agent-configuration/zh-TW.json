@@ -4,24 +4,78 @@
     "learnMore": "瞭解更多"
   },
   "configs": {
-    "name": "名稱",
-    "provider": "供應商",
-    "authMethod": "登入方式",
-    "model": "模型",
-    "fallbackModel": "備用模型",
-    "effort": "推理強度",
-    "systemPromptPreset": "助理風格",
-    "appendSystemPrompt": "額外指令",
-    "customSystemPrompt": "自訂指令",
-    "cwd": "工作資料夾",
-    "permissionMode": "工具權限",
-    "allowedTools": "允許的工具",
-    "disallowedTools": "封鎖的工具",
-    "settingSources": "要載入的專案設定",
-    "maxTurns": "最大步驟數",
-    "maxBudgetUsd": "支出上限（USD）",
-    "additionalDirectories": "額外資料夾",
-    "supportedDialogKinds": "問題類型（進階）"
+    "name": {
+      "label": "名稱",
+      "description": "在編輯器中顯示於節點上的選用標籤。"
+    },
+    "provider": {
+      "label": "供應商",
+      "description": "選擇 Claude 的執行位置 —— 直接使用 Anthropic，或透過你的 Amazon、Google 或 Microsoft 雲端帳戶。"
+    },
+    "authMethod": {
+      "label": "登入方式",
+      "description": "選擇供應商為 Anthropic 時的登入方式：API 金鑰或你的 Claude 訂閱。"
+    },
+    "model": {
+      "label": "模型",
+      "description": "選擇要使用的 Claude 模型；留空則使用預設值。"
+    },
+    "fallbackModel": {
+      "label": "備用模型",
+      "description": "選擇在主模型無法使用時自動使用的備用模型。"
+    },
+    "effort": {
+      "label": "推理強度",
+      "description": "設定模型在行動前思考的深度 —— 越高表示推理越深入、消耗的權杖越多。"
+    },
+    "systemPromptPreset": {
+      "label": "助理風格",
+      "description": "選擇助理起始使用的內建行為。"
+    },
+    "appendSystemPrompt": {
+      "label": "額外指令",
+      "description": "在 Claude Code 風格之上新增額外指令。"
+    },
+    "customSystemPrompt": {
+      "label": "自訂指令",
+      "description": "保存你自己的指令，僅在風格設為「自訂」時使用。"
+    },
+    "cwd": {
+      "label": "工作資料夾",
+      "description": "設定助理的工作資料夾；留空則使用 Node-RED 的資料夾。"
+    },
+    "permissionMode": {
+      "label": "工具權限",
+      "description": "設定助理在詢問之前可以自行執行的程度。"
+    },
+    "allowedTools": {
+      "label": "允許的工具",
+      "description": "列出助理無需詢問即可使用的工具，每行一個。"
+    },
+    "disallowedTools": {
+      "label": "封鎖的工具",
+      "description": "列出助理絕不可使用的工具，每行一個。"
+    },
+    "settingSources": {
+      "label": "要載入的專案設定",
+      "description": "選擇要載入的專案設定檔（user、project、local）。"
+    },
+    "maxTurns": {
+      "label": "最大步驟數",
+      "description": "限制助理可執行的來回步驟數；0 表示無限制。"
+    },
+    "maxBudgetUsd": {
+      "label": "支出上限（USD）",
+      "description": "當預估成本達到此美元金額時停止執行；0 表示無限制。"
+    },
+    "additionalDirectories": {
+      "label": "額外資料夾",
+      "description": "列出除工作資料夾外助理可開啟的其他資料夾，每行一個。"
+    },
+    "supportedDialogKinds": {
+      "label": "問題類型（進階）",
+      "description": "進階：列出你的介面可以回答的釐清問題類型。"
+    }
   },
   "options": {
     "provider": {
@@ -75,7 +129,13 @@
     "cancel": "取消"
   },
   "credentials": {
-    "apiKey": "API 金鑰",
-    "oauthToken": "訂閱權杖"
+    "apiKey": {
+      "label": "API 金鑰",
+      "description": "保存你的 Anthropic API 金鑰，在登入方式為 API 金鑰時使用。"
+    },
+    "oauthToken": {
+      "label": "訂閱權杖",
+      "description": "保存你的 Claude 訂閱權杖，在登入方式為貼上的訂閱權杖時使用。"
+    }
   }
 }

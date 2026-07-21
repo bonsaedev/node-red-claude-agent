@@ -1,16 +1,46 @@
 {
   "label": "herramienta claude",
   "configs": {
-    "name": "Nombre de la herramienta",
-    "agent": "Agente",
-    "description": "Descripción",
-    "params": "Parámetros",
-    "timeoutSeconds": "Tiempo de espera (segundos)",
-    "preApproved": "Preaprobada",
-    "readOnly": "Solo lectura",
-    "errorPort": "Puerto de error",
-    "completePort": "Puerto de finalización",
-    "statusPort": "Puerto de estado"
+    "name": {
+      "label": "Nombre de la herramienta",
+      "description": "Establece el nombre de la herramienta que llama el modelo (se convierte en mcp__flow__<nombre>)."
+    },
+    "agent": {
+      "label": "Agente",
+      "description": "Vincula esta herramienta a la configuración del agente que extiende."
+    },
+    "description": {
+      "label": "Descripción",
+      "description": "Describe qué hace la herramienta para que Claude sepa cuándo llamarla."
+    },
+    "params": {
+      "label": "Parámetros",
+      "description": "Define las entradas de la herramienta, una fila por parámetro."
+    },
+    "timeoutSeconds": {
+      "label": "Tiempo de espera (segundos)",
+      "description": "Establece cuántos segundos esperar una herramienta claude retorno antes de devolver un error de tiempo de espera al modelo."
+    },
+    "preApproved": {
+      "label": "Preaprobada",
+      "description": "Preaprueba la herramienta para que la llamada omita la comprobación de permisos."
+    },
+    "readOnly": {
+      "label": "Solo lectura",
+      "description": "Marca la herramienta como libre de efectos secundarios para que Claude pueda agruparla en paralelo con otras lecturas."
+    },
+    "errorPort": {
+      "label": "Puerto de error",
+      "description": "Añade una salida de error aparte; cuando el nodo lanza un error, este se envía ahí en lugar de detener el flujo."
+    },
+    "completePort": {
+      "label": "Puerto de finalización",
+      "description": "Añade un puerto de salida de finalización que emite después de que el nodo termina de procesar un mensaje."
+    },
+    "statusPort": {
+      "label": "Puerto de estado",
+      "description": "Añade un puerto de salida de estado que emite los cambios de estado del nodo como mensajes."
+    }
   },
   "outputs": {
     "call": {

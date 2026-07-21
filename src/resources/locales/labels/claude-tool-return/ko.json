@@ -1,11 +1,26 @@
 {
   "label": "claude 도구 반환",
   "configs": {
-    "name": "이름",
-    "format": "반환 형식",
-    "errorPort": "오류 포트",
-    "completePort": "완료 포트",
-    "statusPort": "상태 포트"
+    "name": {
+      "label": "이름",
+      "description": "에디터에서 노드에 표시되는 선택적 레이블입니다."
+    },
+    "format": {
+      "label": "반환 형식",
+      "description": "msg.payload를 일반 텍스트 블록으로 반환할지 기계가 읽을 수 있는 JSON으로 반환할지 선택합니다."
+    },
+    "errorPort": {
+      "label": "오류 포트",
+      "description": "오류 출력 포트를 추가합니다. 노드가 오류를 던지면 플로우를 중단하는 대신 해당 포트로 전송됩니다."
+    },
+    "completePort": {
+      "label": "완료 포트",
+      "description": "완료 출력 포트를 추가합니다. 노드가 메시지 처리를 마친 후에 방출합니다."
+    },
+    "statusPort": {
+      "label": "상태 포트",
+      "description": "상태 출력 포트를 추가합니다. 노드의 상태 변화를 메시지로 방출합니다."
+    }
   },
   "options": {
     "format": {
@@ -15,6 +30,6 @@
   },
   "input": {
     "label": "반환",
-    "description": "Claude 도구 호출에 대한 플로우의 응답입니다. 값은 msg.output.payload에 실려 전달됩니다. 모델에 오류를 반환하려면 msg.output.isError를 설정하세요."
+    "description": "Claude 도구 호출에 대한 플로우의 응답입니다. 값은 msg.payload에 실려 전달됩니다. 모델에 오류를 반환하려면 msg.isError를 설정하세요."
   }
 }

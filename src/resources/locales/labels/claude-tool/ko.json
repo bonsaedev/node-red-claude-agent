@@ -1,16 +1,46 @@
 {
   "label": "claude 도구",
   "configs": {
-    "name": "도구 이름",
-    "agent": "에이전트",
-    "description": "설명",
-    "params": "매개변수",
-    "timeoutSeconds": "제한 시간(초)",
-    "preApproved": "사전 승인됨",
-    "readOnly": "읽기 전용",
-    "errorPort": "오류 포트",
-    "completePort": "완료 포트",
-    "statusPort": "상태 포트"
+    "name": {
+      "label": "도구 이름",
+      "description": "모델이 호출하는 도구 이름을 설정합니다(mcp__flow__<이름>이 됩니다)."
+    },
+    "agent": {
+      "label": "에이전트",
+      "description": "이 도구를 확장 대상 에이전트 구성에 바인딩합니다."
+    },
+    "description": {
+      "label": "설명",
+      "description": "Claude가 언제 호출할지 알 수 있도록 도구가 하는 일을 설명합니다."
+    },
+    "params": {
+      "label": "매개변수",
+      "description": "도구의 입력을 매개변수마다 한 행씩 정의합니다."
+    },
+    "timeoutSeconds": {
+      "label": "제한 시간(초)",
+      "description": "모델에 시간 초과 오류를 반환하기 전에 claude 도구 반환을 몇 초 기다릴지 설정합니다."
+    },
+    "preApproved": {
+      "label": "사전 승인됨",
+      "description": "도구를 사전 승인하여 호출이 권한 확인을 건너뛰도록 합니다."
+    },
+    "readOnly": {
+      "label": "읽기 전용",
+      "description": "도구를 부작용이 없는 것으로 표시하여 Claude가 다른 읽기와 병렬로 묶어 실행할 수 있게 합니다."
+    },
+    "errorPort": {
+      "label": "오류 포트",
+      "description": "별도의 오류 출력을 추가합니다. 노드가 오류를 발생시키면 플로우를 중단하는 대신 그곳으로 전송됩니다."
+    },
+    "completePort": {
+      "label": "완료 포트",
+      "description": "노드가 메시지 처리를 마친 후 방출하는 완료 출력 포트를 추가합니다."
+    },
+    "statusPort": {
+      "label": "상태 포트",
+      "description": "노드의 상태 변경을 메시지로 방출하는 상태 출력 포트를 추가합니다."
+    }
   },
   "outputs": {
     "call": {

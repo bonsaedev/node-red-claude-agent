@@ -66,12 +66,12 @@ function mockConfig(options: Record<string, unknown> = {}) {
   };
 }
 
-/** Read each port-N emission's wrapped payload (the node sends under `output`). */
+/** Read each port-N emission (a flat accumulating record). */
 function outputs(
-  node: { sent: (p: number) => { output: unknown }[] },
+  node: { sent: (p: number) => Record<string, unknown>[] },
   port: number,
 ) {
-  return node.sent(port).map((m) => m.output as Record<string, any>);
+  return node.sent(port);
 }
 
 const RESULT_OK = {
@@ -493,7 +493,7 @@ describe("claude-agent", () => {
       const run = node.receive({ payload: "list", correlationId: "owner" });
       await vi.waitFor(() => expect(node.sent(1).length).toBeGreaterThan(0));
 
-      const ask = node.sent(1)[0].output as {
+      const ask = node.sent(1)[0] as unknown as {
         request: {
           requestId: string;
           kind: string;
@@ -544,7 +544,7 @@ describe("claude-agent", () => {
       const run = node.receive({ payload: "list", correlationId: "owner" });
       await vi.waitFor(() => expect(node.sent(1).length).toBeGreaterThan(0));
       const requestId = (
-        node.sent(1)[0].output as { request: { requestId: string } }
+        node.sent(1)[0] as unknown as { request: { requestId: string } }
       ).request.requestId;
 
       // an unrelated client must not be able to answer
@@ -591,7 +591,7 @@ describe("claude-agent", () => {
       const run = node.receive({ payload: "list" });
       await vi.waitFor(() => expect(node.sent(1).length).toBeGreaterThan(0));
       const requestId = (
-        node.sent(1)[0].output as { request: { requestId: string } }
+        node.sent(1)[0] as unknown as { request: { requestId: string } }
       ).request.requestId;
 
       // an answer that carries a correlationId must NOT resolve the un-correlated run
@@ -631,7 +631,7 @@ describe("claude-agent", () => {
       const run = node.receive({ payload: "go", correlationId: "owner" });
       await vi.waitFor(() => expect(node.sent(1).length).toBeGreaterThan(0));
       const requestId = (
-        node.sent(1)[0].output as { request: { requestId: string } }
+        node.sent(1)[0] as unknown as { request: { requestId: string } }
       ).request.requestId;
 
       await node.receive({
@@ -668,7 +668,7 @@ describe("claude-agent", () => {
       const run = node.receive({ payload: "ask", correlationId: "c-1" });
       await vi.waitFor(() => expect(node.sent(1).length).toBeGreaterThan(0));
 
-      const ask = node.sent(1)[0].output as {
+      const ask = node.sent(1)[0] as unknown as {
         request: {
           requestId: string;
           kind: string;

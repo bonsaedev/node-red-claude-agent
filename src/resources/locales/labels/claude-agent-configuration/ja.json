@@ -4,24 +4,78 @@
     "learnMore": "詳細"
   },
   "configs": {
-    "name": "名前",
-    "provider": "プロバイダー",
-    "authMethod": "サインイン方法",
-    "model": "モデル",
-    "fallbackModel": "予備モデル",
-    "effort": "推論の深さ",
-    "systemPromptPreset": "アシスタントのスタイル",
-    "appendSystemPrompt": "追加の指示",
-    "customSystemPrompt": "カスタム指示",
-    "cwd": "作業フォルダー",
-    "permissionMode": "ツールの権限",
-    "allowedTools": "許可するツール",
-    "disallowedTools": "ブロックするツール",
-    "settingSources": "読み込むプロジェクト設定",
-    "maxTurns": "最大ステップ数",
-    "maxBudgetUsd": "支出上限（USD）",
-    "additionalDirectories": "追加フォルダー",
-    "supportedDialogKinds": "質問の種類（詳細設定）"
+    "name": {
+      "label": "名前",
+      "description": "エディターでノードに表示される任意のラベル。"
+    },
+    "provider": {
+      "label": "プロバイダー",
+      "description": "Claude を実行する場所を選択します — Anthropic に直接、または Amazon・Google・Microsoft のクラウドアカウント経由。"
+    },
+    "authMethod": {
+      "label": "サインイン方法",
+      "description": "プロバイダーが Anthropic の場合のサインイン方法を選択します。APIキーか Claude サブスクリプション。"
+    },
+    "model": {
+      "label": "モデル",
+      "description": "使用する Claude モデルを選択します。既定を使う場合は空のままにします。"
+    },
+    "fallbackModel": {
+      "label": "予備モデル",
+      "description": "メインモデルが利用できないときに自動的に使用される予備モデルを選択します。"
+    },
+    "effort": {
+      "label": "推論の深さ",
+      "description": "モデルが行動前にどれだけ深く考えるかを設定します。高いほど推論が深くなり、トークンも多く消費します。"
+    },
+    "systemPromptPreset": {
+      "label": "アシスタントのスタイル",
+      "description": "アシスタントが開始時に使う組み込みの動作を選択します。"
+    },
+    "appendSystemPrompt": {
+      "label": "追加の指示",
+      "description": "Claude Code スタイルに加える追加の指示を設定します。"
+    },
+    "customSystemPrompt": {
+      "label": "カスタム指示",
+      "description": "独自の指示を保持します。スタイルが「カスタム」に設定されている場合のみ使用されます。"
+    },
+    "cwd": {
+      "label": "作業フォルダー",
+      "description": "アシスタントが作業するフォルダーを設定します。空のままにすると Node-RED のフォルダーを使用します。"
+    },
+    "permissionMode": {
+      "label": "ツールの権限",
+      "description": "アシスタントが確認を求める前に自律的にどこまで行えるかを設定します。"
+    },
+    "allowedTools": {
+      "label": "許可するツール",
+      "description": "アシスタントが確認なしで使用できるツールを1行に1つずつ列挙します。"
+    },
+    "disallowedTools": {
+      "label": "ブロックするツール",
+      "description": "アシスタントが決して使用できないツールを1行に1つずつ列挙します。"
+    },
+    "settingSources": {
+      "label": "読み込むプロジェクト設定",
+      "description": "読み込むプロジェクト設定ファイル（user、project、local）を選択します。"
+    },
+    "maxTurns": {
+      "label": "最大ステップ数",
+      "description": "アシスタントが実行できる往復ステップ数を制限します。0 は無制限を意味します。"
+    },
+    "maxBudgetUsd": {
+      "label": "支出上限（USD）",
+      "description": "推定コストがこの米ドル額に達したら実行を停止します。0 は無制限を意味します。"
+    },
+    "additionalDirectories": {
+      "label": "追加フォルダー",
+      "description": "作業フォルダー以外にアシスタントが開けるフォルダーを1行に1つずつ列挙します。"
+    },
+    "supportedDialogKinds": {
+      "label": "質問の種類（詳細設定）",
+      "description": "詳細設定：UI が回答できる確認質問の種類を列挙します。"
+    }
   },
   "options": {
     "provider": {
@@ -75,7 +129,13 @@
     "cancel": "キャンセル"
   },
   "credentials": {
-    "apiKey": "APIキー",
-    "oauthToken": "サブスクリプショントークン"
+    "apiKey": {
+      "label": "APIキー",
+      "description": "Anthropic の APIキーを保持します。サインイン方法が「APIキー」のときに使用されます。"
+    },
+    "oauthToken": {
+      "label": "サブスクリプショントークン",
+      "description": "Claude サブスクリプショントークンを保持します。サインイン方法が貼り付けたサブスクリプショントークンのときに使用されます。"
+    }
   }
 }

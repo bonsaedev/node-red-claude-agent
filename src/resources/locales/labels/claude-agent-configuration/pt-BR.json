@@ -4,24 +4,78 @@
     "learnMore": "Saiba mais"
   },
   "configs": {
-    "name": "Nome",
-    "provider": "Provedor",
-    "authMethod": "Método de login",
-    "model": "Modelo",
-    "fallbackModel": "Modelo reserva",
-    "effort": "Esforço de raciocínio",
-    "systemPromptPreset": "Estilo do assistente",
-    "appendSystemPrompt": "Instruções adicionais",
-    "customSystemPrompt": "Instruções personalizadas",
-    "cwd": "Pasta de trabalho",
-    "permissionMode": "Permissões de ferramentas",
-    "allowedTools": "Ferramentas permitidas",
-    "disallowedTools": "Ferramentas bloqueadas",
-    "settingSources": "Configurações do projeto a carregar",
-    "maxTurns": "Máximo de etapas",
-    "maxBudgetUsd": "Limite de gastos (USD)",
-    "additionalDirectories": "Pastas adicionais",
-    "supportedDialogKinds": "Tipos de pergunta (avançado)"
+    "name": {
+      "label": "Nome",
+      "description": "Um rótulo opcional exibido no nó no editor."
+    },
+    "provider": {
+      "label": "Provedor",
+      "description": "Seleciona onde o Claude é executado — diretamente na Anthropic ou por meio da sua conta na nuvem da Amazon, Google ou Microsoft."
+    },
+    "authMethod": {
+      "label": "Método de login",
+      "description": "Escolhe como fazer login quando o provedor é a Anthropic: uma chave de API ou sua assinatura Claude."
+    },
+    "model": {
+      "label": "Modelo",
+      "description": "Seleciona qual modelo Claude usar; deixe vazio para o padrão."
+    },
+    "fallbackModel": {
+      "label": "Modelo reserva",
+      "description": "Seleciona um modelo reserva usado automaticamente quando o principal está indisponível."
+    },
+    "effort": {
+      "label": "Esforço de raciocínio",
+      "description": "Define o quanto o modelo pensa antes de agir — mais alto significa raciocínio mais profundo e mais tokens."
+    },
+    "systemPromptPreset": {
+      "label": "Estilo do assistente",
+      "description": "Escolhe o comportamento integrado com o qual o assistente começa."
+    },
+    "appendSystemPrompt": {
+      "label": "Instruções adicionais",
+      "description": "Adiciona instruções extras sobre o estilo do Claude Code."
+    },
+    "customSystemPrompt": {
+      "label": "Instruções personalizadas",
+      "description": "Contém suas próprias instruções, usadas apenas quando o estilo está definido como Personalizado."
+    },
+    "cwd": {
+      "label": "Pasta de trabalho",
+      "description": "Define a pasta em que o assistente trabalha; deixe vazio para usar a pasta do Node-RED."
+    },
+    "permissionMode": {
+      "label": "Permissões de ferramentas",
+      "description": "Define o quanto o assistente pode fazer por conta própria antes de perguntar."
+    },
+    "allowedTools": {
+      "label": "Ferramentas permitidas",
+      "description": "Lista as ferramentas que o assistente pode usar sem perguntar, uma por linha."
+    },
+    "disallowedTools": {
+      "label": "Ferramentas bloqueadas",
+      "description": "Lista as ferramentas que o assistente nunca pode usar, uma por linha."
+    },
+    "settingSources": {
+      "label": "Configurações do projeto a carregar",
+      "description": "Escolhe quais arquivos de configurações do projeto (user, project, local) carregar."
+    },
+    "maxTurns": {
+      "label": "Máximo de etapas",
+      "description": "Limita quantas etapas de ida e volta o assistente pode dar; 0 significa sem limite."
+    },
+    "maxBudgetUsd": {
+      "label": "Limite de gastos (USD)",
+      "description": "Interrompe a execução quando o custo estimado atinge esta quantia em dólares americanos; 0 significa sem limite."
+    },
+    "additionalDirectories": {
+      "label": "Pastas adicionais",
+      "description": "Lista outras pastas que o assistente pode abrir além da pasta de trabalho, uma por linha."
+    },
+    "supportedDialogKinds": {
+      "label": "Tipos de pergunta (avançado)",
+      "description": "Avançado: lista os tipos de pergunta de esclarecimento que sua interface pode responder."
+    }
   },
   "options": {
     "provider": {
@@ -75,7 +129,13 @@
     "cancel": "Cancelar"
   },
   "credentials": {
-    "apiKey": "Chave de API",
-    "oauthToken": "Token de assinatura"
+    "apiKey": {
+      "label": "Chave de API",
+      "description": "Contém sua chave de API da Anthropic, usada quando o método de login é chave de API."
+    },
+    "oauthToken": {
+      "label": "Token de assinatura",
+      "description": "Contém seu token de assinatura Claude, usado quando o método de login é um token de assinatura colado."
+    }
   }
 }

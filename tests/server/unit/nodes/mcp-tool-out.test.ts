@@ -13,123 +13,42 @@ function settleSpy(): Settle & { mock: ReturnType<typeof vi.fn>["mock"] } {
 }
 
 describe("mcp-tool-out", () => {
-  describe("private-channel path (primary)", () => {
-    it("settles the live resolver riding the private channel and takes it once", async () => {
-      const { node } = await createNode(McpToolOut, { config: {} });
-      const settle = settleSpy();
-
-      await node.receive(
-        { _msgid: "sig-1", output: { payload: "the answer" } },
-        { private: { mcpReturn: settle } },
-      );
-
-      expect(settle).toHaveBeenCalledTimes(1);
-      expect(settle).toHaveBeenCalledWith({
-        value: "the answer",
-        format: "text",
-        isError: false,
-      } satisfies ToolAnswer);
-      expect(node.statuses().at(-1)).toMatchObject({ text: "returned" });
-    });
-
-    it("propagates isError from msg.output.isError", async () => {
-      const { node } = await createNode(McpToolOut, { config: {} });
-      const settle = settleSpy();
-
-      await node.receive(
-        { _msgid: "sig-1", output: { payload: "boom", isError: true } },
-        { private: { mcpReturn: settle } },
-      );
-
-      expect(settle).toHaveBeenCalledWith(
-        expect.objectContaining({ value: "boom", isError: true }),
-      );
-    });
-
-    it("carries the configured json format into the answer", async () => {
-      const { node } = await createNode(McpToolOut, {
-        config: { format: "json" },
-      });
-      const settle = settleSpy();
-
-      await node.receive(
-        { _msgid: "sig-1", output: { payload: { ok: true } } },
-        { private: { mcpReturn: settle } },
-      );
-
-      expect(settle).toHaveBeenCalledWith(
-        expect.objectContaining({ value: { ok: true }, format: "json" }),
-      );
-    });
-
-    it("reads the value at the top level when there is no output envelope", async () => {
-      const { node } = await createNode(McpToolOut, { config: {} });
-      const settle = settleSpy();
-
-      await node.receive(
-        { _msgid: "sig-1", payload: "raw" },
-        { private: { mcpReturn: settle } },
-      );
-
-      expect(settle).toHaveBeenCalledWith(
-        expect.objectContaining({ value: "raw" }),
-      );
-    });
-
-    it("prefers the author's top-level payload over the source's stale output args", async () => {
-      // A core Node-RED node did `msg.payload = answer; return msg` — msg.output
-      // still holds the source's ORIGINAL tool args. The answer must be the fresh
-      // top-level payload, not the echoed args.
-      const { node } = await createNode(McpToolOut, { config: {} });
-      const settle = settleSpy();
-
-      await node.receive(
-        {
-          _msgid: "sig-1",
-          payload: "the answer",
-          output: { payload: { city: "SF" }, mcpTool: { callId: "c-1" } },
-        },
-        { private: { mcpReturn: settle } },
-      );
-
-      expect(settle).toHaveBeenCalledWith(
-        expect.objectContaining({ value: "the answer" }),
-      );
-    });
+  beforeEach(() => {
+    // isolate the module-level index between tests
+    PendingIndex.drop("call-1");
   });
 
-  describe("callId fallback path", () => {
-    beforeEach(() => {
-      PendingIndex.drop("call-1");
+  it("settles the parked call by its callId, take-once", async () => {
+    const settle = settleSpy();
+    PendingIndex.put("call-1", settle);
+
+    const { node } = await createNode(McpToolOut, { config: {} });
+    await node.receive({
+      payload: "the answer",
+      _mcpTool: { callId: "call-1" },
     });
 
-    it("settles a pending call by callId when no private resolver is present", async () => {
-      const settle = settleSpy();
-      PendingIndex.put("call-1", settle);
+    expect(settle).toHaveBeenCalledTimes(1);
+    expect(settle).toHaveBeenCalledWith({
+      value: "the answer",
+      format: "text",
+      isError: false,
+    } satisfies ToolAnswer);
+    expect(node.statuses().at(-1)).toMatchObject({ text: "returned" });
+    // taken once — a second return finds nothing
+    expect(PendingIndex.take("call-1")).toBeUndefined();
+  });
 
-      const { node } = await createNode(McpToolOut, { config: {} });
-      await node.receive({
-        _msgid: "sig-1",
-        output: { payload: "late answer", mcpTool: { callId: "call-1" } },
-      });
-
-      expect(settle).toHaveBeenCalledWith(
-        expect.objectContaining({ value: "late answer" }),
-      );
-      expect(PendingIndex.take("call-1")).toBeUndefined();
+  it("warns when there is no pending call to settle", async () => {
+    const { node } = await createNode(McpToolOut, { config: {} });
+    await node.receive({
+      payload: "orphan",
+      _mcpTool: { callId: "gone" },
     });
 
-    it("warns when there is no pending call to settle", async () => {
-      const { node } = await createNode(McpToolOut, { config: {} });
-      await node.receive({
-        _msgid: "sig-1",
-        output: { payload: "orphan", mcpTool: { callId: "gone" } },
-      });
-
-      expect(
-        node.warned().some((w) => w.includes("no pending tool call")),
-      ).toBe(true);
-      expect(node.statuses().at(-1)).toMatchObject({ text: "no pending call" });
-    });
+    expect(node.warned().some((w) => w.includes("no pending tool call"))).toBe(
+      true,
+    );
+    expect(node.statuses().at(-1)).toMatchObject({ text: "no pending call" });
   });
 });

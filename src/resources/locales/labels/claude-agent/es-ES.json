@@ -1,16 +1,46 @@
 {
   "label": "agente claude",
   "configs": {
-    "name": "Nombre",
-    "config": "Configuración",
-    "prompt": "Prompt",
-    "responseMode": "Estilo de respuesta",
-    "interactive": "Interactivo",
-    "includePartial": "Escritura en vivo",
-    "permissionMode": "Permisos de herramientas",
-    "errorPort": "Puerto de error",
-    "completePort": "Puerto de finalización",
-    "statusPort": "Puerto de estado"
+    "name": {
+      "label": "Nombre",
+      "description": "Una etiqueta opcional que se muestra en el nodo en el editor."
+    },
+    "config": {
+      "label": "Configuración",
+      "description": "Selecciona la configuración del agente Claude (inicio de sesión y ajustes de ejecución) que usa este nodo."
+    },
+    "prompt": {
+      "label": "Prompt",
+      "description": "Define qué se le pide al asistente; por defecto, la carga del mensaje entrante."
+    },
+    "responseMode": {
+      "label": "Estilo de respuesta",
+      "description": "Elige si se envía solo la respuesta final o se transmite cada parte a medida que llega."
+    },
+    "interactive": {
+      "label": "Interactivo",
+      "description": "Permite que el asistente se detenga para pedir una aprobación o una pregunta aclaratoria por el puerto de consulta."
+    },
+    "includePartial": {
+      "label": "Escritura en vivo",
+      "description": "Transmite el texto generado palabra por palabra para un efecto de escritura en vivo."
+    },
+    "permissionMode": {
+      "label": "Permisos de herramientas",
+      "description": "Anula los permisos de herramientas de la configuración solo para este nodo."
+    },
+    "errorPort": {
+      "label": "Puerto de error",
+      "description": "Añade una salida de error aparte; cuando el nodo lanza un error, este se envía ahí en lugar de detener el flujo."
+    },
+    "completePort": {
+      "label": "Puerto de finalización",
+      "description": "Añade un puerto de salida de finalización que emite después de que el nodo termina de procesar un mensaje."
+    },
+    "statusPort": {
+      "label": "Puerto de estado",
+      "description": "Añade un puerto de salida de estado que emite los cambios de estado del nodo como mensajes."
+    }
   },
   "options": {
     "responseMode": {

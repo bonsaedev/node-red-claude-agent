@@ -4,24 +4,78 @@
     "learnMore": "Más información"
   },
   "configs": {
-    "name": "Nombre",
-    "provider": "Proveedor",
-    "authMethod": "Método de inicio de sesión",
-    "model": "Modelo",
-    "fallbackModel": "Modelo de respaldo",
-    "effort": "Esfuerzo de razonamiento",
-    "systemPromptPreset": "Estilo del asistente",
-    "appendSystemPrompt": "Instrucciones adicionales",
-    "customSystemPrompt": "Instrucciones personalizadas",
-    "cwd": "Carpeta de trabajo",
-    "permissionMode": "Permisos de herramientas",
-    "allowedTools": "Herramientas permitidas",
-    "disallowedTools": "Herramientas bloqueadas",
-    "settingSources": "Ajustes del proyecto a cargar",
-    "maxTurns": "Pasos máximos",
-    "maxBudgetUsd": "Límite de gasto (USD)",
-    "additionalDirectories": "Carpetas adicionales",
-    "supportedDialogKinds": "Tipos de pregunta (avanzado)"
+    "name": {
+      "label": "Nombre",
+      "description": "Una etiqueta opcional que se muestra en el nodo en el editor."
+    },
+    "provider": {
+      "label": "Proveedor",
+      "description": "Selecciona dónde se ejecuta Claude: directamente en Anthropic o a través de tu cuenta en la nube de Amazon, Google o Microsoft."
+    },
+    "authMethod": {
+      "label": "Método de inicio de sesión",
+      "description": "Elige cómo iniciar sesión cuando el proveedor es Anthropic: una clave de API o tu suscripción de Claude."
+    },
+    "model": {
+      "label": "Modelo",
+      "description": "Selecciona qué modelo de Claude usar; déjalo vacío para el predeterminado."
+    },
+    "fallbackModel": {
+      "label": "Modelo de respaldo",
+      "description": "Selecciona un modelo de respaldo que se usa automáticamente cuando el principal no está disponible."
+    },
+    "effort": {
+      "label": "Esfuerzo de razonamiento",
+      "description": "Define cuánto piensa el modelo antes de actuar: más alto significa un razonamiento más profundo y más tokens."
+    },
+    "systemPromptPreset": {
+      "label": "Estilo del asistente",
+      "description": "Elige el comportamiento integrado con el que arranca el asistente."
+    },
+    "appendSystemPrompt": {
+      "label": "Instrucciones adicionales",
+      "description": "Añade instrucciones adicionales sobre el estilo de Claude Code."
+    },
+    "customSystemPrompt": {
+      "label": "Instrucciones personalizadas",
+      "description": "Contiene tus propias instrucciones, usadas solo cuando el estilo está configurado como Personalizado."
+    },
+    "cwd": {
+      "label": "Carpeta de trabajo",
+      "description": "Define la carpeta en la que trabaja el asistente; déjala vacía para usar la carpeta de Node-RED."
+    },
+    "permissionMode": {
+      "label": "Permisos de herramientas",
+      "description": "Define cuánto puede hacer el asistente por su cuenta antes de preguntar."
+    },
+    "allowedTools": {
+      "label": "Herramientas permitidas",
+      "description": "Lista las herramientas que el asistente puede usar sin preguntar, una por línea."
+    },
+    "disallowedTools": {
+      "label": "Herramientas bloqueadas",
+      "description": "Lista las herramientas que el asistente nunca puede usar, una por línea."
+    },
+    "settingSources": {
+      "label": "Ajustes del proyecto a cargar",
+      "description": "Elige qué archivos de ajustes del proyecto (user, project, local) cargar."
+    },
+    "maxTurns": {
+      "label": "Pasos máximos",
+      "description": "Limita cuántos pasos de ida y vuelta puede dar el asistente; 0 significa sin límite."
+    },
+    "maxBudgetUsd": {
+      "label": "Límite de gasto (USD)",
+      "description": "Detiene la ejecución cuando el coste estimado alcanza esta cantidad de dólares estadounidenses; 0 significa sin límite."
+    },
+    "additionalDirectories": {
+      "label": "Carpetas adicionales",
+      "description": "Lista carpetas adicionales que el asistente puede abrir además de la carpeta de trabajo, una por línea."
+    },
+    "supportedDialogKinds": {
+      "label": "Tipos de pregunta (avanzado)",
+      "description": "Avanzado: lista los tipos de pregunta aclaratoria que tu interfaz puede responder."
+    }
   },
   "options": {
     "provider": {
@@ -75,7 +129,13 @@
     "cancel": "Cancelar"
   },
   "credentials": {
-    "apiKey": "Clave de API",
-    "oauthToken": "Token de suscripción"
+    "apiKey": {
+      "label": "Clave de API",
+      "description": "Contiene tu clave de API de Anthropic, usada cuando el método de inicio de sesión es clave de API."
+    },
+    "oauthToken": {
+      "label": "Token de suscripción",
+      "description": "Contiene tu token de suscripción de Claude, usado cuando el método de inicio de sesión es un token de suscripción pegado."
+    }
   }
 }

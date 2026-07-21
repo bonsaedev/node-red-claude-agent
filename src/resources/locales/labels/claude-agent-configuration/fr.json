@@ -4,24 +4,78 @@
     "learnMore": "En savoir plus"
   },
   "configs": {
-    "name": "Nom",
-    "provider": "Fournisseur",
-    "authMethod": "Méthode de connexion",
-    "model": "Modèle",
-    "fallbackModel": "Modèle de secours",
-    "effort": "Effort de réflexion",
-    "systemPromptPreset": "Style de l'assistant",
-    "appendSystemPrompt": "Instructions supplémentaires",
-    "customSystemPrompt": "Instructions personnalisées",
-    "cwd": "Dossier de travail",
-    "permissionMode": "Autorisations des outils",
-    "allowedTools": "Outils autorisés",
-    "disallowedTools": "Outils bloqués",
-    "settingSources": "Paramètres du projet à charger",
-    "maxTurns": "Étapes max.",
-    "maxBudgetUsd": "Limite de dépenses (USD)",
-    "additionalDirectories": "Dossiers supplémentaires",
-    "supportedDialogKinds": "Types de question (avancé)"
+    "name": {
+      "label": "Nom",
+      "description": "Une étiquette facultative affichée sur le nœud dans l'éditeur."
+    },
+    "provider": {
+      "label": "Fournisseur",
+      "description": "Sélectionne où Claude s'exécute — directement chez Anthropic ou via votre compte cloud Amazon, Google ou Microsoft."
+    },
+    "authMethod": {
+      "label": "Méthode de connexion",
+      "description": "Choisit comment se connecter lorsque le fournisseur est Anthropic : une clé API ou votre abonnement Claude."
+    },
+    "model": {
+      "label": "Modèle",
+      "description": "Sélectionne le modèle Claude à utiliser ; laissez vide pour la valeur par défaut."
+    },
+    "fallbackModel": {
+      "label": "Modèle de secours",
+      "description": "Sélectionne un modèle de secours utilisé automatiquement lorsque le principal est indisponible."
+    },
+    "effort": {
+      "label": "Effort de réflexion",
+      "description": "Définit l'intensité de réflexion du modèle avant d'agir — plus élevé signifie un raisonnement plus poussé et plus de jetons."
+    },
+    "systemPromptPreset": {
+      "label": "Style de l'assistant",
+      "description": "Choisit le comportement intégré à partir duquel l'assistant démarre."
+    },
+    "appendSystemPrompt": {
+      "label": "Instructions supplémentaires",
+      "description": "Ajoute des instructions supplémentaires au style Claude Code."
+    },
+    "customSystemPrompt": {
+      "label": "Instructions personnalisées",
+      "description": "Contient vos propres instructions, utilisées uniquement lorsque le style est réglé sur Personnalisé."
+    },
+    "cwd": {
+      "label": "Dossier de travail",
+      "description": "Définit le dossier dans lequel l'assistant travaille ; laissez vide pour utiliser le dossier de Node-RED."
+    },
+    "permissionMode": {
+      "label": "Autorisations des outils",
+      "description": "Définit dans quelle mesure l'assistant peut agir seul avant de demander."
+    },
+    "allowedTools": {
+      "label": "Outils autorisés",
+      "description": "Liste les outils que l'assistant peut utiliser sans demander, un par ligne."
+    },
+    "disallowedTools": {
+      "label": "Outils bloqués",
+      "description": "Liste les outils que l'assistant ne peut jamais utiliser, un par ligne."
+    },
+    "settingSources": {
+      "label": "Paramètres du projet à charger",
+      "description": "Choisit quels fichiers de paramètres du projet (user, project, local) charger."
+    },
+    "maxTurns": {
+      "label": "Étapes max.",
+      "description": "Limite le nombre d'allers-retours que l'assistant peut effectuer ; 0 signifie aucune limite."
+    },
+    "maxBudgetUsd": {
+      "label": "Limite de dépenses (USD)",
+      "description": "Arrête l'exécution dès que le coût estimé atteint ce montant en dollars américains ; 0 signifie aucune limite."
+    },
+    "additionalDirectories": {
+      "label": "Dossiers supplémentaires",
+      "description": "Liste d'autres dossiers que l'assistant peut ouvrir en plus du dossier de travail, un par ligne."
+    },
+    "supportedDialogKinds": {
+      "label": "Types de question (avancé)",
+      "description": "Avancé : liste les types de question de clarification auxquels votre interface peut répondre."
+    }
   },
   "options": {
     "provider": {
@@ -75,7 +129,13 @@
     "cancel": "Annuler"
   },
   "credentials": {
-    "apiKey": "Clé API",
-    "oauthToken": "Jeton d'abonnement"
+    "apiKey": {
+      "label": "Clé API",
+      "description": "Contient votre clé API Anthropic, utilisée lorsque la méthode de connexion est la clé API."
+    },
+    "oauthToken": {
+      "label": "Jeton d'abonnement",
+      "description": "Contient votre jeton d'abonnement Claude, utilisé lorsque la méthode de connexion est un jeton d'abonnement collé."
+    }
   }
 }

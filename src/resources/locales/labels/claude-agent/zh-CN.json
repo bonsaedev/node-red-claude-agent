@@ -1,16 +1,46 @@
 {
   "label": "claude 智能体",
   "configs": {
-    "name": "名称",
-    "config": "配置",
-    "prompt": "提示词",
-    "responseMode": "响应风格",
-    "interactive": "交互式",
-    "includePartial": "实时打字",
-    "permissionMode": "工具权限",
-    "errorPort": "错误端口",
-    "completePort": "完成端口",
-    "statusPort": "状态端口"
+    "name": {
+      "label": "名称",
+      "description": "在编辑器中显示于节点上的可选标签。"
+    },
+    "config": {
+      "label": "配置",
+      "description": "选择此节点使用的 Claude 智能体配置（登录和运行设置）。"
+    },
+    "prompt": {
+      "label": "提示词",
+      "description": "设置要向助手询问的内容；默认使用传入消息的负载。"
+    },
+    "responseMode": {
+      "label": "响应风格",
+      "description": "选择仅发送最终答案，还是在各部分到达时逐段流式传输。"
+    },
+    "interactive": {
+      "label": "交互式",
+      "description": "允许助手暂停，通过提问端口请求批准或提出澄清问题。"
+    },
+    "includePartial": {
+      "label": "实时打字",
+      "description": "逐词流式传输生成的文本，实现实时打字效果。"
+    },
+    "permissionMode": {
+      "label": "工具权限",
+      "description": "仅针对此节点覆盖配置的工具权限。"
+    },
+    "errorPort": {
+      "label": "错误端口",
+      "description": "添加单独的错误输出；当节点抛出错误时，错误会发送到该端口而不是中止流程。"
+    },
+    "completePort": {
+      "label": "完成端口",
+      "description": "添加一个完成输出端口，在节点处理完一条消息后发出。"
+    },
+    "statusPort": {
+      "label": "状态端口",
+      "description": "添加一个状态输出端口，将节点的状态变化作为消息发出。"
+    }
   },
   "options": {
     "responseMode": {

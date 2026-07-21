@@ -1,16 +1,46 @@
 {
   "label": "claude tool",
   "configs": {
-    "name": "Tool name",
-    "agent": "Agent",
-    "description": "Description",
-    "params": "Parameters",
-    "timeoutSeconds": "Timeout (seconds)",
-    "preApproved": "Pre-approved",
-    "readOnly": "Read-only",
-    "errorPort": "Error port",
-    "completePort": "Complete port",
-    "statusPort": "Status port"
+    "name": {
+      "label": "Tool name",
+      "description": "Sets the tool name the model calls (becomes mcp__flow__<name>)."
+    },
+    "agent": {
+      "label": "Agent",
+      "description": "Binds this tool to the agent configuration it extends."
+    },
+    "description": {
+      "label": "Description",
+      "description": "Describes what the tool does so Claude knows when to call it."
+    },
+    "params": {
+      "label": "Parameters",
+      "description": "Defines the tool's inputs, one row per parameter."
+    },
+    "timeoutSeconds": {
+      "label": "Timeout (seconds)",
+      "description": "Sets how many seconds to wait for a claude tool return before returning a timeout error to the model."
+    },
+    "preApproved": {
+      "label": "Pre-approved",
+      "description": "Pre-approves the tool so the call skips the permission pipeline."
+    },
+    "readOnly": {
+      "label": "Read-only",
+      "description": "Marks the tool side-effect-free so Claude may batch it in parallel with other reads."
+    },
+    "errorPort": {
+      "label": "Error port",
+      "description": "Adds a separate error output; when the node throws, the error is sent there instead of halting the flow."
+    },
+    "completePort": {
+      "label": "Complete port",
+      "description": "Adds a complete output port that emits after the node finishes handling a message."
+    },
+    "statusPort": {
+      "label": "Status port",
+      "description": "Adds a status output port that emits the node's status changes as messages."
+    }
   },
   "outputs": {
     "call": {

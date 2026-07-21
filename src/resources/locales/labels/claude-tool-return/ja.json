@@ -1,11 +1,26 @@
 {
   "label": "claude ツール返却",
   "configs": {
-    "name": "名前",
-    "format": "返却形式",
-    "errorPort": "エラーポート",
-    "completePort": "完了ポート",
-    "statusPort": "ステータスポート"
+    "name": {
+      "label": "名前",
+      "description": "エディタ上でノードに表示される任意のラベルです。"
+    },
+    "format": {
+      "label": "返却形式",
+      "description": "msg.payload をプレーンテキストのブロックとして返すか、機械可読な JSON として返すかを選択します。"
+    },
+    "errorPort": {
+      "label": "エラーポート",
+      "description": "エラー出力ポートを追加します。ノードがエラーをスローすると、フローを停止する代わりにそこへ送信されます。"
+    },
+    "completePort": {
+      "label": "完了ポート",
+      "description": "完了出力ポートを追加します。ノードがメッセージの処理を終えた後に送信します。"
+    },
+    "statusPort": {
+      "label": "ステータスポート",
+      "description": "ステータス出力ポートを追加します。ノードのステータス変化をメッセージとして送信します。"
+    }
   },
   "options": {
     "format": {
@@ -15,6 +30,6 @@
   },
   "input": {
     "label": "返却",
-    "description": "Claude のツール呼び出しに対するフローの回答です。値は msg.output.payload に載せます。モデルにエラーを返すには msg.output.isError を設定してください。"
+    "description": "Claude のツール呼び出しに対するフローの回答です。値は msg.payload に載せます。モデルにエラーを返すには msg.isError を設定してください。"
   }
 }

@@ -1,18 +1,54 @@
 {
   "label": "claude MCP",
   "configs": {
-    "name": "Nombre",
-    "agent": "Agente",
-    "serverName": "Nombre del servidor",
-    "transport": "Transporte",
-    "command": "Comando",
-    "args": "Argumentos",
-    "url": "URL",
-    "headerName": "Cabecera de autenticación (http/sse)",
-    "envName": "Variable de entorno (stdio)",
-    "timeout": "Tiempo de espera (ms)",
-    "alwaysLoad": "Cargar siempre las herramientas",
-    "preApproveAll": "Preaprobar todas las herramientas"
+    "name": {
+      "label": "Nombre",
+      "description": "Una etiqueta opcional que se muestra en el nodo en el editor."
+    },
+    "agent": {
+      "label": "Agente",
+      "description": "Vincula este servidor MCP a la configuración del agente que extiende."
+    },
+    "serverName": {
+      "label": "Nombre del servidor",
+      "description": "Establece un nombre único para este servidor, usado en los nombres de herramienta como mcp__<nombre>__<herramienta>; no puede ser 'flow'."
+    },
+    "transport": {
+      "label": "Transporte",
+      "description": "Elige cómo llegar al servidor: un comando local (stdio) o una URL remota (http/sse)."
+    },
+    "command": {
+      "label": "Comando",
+      "description": "Establece el ejecutable a ejecutar para el transporte stdio (por ejemplo: npx, node, python)."
+    },
+    "args": {
+      "label": "Argumentos",
+      "description": "Lista los argumentos pasados al comando stdio, separados por coma o salto de línea."
+    },
+    "url": {
+      "label": "URL",
+      "description": "Establece la URL del servidor para el transporte http o sse."
+    },
+    "headerName": {
+      "label": "Cabecera de autenticación (http/sse)",
+      "description": "Establece la cabecera en la que se envía el secreto para http/sse (por defecto Authorization: Bearer)."
+    },
+    "envName": {
+      "label": "Variable de entorno (stdio)",
+      "description": "Establece la variable de entorno con la que se proporciona el secreto para stdio."
+    },
+    "timeout": {
+      "label": "Tiempo de espera (ms)",
+      "description": "Establece los milisegundos máximos por llamada de herramienta antes de que el SDK la aborte; los valores por debajo de 1000 se ignoran."
+    },
+    "alwaysLoad": {
+      "label": "Cargar siempre las herramientas",
+      "description": "Incluye siempre las herramientas de este servidor en el prompt y bloquea el arranque hasta que se conecta."
+    },
+    "preApproveAll": {
+      "label": "Preaprobar todas las herramientas",
+      "description": "Preaprueba todas las herramientas de este servidor para que las llamadas omitan el aviso de aprobación."
+    }
   },
   "options": {
     "transport": {
@@ -22,6 +58,9 @@
     }
   },
   "credentials": {
-    "secret": "Token / clave de API"
+    "secret": {
+      "label": "Token / clave de API",
+      "description": "Contiene un token o clave de API para este servidor, enviado como cabecera Bearer (http/sse) o variable de entorno (stdio)."
+    }
   }
 }

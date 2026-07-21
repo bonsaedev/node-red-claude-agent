@@ -1,16 +1,46 @@
 {
   "label": "agent claude",
   "configs": {
-    "name": "Nom",
-    "config": "Configuration",
-    "prompt": "Prompt",
-    "responseMode": "Style de réponse",
-    "interactive": "Interactif",
-    "includePartial": "Saisie en direct",
-    "permissionMode": "Autorisations des outils",
-    "errorPort": "Port d'erreur",
-    "completePort": "Port de fin",
-    "statusPort": "Port de statut"
+    "name": {
+      "label": "Nom",
+      "description": "Une étiquette facultative affichée sur le nœud dans l'éditeur."
+    },
+    "config": {
+      "label": "Configuration",
+      "description": "Sélectionne la configuration de l'agent Claude (connexion et paramètres d'exécution) utilisée par ce nœud."
+    },
+    "prompt": {
+      "label": "Prompt",
+      "description": "Définit ce qui est demandé à l'assistant ; par défaut, la charge utile du message entrant."
+    },
+    "responseMode": {
+      "label": "Style de réponse",
+      "description": "Choisit d'envoyer uniquement la réponse finale ou de diffuser chaque partie au fur et à mesure."
+    },
+    "interactive": {
+      "label": "Interactif",
+      "description": "Permet à l'assistant de s'interrompre pour demander une approbation ou une question de clarification via le port de demande."
+    },
+    "includePartial": {
+      "label": "Saisie en direct",
+      "description": "Diffuse le texte généré mot à mot pour un effet de saisie en direct."
+    },
+    "permissionMode": {
+      "label": "Autorisations des outils",
+      "description": "Remplace les autorisations des outils de la configuration uniquement pour ce nœud."
+    },
+    "errorPort": {
+      "label": "Port d'erreur",
+      "description": "Ajoute une sortie d'erreur distincte ; lorsque le nœud lève une erreur, celle-ci y est envoyée au lieu d'interrompre le flux."
+    },
+    "completePort": {
+      "label": "Port de fin",
+      "description": "Ajoute un port de sortie de fin qui émet une fois que le nœud a terminé de traiter un message."
+    },
+    "statusPort": {
+      "label": "Port de statut",
+      "description": "Ajoute un port de sortie de statut qui émet les changements de statut du nœud sous forme de messages."
+    }
   },
   "options": {
     "responseMode": {

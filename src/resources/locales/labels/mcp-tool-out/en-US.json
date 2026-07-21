@@ -1,11 +1,26 @@
 {
   "label": "MCP tool out",
   "configs": {
-    "name": "Name",
-    "format": "Return format",
-    "errorPort": "Error port",
-    "completePort": "Complete port",
-    "statusPort": "Status port"
+    "name": {
+      "label": "Name",
+      "description": "An optional label shown on the node in the editor."
+    },
+    "format": {
+      "label": "Return format",
+      "description": "Chooses whether msg.payload is returned to the client as a plain text block or as machine-readable JSON."
+    },
+    "errorPort": {
+      "label": "Error port",
+      "description": "Adds an error output port; when the node throws, the error is sent there instead of halting the flow."
+    },
+    "completePort": {
+      "label": "Complete port",
+      "description": "Adds a complete output port that emits after the node finishes handling a message."
+    },
+    "statusPort": {
+      "label": "Status port",
+      "description": "Adds a status output port that emits the node's status changes as messages."
+    }
   },
   "options": {
     "format": {
@@ -15,6 +30,6 @@
   },
   "input": {
     "label": "Return",
-    "description": "The flow's answer to an MCP tool call. The value rides msg.output.payload; set msg.output.isError to return an error to the client."
+    "description": "The flow's answer to an MCP tool call. The value rides msg.payload; set msg.isError to return an error to the client."
   }
 }

@@ -11,8 +11,8 @@ import {
 } from "../../shared/schemas/claude-mcp";
 import { splitList } from "../lib/split-list";
 
-type Config = Infer<typeof ConfigsSchema>;
-type Credentials = Infer<typeof CredentialsSchema>;
+type ClaudeMcpConfig = Infer<typeof ConfigsSchema>;
+type ClaudeMcpCredentials = Infer<typeof CredentialsSchema>;
 
 /**
  * `claude-mcp` — a pure ConfigNode that points a bound agent at an EXTERNAL MCP
@@ -21,7 +21,10 @@ type Credentials = Infer<typeof CredentialsSchema>;
  * mid-run round-trip — the SDK/CLI owns the whole tool-call. Binds by identity via
  * a NodeRef to the same `claude-agent-configuration` the agent references.
  */
-export default class ClaudeMcp extends ConfigNode<Config, Credentials> {
+export default class ClaudeMcp extends ConfigNode<
+  ClaudeMcpConfig,
+  ClaudeMcpCredentials
+> {
   static override readonly type = "claude-mcp";
   static override readonly configSchema = ConfigsSchema;
   static override readonly credentialsSchema = CredentialsSchema;

@@ -4,24 +4,78 @@
     "learnMore": "Learn more"
   },
   "configs": {
-    "name": "Name",
-    "provider": "Provider",
-    "authMethod": "Sign-in method",
-    "model": "Model",
-    "fallbackModel": "Backup model",
-    "effort": "Reasoning effort",
-    "systemPromptPreset": "Assistant style",
-    "appendSystemPrompt": "Extra instructions",
-    "customSystemPrompt": "Custom instructions",
-    "cwd": "Working folder",
-    "permissionMode": "Tool permissions",
-    "allowedTools": "Allowed tools",
-    "disallowedTools": "Blocked tools",
-    "settingSources": "Project settings to load",
-    "maxTurns": "Max steps",
-    "maxBudgetUsd": "Spending limit (USD)",
-    "additionalDirectories": "Extra folders",
-    "supportedDialogKinds": "Question types (advanced)"
+    "name": {
+      "label": "Name",
+      "description": "An optional label shown on the node in the editor."
+    },
+    "provider": {
+      "label": "Provider",
+      "description": "Selects where Claude runs — Anthropic directly, or through your Amazon, Google, or Microsoft cloud account."
+    },
+    "authMethod": {
+      "label": "Sign-in method",
+      "description": "Chooses how to sign in when the provider is Anthropic: an API key or your Claude subscription."
+    },
+    "model": {
+      "label": "Model",
+      "description": "Selects which Claude model to use; leave empty for the default."
+    },
+    "fallbackModel": {
+      "label": "Backup model",
+      "description": "Selects a backup model used automatically when the main one is unavailable."
+    },
+    "effort": {
+      "label": "Reasoning effort",
+      "description": "Sets how hard the model thinks before acting — higher means deeper reasoning and more tokens."
+    },
+    "systemPromptPreset": {
+      "label": "Assistant style",
+      "description": "Chooses the built-in behavior the assistant starts from."
+    },
+    "appendSystemPrompt": {
+      "label": "Extra instructions",
+      "description": "Adds extra instructions on top of the Claude Code style."
+    },
+    "customSystemPrompt": {
+      "label": "Custom instructions",
+      "description": "Holds your own instructions, used only when the style is set to Custom."
+    },
+    "cwd": {
+      "label": "Working folder",
+      "description": "Sets the folder the assistant works in; leave empty to use Node-RED's folder."
+    },
+    "permissionMode": {
+      "label": "Tool permissions",
+      "description": "Sets how much the assistant may do on its own before asking."
+    },
+    "allowedTools": {
+      "label": "Allowed tools",
+      "description": "Lists tools the assistant may use without asking, one per line."
+    },
+    "disallowedTools": {
+      "label": "Blocked tools",
+      "description": "Lists tools the assistant may never use, one per line."
+    },
+    "settingSources": {
+      "label": "Project settings to load",
+      "description": "Chooses which project settings files (user, project, local) to load."
+    },
+    "maxTurns": {
+      "label": "Max steps",
+      "description": "Limits how many back-and-forth steps the assistant may take; 0 means no limit."
+    },
+    "maxBudgetUsd": {
+      "label": "Spending limit (USD)",
+      "description": "Stops the run once the estimated cost reaches this many US dollars; 0 means no limit."
+    },
+    "additionalDirectories": {
+      "label": "Extra folders",
+      "description": "Lists extra folders the assistant may open besides the working folder, one per line."
+    },
+    "supportedDialogKinds": {
+      "label": "Question types (advanced)",
+      "description": "Advanced: lists the kinds of clarifying question your UI can answer."
+    }
   },
   "options": {
     "provider": {
@@ -75,7 +129,13 @@
     "cancel": "Cancel"
   },
   "credentials": {
-    "apiKey": "API key",
-    "oauthToken": "Subscription token"
+    "apiKey": {
+      "label": "API key",
+      "description": "Holds your Anthropic API key, used when the sign-in method is API key."
+    },
+    "oauthToken": {
+      "label": "Subscription token",
+      "description": "Holds your Claude subscription token, used when the sign-in method is a pasted subscription token."
+    }
   }
 }

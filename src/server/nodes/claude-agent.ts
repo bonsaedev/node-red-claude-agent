@@ -18,18 +18,22 @@ import type ClaudeAgentConfiguration from "./claude-agent-configuration";
 import type { RunContext } from "../lib/tool-dispatch";
 import { ConfigsSchema } from "../../shared/schemas/claude-agent";
 
-type Config = Infer<typeof ConfigsSchema>;
+type ClaudeAgentConfig = Infer<typeof ConfigsSchema>;
 
 /** Incoming message. */
 type ClaudeAgentInput = Input<
   Port<{
-    /** Prompt to run (when the prompt source is msg.payload). May also carry a
-     * control message: `{ claudeResponse }` answers an 'ask',
-     * `{ claudeControl: 'interrupt' }` aborts the run. */
+    /** Prompt to run (when the prompt source is msg.payload). */
     payload?: unknown;
-    /** Opaque token echoed on every emitted message (under output) so a downstream
+    /** Opaque token echoed on the record of every emitted message so a downstream
      * router can return each message to the right client/connection. */
     correlationId?: string;
+    /** Control message (not a new prompt): abort this correlation's in-flight run. */
+    claudeControl?: string;
+    /** Control message: answer a pending interactive 'ask' request. */
+    claudeResponse?: ClaudeResponse;
+    /** Resume an existing Claude session (multi-turn). */
+    sessionId?: string;
   }>
 >;
 
@@ -181,7 +185,7 @@ function extractText(message: unknown): string {
 }
 
 export default class ClaudeAgent extends IONode<
-  Config,
+  ClaudeAgentConfig,
   any,
   ClaudeAgentInput,
   ClaudeAgentOutputs
@@ -257,12 +261,9 @@ export default class ClaudeAgent extends IONode<
   }
 
   override async input(msg: ClaudeAgentInput): Promise<void> {
-    const m = msg as ClaudeAgentInput & {
-      claudeControl?: string;
-      claudeResponse?: ClaudeResponse;
-      sessionId?: string;
-      correlationId?: string;
-    };
+    // All control fields are declared on ClaudeAgentInput, so `msg` is already typed
+    // — no reshape cast needed.
+    const m = msg;
 
     // Correlation id rides every emission so a downstream router can return
     // each message to the originating client (captured locally => concurrency-safe).

@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { createNode } from "@bonsae/nrg/test/server/unit";
-import { Channels } from "@bonsae/nrg/server";
 import McpToolIn from "../../../../src/server/nodes/mcp-tool-in";
 import {
   PendingIndex,
@@ -10,10 +9,10 @@ import {
 
 const SERVER_INFO = { nodeId: "srv-1", name: "node-red" };
 
-/** The live resolver the tool parked on the private channel of a `call` emission. */
-function resolverOf(frame: unknown): Settle {
-  return (frame as Record<symbol, { private: { mcpReturn: Settle } }>)[Channels]
-    .private.mcpReturn;
+/** Settle a parked call the way `mcp-tool-out` does — take the live resolver from
+ *  the package `PendingIndex` by the `callId` that rode the wire on `_mcpTool`. */
+function resolverOf(frame: { _mcpTool: { callId: string } }): Settle {
+  return PendingIndex.take(frame._mcpTool.callId)!;
 }
 
 const answer = (value: unknown): ToolAnswer => ({
@@ -67,12 +66,12 @@ describe("mcp-tool-in", () => {
       node.dispatch({ city: "SF" }, SERVER_INFO);
 
       const [frame] = node.sent("call");
-      expect(frame.output.payload).toEqual({ city: "SF" });
-      expect(frame.output.mcpTool).toMatchObject({
+      expect(frame.payload).toEqual({ city: "SF" });
+      expect(frame._mcpTool).toMatchObject({
         name: "get_weather",
         server: { nodeId: "srv-1", name: "node-red" },
       });
-      expect(typeof frame.output.mcpTool.callId).toBe("string");
+      expect(typeof frame._mcpTool.callId).toBe("string");
       expect(node.statuses().at(-1)).toMatchObject({
         text: "calling get_weather",
       });
@@ -82,10 +81,10 @@ describe("mcp-tool-in", () => {
       const { node } = await createNode(McpToolIn, { config: TOOL_CONFIG });
       node.dispatch({ city: "SF" }, SERVER_INFO, undefined, undefined, "req-9");
 
-      expect(node.sent("call")[0].output.mcpTool.requestId).toBe("req-9");
+      expect(node.sent("call")[0]._mcpTool.requestId).toBe("req-9");
     });
 
-    it("resolves with the answer settled on the private channel", async () => {
+    it("resolves with the answer when its parked resolver is settled", async () => {
       const { node } = await createNode(McpToolIn, { config: TOOL_CONFIG });
       const p = node.dispatch({ city: "SF" }, SERVER_INFO);
 
@@ -135,7 +134,7 @@ describe("mcp-tool-in", () => {
         },
       );
       await vi.waitFor(() => expect(node.sent("call")).toHaveLength(1));
-      expect(node.sent("call")[0].output.mcpTool.requestId).toBe("req-1");
+      expect(node.sent("call")[0]._mcpTool.requestId).toBe("req-1");
 
       resolverOf(node.sent("call")[0])(answer("sunny"));
       await expect(resultP).resolves.toEqual({
@@ -215,17 +214,17 @@ describe("mcp-tool-in", () => {
   });
 
   describe("concurrency", () => {
-    // Settled via the callId `PendingIndex` (the fallback route): the unit harness
-    // mints a fixed `_msgid` per emission, so two concurrent private-channel
-    // resolvers would collide — the callId is the per-call-unique route.
+    // Settled via the callId `PendingIndex` — the live resolver never rides the
+    // wire (it can't survive a fan-out clone), so a return node always correlates
+    // back by the per-call-unique `callId` that rode on `_mcpTool`.
     it("keys concurrent calls independently", async () => {
       const { node } = await createNode(McpToolIn, { config: TOOL_CONFIG });
       const p1 = node.dispatch({ city: "SF" }, SERVER_INFO);
       const p2 = node.dispatch({ city: "NYC" }, SERVER_INFO);
 
       const [f1, f2] = node.sent("call");
-      const id1 = f1.output.mcpTool.callId as string;
-      const id2 = f2.output.mcpTool.callId as string;
+      const id1 = f1._mcpTool.callId as string;
+      const id2 = f2._mcpTool.callId as string;
       expect(id1).not.toBe(id2);
 
       PendingIndex.take(id1)!(answer("sunny"));

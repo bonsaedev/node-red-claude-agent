@@ -1,16 +1,46 @@
 {
   "label": "claude エージェント",
   "configs": {
-    "name": "名前",
-    "config": "設定",
-    "prompt": "プロンプト",
-    "responseMode": "応答スタイル",
-    "interactive": "インタラクティブ",
-    "includePartial": "リアルタイム表示",
-    "permissionMode": "ツールの権限",
-    "errorPort": "エラーポート",
-    "completePort": "完了ポート",
-    "statusPort": "ステータスポート"
+    "name": {
+      "label": "名前",
+      "description": "エディターでノードに表示される任意のラベル。"
+    },
+    "config": {
+      "label": "設定",
+      "description": "このノードが使用する Claude エージェント設定（サインインと実行設定）を選択します。"
+    },
+    "prompt": {
+      "label": "プロンプト",
+      "description": "アシスタントに尋ねる内容を指定します。既定では受信メッセージのペイロードを使用します。"
+    },
+    "responseMode": {
+      "label": "応答スタイル",
+      "description": "最終回答のみを送信するか、各部分を到着次第ストリーミングするかを選択します。"
+    },
+    "interactive": {
+      "label": "インタラクティブ",
+      "description": "アシスタントが一時停止し、質問ポートを通じて承認や確認の質問を求められるようにします。"
+    },
+    "includePartial": {
+      "label": "リアルタイム表示",
+      "description": "生成されたテキストを1単語ずつストリーミングし、リアルタイム入力の効果を出します。"
+    },
+    "permissionMode": {
+      "label": "ツールの権限",
+      "description": "このノードに限り、設定のツール権限を上書きします。"
+    },
+    "errorPort": {
+      "label": "エラーポート",
+      "description": "専用のエラー出力を追加します。ノードがエラーをスローすると、フローを止める代わりにそこへ送られます。"
+    },
+    "completePort": {
+      "label": "完了ポート",
+      "description": "ノードがメッセージの処理を終えた後に出力する完了ポートを追加します。"
+    },
+    "statusPort": {
+      "label": "ステータスポート",
+      "description": "ノードのステータス変化をメッセージとして出力するステータスポートを追加します。"
+    }
   },
   "options": {
     "responseMode": {

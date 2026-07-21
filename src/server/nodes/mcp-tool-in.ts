@@ -14,22 +14,24 @@ import {
   toCallToolResult,
   errorResult,
   type Settle,
-  type Param,
   type ToolAnswer,
 } from "../lib/tool-dispatch";
 
-type Config = Infer<typeof ConfigsSchema>;
+type McpToolInConfig = Infer<typeof ConfigsSchema>;
 
 /** Clone-safe provenance for the server hosting this tool. */
 type ServerInfo = { nodeId: string; name: string };
 
 /**
- * The clone-safe call payload emitted on `call`. The live resolver rides the
- * PRIVATE channel (keyed by `_msgid`), never this object.
+ * The clone-safe call payload emitted on `call`. `_mcpTool` is the Model-B
+ * transaction object — a node-type-named, `_`-prefixed root field whose `callId`
+ * rides the wire so `mcp-tool-out` looks the parked live resolver up in the package
+ * `PendingIndex`. A wire check verifies a return node reads it; the resolver itself
+ * never rides the message (it can't survive a fan-out clone).
  */
-type CallWire = {
+type McpToolInOutput = {
   payload: Record<string, unknown>;
-  mcpTool: {
+  _mcpTool: {
     callId: string;
     name: string;
     requestId?: string;
@@ -45,10 +47,10 @@ type CallWire = {
  * never hangs the HTTP request.
  */
 export default class McpToolIn extends IONode<
-  Config,
+  McpToolInConfig,
   never,
   never,
-  Outputs<{ call: Port<CallWire> }>
+  Outputs<{ call: Port<McpToolInOutput> }>
 > {
   static override readonly type = "mcp-tool-in";
   static override readonly category = "mcp";
@@ -73,7 +75,7 @@ export default class McpToolIn extends IONode<
       this.config.name,
       {
         description: this.config.description,
-        inputSchema: zodShapeFrom(this.config.params as Param[]),
+        inputSchema: zodShapeFrom(this.config.params),
         annotations: { readOnlyHint: this.config.readOnly },
       },
       async (
@@ -186,22 +188,18 @@ export default class McpToolIn extends IONode<
         text: `calling ${this.config.name}`,
       });
 
-      // send() runs on the transport's stack (no input() ALS frame), so the
-      // framework delivers via node.send and mints a fresh _msgid. The live
-      // resolver rides the PRIVATE channel, keyed by that _msgid.
-      this.send(
-        "call",
-        {
-          payload: args,
-          mcpTool: {
-            callId,
-            name: this.config.name,
-            requestId,
-            server: serverInfo,
-          },
+      // The live resolver is parked in `PendingIndex` under `callId` (above); the
+      // wire carries only that id inside `_mcpTool`, so a return node correlates
+      // back by looking it up — nothing un-cloneable rides the message.
+      this.send("call", {
+        payload: args,
+        _mcpTool: {
+          callId,
+          name: this.config.name,
+          requestId,
+          server: serverInfo,
         },
-        { private: { mcpReturn: settle } },
-      );
+      });
     });
   }
 

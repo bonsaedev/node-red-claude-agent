@@ -1,11 +1,26 @@
 {
   "label": "claude tool return",
   "configs": {
-    "name": "Name",
-    "format": "Rückgabeformat",
-    "errorPort": "Fehler-Port",
-    "completePort": "Abschluss-Port",
-    "statusPort": "Status-Port"
+    "name": {
+      "label": "Name",
+      "description": "Eine optionale Beschriftung, die im Editor am Node angezeigt wird."
+    },
+    "format": {
+      "label": "Rückgabeformat",
+      "description": "Legt fest, ob msg.payload dem Modell als reiner Textblock oder als maschinenlesbares JSON zurückgegeben wird."
+    },
+    "errorPort": {
+      "label": "Fehler-Port",
+      "description": "Fügt einen Fehler-Ausgabeport hinzu; wenn der Node einen Fehler wirft, wird dieser dorthin gesendet, statt den Flow anzuhalten."
+    },
+    "completePort": {
+      "label": "Abschluss-Port",
+      "description": "Fügt einen Abschluss-Ausgabeport hinzu, der sendet, nachdem der Node eine Nachricht fertig verarbeitet hat."
+    },
+    "statusPort": {
+      "label": "Status-Port",
+      "description": "Fügt einen Status-Ausgabeport hinzu, der die Statusänderungen des Nodes als Nachrichten sendet."
+    }
   },
   "options": {
     "format": {
@@ -15,6 +30,6 @@
   },
   "input": {
     "label": "Rückgabe",
-    "description": "Die Antwort des Flows auf einen Claude-Tool-Aufruf. Der Wert reist in msg.output.payload; setze msg.output.isError, um dem Modell einen Fehler zurückzugeben."
+    "description": "Die Antwort des Flows auf einen Claude-Tool-Aufruf. Der Wert reist in msg.payload; setze msg.isError, um dem Modell einen Fehler zurückzugeben."
   }
 }

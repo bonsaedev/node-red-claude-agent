@@ -1,16 +1,46 @@
 {
   "label": "claude ツール",
   "configs": {
-    "name": "ツール名",
-    "agent": "エージェント",
-    "description": "説明",
-    "params": "パラメーター",
-    "timeoutSeconds": "タイムアウト（秒）",
-    "preApproved": "事前承認済み",
-    "readOnly": "読み取り専用",
-    "errorPort": "エラーポート",
-    "completePort": "完了ポート",
-    "statusPort": "ステータスポート"
+    "name": {
+      "label": "ツール名",
+      "description": "モデルが呼び出すツール名を設定します（mcp__flow__<名前> になります）。"
+    },
+    "agent": {
+      "label": "エージェント",
+      "description": "このツールを、拡張対象のエージェント設定に紐付けます。"
+    },
+    "description": {
+      "label": "説明",
+      "description": "ツールの機能を説明し、Claude がいつ呼び出すべきか判断できるようにします。"
+    },
+    "params": {
+      "label": "パラメーター",
+      "description": "ツールの入力を、パラメーターごとに1行で定義します。"
+    },
+    "timeoutSeconds": {
+      "label": "タイムアウト（秒）",
+      "description": "モデルにタイムアウトエラーを返すまでに、claude ツール返却を何秒待つかを設定します。"
+    },
+    "preApproved": {
+      "label": "事前承認済み",
+      "description": "ツールを事前承認し、呼び出しが権限チェックをスキップするようにします。"
+    },
+    "readOnly": {
+      "label": "読み取り専用",
+      "description": "ツールを副作用なしとしてマークし、Claude が他の読み取りと並行してまとめて実行できるようにします。"
+    },
+    "errorPort": {
+      "label": "エラーポート",
+      "description": "専用のエラー出力を追加します。ノードがエラーをスローすると、フローを止める代わりにそこへ送られます。"
+    },
+    "completePort": {
+      "label": "完了ポート",
+      "description": "ノードがメッセージの処理を終えた後に出力する完了ポートを追加します。"
+    },
+    "statusPort": {
+      "label": "ステータスポート",
+      "description": "ノードのステータス変化をメッセージとして出力するステータスポートを追加します。"
+    }
   },
   "outputs": {
     "call": {

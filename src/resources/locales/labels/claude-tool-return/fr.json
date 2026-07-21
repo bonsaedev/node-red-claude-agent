@@ -1,11 +1,26 @@
 {
   "label": "retour d'outil claude",
   "configs": {
-    "name": "Nom",
-    "format": "Format de retour",
-    "errorPort": "Port d'erreur",
-    "completePort": "Port de fin",
-    "statusPort": "Port de statut"
+    "name": {
+      "label": "Nom",
+      "description": "Une étiquette facultative affichée sur le nœud dans l'éditeur."
+    },
+    "format": {
+      "label": "Format de retour",
+      "description": "Détermine si msg.payload est renvoyé au modèle sous forme de bloc de texte brut ou de JSON lisible par machine."
+    },
+    "errorPort": {
+      "label": "Port d'erreur",
+      "description": "Ajoute un port de sortie d'erreur ; lorsque le nœud lève une erreur, celle-ci y est envoyée au lieu d'arrêter le flux."
+    },
+    "completePort": {
+      "label": "Port de fin",
+      "description": "Ajoute un port de sortie de fin qui émet une fois que le nœud a terminé de traiter un message."
+    },
+    "statusPort": {
+      "label": "Port de statut",
+      "description": "Ajoute un port de sortie de statut qui émet les changements de statut du nœud sous forme de messages."
+    }
   },
   "options": {
     "format": {
@@ -15,6 +30,6 @@
   },
   "input": {
     "label": "Retour",
-    "description": "La réponse du flux à un appel d'outil Claude. La valeur circule dans msg.output.payload ; définissez msg.output.isError pour renvoyer une erreur au modèle."
+    "description": "La réponse du flux à un appel d'outil Claude. La valeur circule dans msg.payload ; définissez msg.isError pour renvoyer une erreur au modèle."
   }
 }

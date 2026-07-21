@@ -4,24 +4,78 @@
     "learnMore": "Mehr erfahren"
   },
   "configs": {
-    "name": "Name",
-    "provider": "Anbieter",
-    "authMethod": "Anmeldemethode",
-    "model": "Modell",
-    "fallbackModel": "Ersatzmodell",
-    "effort": "Denkintensität",
-    "systemPromptPreset": "Assistenten-Stil",
-    "appendSystemPrompt": "Zusätzliche Anweisungen",
-    "customSystemPrompt": "Eigene Anweisungen",
-    "cwd": "Arbeitsordner",
-    "permissionMode": "Tool-Berechtigungen",
-    "allowedTools": "Erlaubte Tools",
-    "disallowedTools": "Blockierte Tools",
-    "settingSources": "Zu ladende Projekteinstellungen",
-    "maxTurns": "Max. Schritte",
-    "maxBudgetUsd": "Ausgabenlimit (USD)",
-    "additionalDirectories": "Zusätzliche Ordner",
-    "supportedDialogKinds": "Fragetypen (erweitert)"
+    "name": {
+      "label": "Name",
+      "description": "Eine optionale Bezeichnung, die am Node im Editor angezeigt wird."
+    },
+    "provider": {
+      "label": "Anbieter",
+      "description": "Wählt, wo Claude läuft — direkt bei Anthropic oder über Ihr Amazon-, Google- oder Microsoft-Cloud-Konto."
+    },
+    "authMethod": {
+      "label": "Anmeldemethode",
+      "description": "Wählt die Anmeldeart, wenn der Anbieter Anthropic ist: ein API-Schlüssel oder Ihr Claude-Abonnement."
+    },
+    "model": {
+      "label": "Modell",
+      "description": "Wählt das zu verwendende Claude-Modell; leer lassen für die Standardauswahl."
+    },
+    "fallbackModel": {
+      "label": "Ersatzmodell",
+      "description": "Wählt ein Ersatzmodell, das automatisch verwendet wird, wenn das Hauptmodell nicht verfügbar ist."
+    },
+    "effort": {
+      "label": "Denkintensität",
+      "description": "Legt fest, wie intensiv das Modell vor dem Handeln nachdenkt — höher bedeutet tiefere Überlegung und mehr Tokens."
+    },
+    "systemPromptPreset": {
+      "label": "Assistenten-Stil",
+      "description": "Wählt das integrierte Verhalten, mit dem der Assistent startet."
+    },
+    "appendSystemPrompt": {
+      "label": "Zusätzliche Anweisungen",
+      "description": "Fügt zusätzliche Anweisungen zum Claude-Code-Stil hinzu."
+    },
+    "customSystemPrompt": {
+      "label": "Eigene Anweisungen",
+      "description": "Enthält Ihre eigenen Anweisungen, die nur verwendet werden, wenn der Stil auf „Benutzerdefiniert“ gesetzt ist."
+    },
+    "cwd": {
+      "label": "Arbeitsordner",
+      "description": "Legt den Ordner fest, in dem der Assistent arbeitet; leer lassen, um den Node-RED-Ordner zu verwenden."
+    },
+    "permissionMode": {
+      "label": "Tool-Berechtigungen",
+      "description": "Legt fest, wie viel der Assistent eigenständig tun darf, bevor er nachfragt."
+    },
+    "allowedTools": {
+      "label": "Erlaubte Tools",
+      "description": "Listet Tools auf, die der Assistent ohne Nachfrage verwenden darf, eines pro Zeile."
+    },
+    "disallowedTools": {
+      "label": "Blockierte Tools",
+      "description": "Listet Tools auf, die der Assistent niemals verwenden darf, eines pro Zeile."
+    },
+    "settingSources": {
+      "label": "Zu ladende Projekteinstellungen",
+      "description": "Wählt, welche Projekteinstellungsdateien (user, project, local) geladen werden."
+    },
+    "maxTurns": {
+      "label": "Max. Schritte",
+      "description": "Begrenzt, wie viele Hin-und-her-Schritte der Assistent ausführen darf; 0 bedeutet kein Limit."
+    },
+    "maxBudgetUsd": {
+      "label": "Ausgabenlimit (USD)",
+      "description": "Stoppt den Lauf, sobald die geschätzten Kosten diesen Betrag in US-Dollar erreichen; 0 bedeutet kein Limit."
+    },
+    "additionalDirectories": {
+      "label": "Zusätzliche Ordner",
+      "description": "Listet weitere Ordner auf, die der Assistent neben dem Arbeitsordner öffnen darf, einen pro Zeile."
+    },
+    "supportedDialogKinds": {
+      "label": "Fragetypen (erweitert)",
+      "description": "Erweitert: Listet die Arten von Rückfragen auf, die Ihre Oberfläche beantworten kann."
+    }
   },
   "options": {
     "provider": {
@@ -75,7 +129,13 @@
     "cancel": "Abbrechen"
   },
   "credentials": {
-    "apiKey": "API-Schlüssel",
-    "oauthToken": "Abonnement-Token"
+    "apiKey": {
+      "label": "API-Schlüssel",
+      "description": "Enthält Ihren Anthropic-API-Schlüssel, der verwendet wird, wenn die Anmeldemethode „API-Schlüssel“ ist."
+    },
+    "oauthToken": {
+      "label": "Abonnement-Token",
+      "description": "Enthält Ihren Claude-Abonnement-Token, der verwendet wird, wenn die Anmeldemethode ein eingefügter Abonnement-Token ist."
+    }
   }
 }

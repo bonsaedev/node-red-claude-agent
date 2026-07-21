@@ -1,18 +1,54 @@
 {
   "label": "claude MCP",
   "configs": {
-    "name": "名稱",
-    "agent": "代理",
-    "serverName": "伺服器名稱",
-    "transport": "傳輸方式",
-    "command": "命令",
-    "args": "引數",
-    "url": "URL",
-    "headerName": "驗證標頭 (http/sse)",
-    "envName": "環境變數 (stdio)",
-    "timeout": "逾時 (ms)",
-    "alwaysLoad": "一律載入工具",
-    "preApproveAll": "預先核准所有工具"
+    "name": {
+      "label": "名稱",
+      "description": "在編輯器中顯示於節點上的選用標籤。"
+    },
+    "agent": {
+      "label": "代理",
+      "description": "將此 MCP 伺服器繫結到它所擴充的代理組態。"
+    },
+    "serverName": {
+      "label": "伺服器名稱",
+      "description": "為此伺服器設定唯一名稱，在工具名稱中用作 mcp__<名稱>__<工具>；不能為 'flow'。"
+    },
+    "transport": {
+      "label": "傳輸方式",
+      "description": "選擇連接伺服器的方式：本機命令（stdio）或遠端 URL（http/sse）。"
+    },
+    "command": {
+      "label": "命令",
+      "description": "設定 stdio 傳輸要執行的可執行檔（例如：npx、node、python）。"
+    },
+    "args": {
+      "label": "引數",
+      "description": "列出傳遞給 stdio 命令的引數，以逗號或換行分隔。"
+    },
+    "url": {
+      "label": "URL",
+      "description": "設定 http 或 sse 傳輸的伺服器 URL。"
+    },
+    "headerName": {
+      "label": "驗證標頭 (http/sse)",
+      "description": "設定 http/sse 中傳送密鑰所用的標頭（預設 Authorization: Bearer）。"
+    },
+    "envName": {
+      "label": "環境變數 (stdio)",
+      "description": "設定 stdio 中提供密鑰所用的環境變數。"
+    },
+    "timeout": {
+      "label": "逾時 (ms)",
+      "description": "設定 SDK 中止每次工具呼叫前的最大毫秒數；低於 1000 的值將被忽略。"
+    },
+    "alwaysLoad": {
+      "label": "一律載入工具",
+      "description": "一律將此伺服器的工具納入提示，並在其連線前阻止啟動。"
+    },
+    "preApproveAll": {
+      "label": "預先核准所有工具",
+      "description": "預先核准此伺服器上的所有工具，使呼叫略過核准提示。"
+    }
   },
   "options": {
     "transport": {
@@ -22,6 +58,9 @@
     }
   },
   "credentials": {
-    "secret": "權杖 / API 金鑰"
+    "secret": {
+      "label": "權杖 / API 金鑰",
+      "description": "保存此伺服器的權杖或 API 金鑰，作為 Bearer 標頭（http/sse）或環境變數（stdio）傳送。"
+    }
   }
 }

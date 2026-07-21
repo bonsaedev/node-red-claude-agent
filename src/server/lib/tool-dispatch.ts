@@ -6,7 +6,7 @@ import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 /**
  * Per-run context handed to every flow-tool at assembly time. Mirrors the agent's
  * run vars; `signal` is the agent's per-run AbortController, `public()` returns the
- * clone-safe provenance the emit carries under `claudeTool.agent`.
+ * clone-safe provenance the emit carries under `_claudeTool.agent`.
  */
 export type RunContext = {
   correlationId?: string;

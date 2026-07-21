@@ -1,15 +1,42 @@
 {
   "label": "MCP tool in",
   "configs": {
-    "name": "Tool name",
-    "server": "Server",
-    "description": "Description",
-    "params": "Parameters",
-    "timeoutSeconds": "Timeout (seconds)",
-    "readOnly": "Read-only",
-    "errorPort": "Error port",
-    "completePort": "Complete port",
-    "statusPort": "Status port"
+    "name": {
+      "label": "Tool name",
+      "description": "The tool id clients call; use letters, numbers, dashes, or underscores."
+    },
+    "server": {
+      "label": "Server",
+      "description": "The MCP server this tool is exposed on."
+    },
+    "description": {
+      "label": "Description",
+      "description": "Explains what the tool does; the client's model reads this to decide when to call it."
+    },
+    "params": {
+      "label": "Parameters",
+      "description": "The tool's inputs, one row per parameter."
+    },
+    "timeoutSeconds": {
+      "label": "Timeout (seconds)",
+      "description": "Maximum seconds to wait for an MCP tool out before returning a timeout error to the client."
+    },
+    "readOnly": {
+      "label": "Read-only",
+      "description": "Marks the tool side-effect-free, a hint clients may use to batch calls."
+    },
+    "errorPort": {
+      "label": "Error port",
+      "description": "Adds an error output port; when the node throws, the error is sent there instead of halting the flow."
+    },
+    "completePort": {
+      "label": "Complete port",
+      "description": "Adds a complete output port that emits after the node finishes handling a message."
+    },
+    "statusPort": {
+      "label": "Status port",
+      "description": "Adds a status output port that emits the node's status changes as messages."
+    }
   },
   "outputs": {
     "call": {

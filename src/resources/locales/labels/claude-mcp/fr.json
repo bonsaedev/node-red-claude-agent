@@ -1,18 +1,54 @@
 {
   "label": "claude MCP",
   "configs": {
-    "name": "Nom",
-    "agent": "Agent",
-    "serverName": "Nom du serveur",
-    "transport": "Transport",
-    "command": "Commande",
-    "args": "Arguments",
-    "url": "URL",
-    "headerName": "En-tête d'authentification (http/sse)",
-    "envName": "Variable d'environnement (stdio)",
-    "timeout": "Délai d'expiration (ms)",
-    "alwaysLoad": "Toujours charger les outils",
-    "preApproveAll": "Pré-approuver tous les outils"
+    "name": {
+      "label": "Nom",
+      "description": "Une étiquette facultative affichée sur le nœud dans l'éditeur."
+    },
+    "agent": {
+      "label": "Agent",
+      "description": "Lie ce serveur MCP à la configuration d'agent qu'il étend."
+    },
+    "serverName": {
+      "label": "Nom du serveur",
+      "description": "Définit un nom unique pour ce serveur, utilisé dans les noms d'outils sous la forme mcp__<nom>__<outil> ; ne peut pas être « flow »."
+    },
+    "transport": {
+      "label": "Transport",
+      "description": "Choisit comment joindre le serveur : une commande locale (stdio) ou une URL distante (http/sse)."
+    },
+    "command": {
+      "label": "Commande",
+      "description": "Définit l'exécutable à lancer pour le transport stdio (par exemple : npx, node, python)."
+    },
+    "args": {
+      "label": "Arguments",
+      "description": "Liste les arguments passés à la commande stdio, séparés par une virgule ou un saut de ligne."
+    },
+    "url": {
+      "label": "URL",
+      "description": "Définit l'URL du serveur pour le transport http ou sse."
+    },
+    "headerName": {
+      "label": "En-tête d'authentification (http/sse)",
+      "description": "Définit l'en-tête dans lequel le secret est envoyé pour http/sse (par défaut Authorization: Bearer)."
+    },
+    "envName": {
+      "label": "Variable d'environnement (stdio)",
+      "description": "Définit la variable d'environnement sous laquelle le secret est fourni pour stdio."
+    },
+    "timeout": {
+      "label": "Délai d'expiration (ms)",
+      "description": "Définit le nombre maximal de millisecondes par appel d'outil avant que le SDK ne l'interrompe ; les valeurs inférieures à 1000 sont ignorées."
+    },
+    "alwaysLoad": {
+      "label": "Toujours charger les outils",
+      "description": "Inclut toujours les outils de ce serveur dans l'invite et bloque le démarrage jusqu'à ce qu'il se connecte."
+    },
+    "preApproveAll": {
+      "label": "Pré-approuver tous les outils",
+      "description": "Pré-approuve tous les outils de ce serveur afin que les appels sautent l'invite d'approbation."
+    }
   },
   "options": {
     "transport": {
@@ -22,6 +58,9 @@
     }
   },
   "credentials": {
-    "secret": "Jeton / clé API"
+    "secret": {
+      "label": "Jeton / clé API",
+      "description": "Contient un jeton ou une clé API pour ce serveur, envoyé comme en-tête Bearer (http/sse) ou variable d'environnement (stdio)."
+    }
   }
 }

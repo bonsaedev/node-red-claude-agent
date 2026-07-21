@@ -1,18 +1,54 @@
 {
   "label": "claude MCP",
   "configs": {
-    "name": "名前",
-    "agent": "エージェント",
-    "serverName": "サーバー名",
-    "transport": "トランスポート",
-    "command": "コマンド",
-    "args": "引数",
-    "url": "URL",
-    "headerName": "認証ヘッダー (http/sse)",
-    "envName": "環境変数 (stdio)",
-    "timeout": "タイムアウト (ms)",
-    "alwaysLoad": "常にツールを読み込む",
-    "preApproveAll": "すべてのツールを事前承認"
+    "name": {
+      "label": "名前",
+      "description": "エディターでノードに表示される任意のラベル。"
+    },
+    "agent": {
+      "label": "エージェント",
+      "description": "この MCP サーバーを、拡張対象のエージェント設定に紐付けます。"
+    },
+    "serverName": {
+      "label": "サーバー名",
+      "description": "このサーバーの一意な名前を設定します。ツール名で mcp__<名前>__<ツール> として使用され、「flow」にはできません。"
+    },
+    "transport": {
+      "label": "トランスポート",
+      "description": "サーバーへの接続方法を選択します。ローカルコマンド（stdio）またはリモート URL（http/sse）。"
+    },
+    "command": {
+      "label": "コマンド",
+      "description": "stdio トランスポートで実行する実行ファイルを設定します（例：npx、node、python）。"
+    },
+    "args": {
+      "label": "引数",
+      "description": "stdio コマンドに渡す引数を、カンマまたは改行で区切って列挙します。"
+    },
+    "url": {
+      "label": "URL",
+      "description": "http または sse トランスポートのサーバー URL を設定します。"
+    },
+    "headerName": {
+      "label": "認証ヘッダー (http/sse)",
+      "description": "http/sse でシークレットを送るヘッダーを設定します（既定は Authorization: Bearer）。"
+    },
+    "envName": {
+      "label": "環境変数 (stdio)",
+      "description": "stdio でシークレットを渡す環境変数を設定します。"
+    },
+    "timeout": {
+      "label": "タイムアウト (ms)",
+      "description": "SDK がツール呼び出しを中断するまでの最大ミリ秒を設定します。1000 未満の値は無視されます。"
+    },
+    "alwaysLoad": {
+      "label": "常にツールを読み込む",
+      "description": "このサーバーのツールを常にプロンプトに含め、接続するまで起動をブロックします。"
+    },
+    "preApproveAll": {
+      "label": "すべてのツールを事前承認",
+      "description": "このサーバーのすべてのツールを事前承認し、呼び出しが承認プロンプトをスキップするようにします。"
+    }
   },
   "options": {
     "transport": {
@@ -22,6 +58,9 @@
     }
   },
   "credentials": {
-    "secret": "トークン / API キー"
+    "secret": {
+      "label": "トークン / API キー",
+      "description": "このサーバー用のトークンまたは API キーを保持します。Bearer ヘッダー（http/sse）または環境変数（stdio）として送信されます。"
+    }
   }
 }

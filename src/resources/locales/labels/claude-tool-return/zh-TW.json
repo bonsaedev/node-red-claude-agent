@@ -1,11 +1,26 @@
 {
   "label": "claude 工具回傳",
   "configs": {
-    "name": "名稱",
-    "format": "回傳格式",
-    "errorPort": "錯誤埠",
-    "completePort": "完成埠",
-    "statusPort": "狀態埠"
+    "name": {
+      "label": "名稱",
+      "description": "在編輯器中顯示於節點上的選填標籤。"
+    },
+    "format": {
+      "label": "回傳格式",
+      "description": "選擇將 msg.payload 以純文字區塊還是機器可讀的 JSON 回傳給模型。"
+    },
+    "errorPort": {
+      "label": "錯誤埠",
+      "description": "新增一個錯誤輸出埠；當節點拋出錯誤時，錯誤會傳送到該埠，而非中斷流程。"
+    },
+    "completePort": {
+      "label": "完成埠",
+      "description": "新增一個完成輸出埠，在節點處理完一則訊息後發出。"
+    },
+    "statusPort": {
+      "label": "狀態埠",
+      "description": "新增一個狀態輸出埠，將節點的狀態變化作為訊息發出。"
+    }
   },
   "options": {
     "format": {
@@ -15,6 +30,6 @@
   },
   "input": {
     "label": "回傳",
-    "description": "流程對 Claude 工具呼叫的回覆。值透過 msg.output.payload 傳遞；設定 msg.output.isError 可向模型回傳錯誤。"
+    "description": "流程對 Claude 工具呼叫的回覆。值透過 msg.payload 傳遞；設定 msg.isError 可向模型回傳錯誤。"
   }
 }

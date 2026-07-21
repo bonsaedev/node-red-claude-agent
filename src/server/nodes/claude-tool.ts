@@ -15,19 +15,21 @@ import {
   errorResult,
   type Settle,
   type RunContext,
-  type Param,
   type ToolAnswer,
 } from "../lib/tool-dispatch";
 
-type Config = Infer<typeof ConfigsSchema>;
+type ClaudeToolConfig = Infer<typeof ConfigsSchema>;
 
 /**
- * The clone-safe call payload emitted on `call`. The live resolver rides the
- * PRIVATE channel (keyed by `_msgid`), never this object.
+ * The clone-safe call payload emitted on `call`. `_claudeTool` is the Model-B
+ * transaction object — a node-type-named, `_`-prefixed root field whose `callId`
+ * rides the wire so `claude-tool-return` looks the parked live resolver up in the
+ * package `PendingIndex`. A wire check verifies a return node reads it; the resolver
+ * itself never rides the message (it can't survive a fan-out clone).
  */
-type CallWire = {
+type ClaudeToolOutput = {
   payload: Record<string, unknown>;
-  claudeTool: {
+  _claudeTool: {
     callId: string;
     name: string;
     toolUseId?: string;
@@ -43,10 +45,10 @@ type CallWire = {
  * run.
  */
 export default class ClaudeTool extends IONode<
-  Config,
+  ClaudeToolConfig,
   never,
   never,
-  Outputs<{ call: Port<CallWire> }>
+  Outputs<{ call: Port<ClaudeToolOutput> }>
 > {
   static override readonly type = "claude-tool";
   static override readonly category = "claude";
@@ -65,7 +67,7 @@ export default class ClaudeTool extends IONode<
     return tool(
       this.config.name,
       this.config.description,
-      zodShapeFrom(this.config.params as Param[]),
+      zodShapeFrom(this.config.params),
       async (args: Record<string, unknown>, extra: unknown) => {
         const mcpSignal = (extra as { signal?: AbortSignal } | undefined)
           ?.signal;
@@ -169,22 +171,18 @@ export default class ClaudeTool extends IONode<
         text: `calling ${this.config.name}`,
       });
 
-      // send() runs on the agent's stack (no input() ALS frame), so the framework
-      // delivers via node.send and mints a fresh _msgid. The live resolver rides the
-      // PRIVATE channel, keyed by that _msgid — exactly like http-in stashes `res`.
-      this.send(
-        "call",
-        {
-          payload: args,
-          claudeTool: {
-            callId,
-            name: this.config.name,
-            toolUseId,
-            agent: run.public(),
-          },
+      // The live resolver is parked in `PendingIndex` under `callId` (above); the
+      // wire carries only that id inside `_claudeTool`, so a return node correlates
+      // back by looking it up — nothing un-cloneable rides the message.
+      this.send("call", {
+        payload: args,
+        _claudeTool: {
+          callId,
+          name: this.config.name,
+          toolUseId,
+          agent: run.public(),
         },
-        { private: { claudeReturn: settle } },
-      );
+      });
     });
   }
 

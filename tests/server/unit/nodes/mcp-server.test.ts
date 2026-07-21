@@ -60,15 +60,14 @@ describe("mcp-server", () => {
           arguments: { city: "SF" },
         });
 
-        // The emission carries the args + a callId; settle it as the flow would.
-        // (Settled via the callId index — the unit harness's fixed _msgid makes the
-        // private channel unreliable across the node/transport boundary here.)
+        // The emission carries the args + a callId; settle it as the flow would,
+        // taking the live resolver from the package `PendingIndex` by that callId.
         let callId: string | undefined;
         await vi.waitFor(() => {
-          callId = toolNode.sent("call")[0]?.output?.mcpTool?.callId;
+          callId = toolNode.sent("call")[0]?._mcpTool?.callId;
           expect(callId).toBeDefined();
         });
-        expect(toolNode.sent("call")[0].output.payload).toEqual({ city: "SF" });
+        expect(toolNode.sent("call")[0].payload).toEqual({ city: "SF" });
         PendingIndex.take(callId!)!({
           value: "sunny",
           format: "text",

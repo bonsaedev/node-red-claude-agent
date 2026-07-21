@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { createNode } from "@bonsae/nrg/test/server/unit";
-import { Channels } from "@bonsae/nrg/server";
 
 // The SDK's `tool()` is a pure definition builder; mock it to a passthrough so
 // the test can invoke the produced handler directly (no MCP server / subprocess).
@@ -37,11 +36,10 @@ function makeRun(overrides: Partial<RunContext> = {}): RunContext {
   };
 }
 
-/** The live resolver the tool parked on the private channel of a `call` emission. */
-function resolverOf(frame: unknown): Settle {
-  return (frame as Record<symbol, { private: { claudeReturn: Settle } }>)[
-    Channels
-  ].private.claudeReturn;
+/** Settle a parked call the way `claude-tool-return` does — take the live resolver
+ *  from the package `PendingIndex` by the `callId` that rode the wire on `_claudeTool`. */
+function resolverOf(frame: { _claudeTool: { callId: string } }): Settle {
+  return PendingIndex.take(frame._claudeTool.callId)!;
 }
 
 const answer = (value: unknown): ToolAnswer => ({
@@ -74,8 +72,8 @@ describe("claude-tool", () => {
       node.dispatch({ city: "SF" }, makeRun());
 
       const [frame] = node.sent("call");
-      expect(frame.output.payload).toEqual({ city: "SF" });
-      expect(frame.output.claudeTool).toMatchObject({
+      expect(frame.payload).toEqual({ city: "SF" });
+      expect(frame._claudeTool).toMatchObject({
         name: "get_weather",
         agent: {
           nodeId: "agent-1",
@@ -83,7 +81,7 @@ describe("claude-tool", () => {
           sessionId: "sess-1",
         },
       });
-      expect(typeof frame.output.claudeTool.callId).toBe("string");
+      expect(typeof frame._claudeTool.callId).toBe("string");
       expect(node.statuses().at(-1)).toMatchObject({
         text: "calling get_weather",
       });
@@ -93,10 +91,10 @@ describe("claude-tool", () => {
       const { node } = await createNode(ClaudeTool, { config: TOOL_CONFIG });
       node.dispatch({ city: "SF" }, makeRun(), undefined, "tu-42");
 
-      expect(node.sent("call")[0].output.claudeTool.toolUseId).toBe("tu-42");
+      expect(node.sent("call")[0]._claudeTool.toolUseId).toBe("tu-42");
     });
 
-    it("resolves with the answer settled on the private channel", async () => {
+    it("resolves with the answer when its parked resolver is settled", async () => {
       const { node } = await createNode(ClaudeTool, { config: TOOL_CONFIG });
       const p = node.dispatch({ city: "SF" }, makeRun());
 
@@ -142,7 +140,7 @@ describe("claude-tool", () => {
 
       const resultP = t.handler({ city: "SF" }, { requestId: "tu-1" });
       await vi.waitFor(() => expect(node.sent("call")).toHaveLength(1));
-      expect(node.sent("call")[0].output.claudeTool.toolUseId).toBe("tu-1");
+      expect(node.sent("call")[0]._claudeTool.toolUseId).toBe("tu-1");
 
       resolverOf(node.sent("call")[0])(answer("sunny"));
       await expect(resultP).resolves.toEqual({
@@ -220,19 +218,17 @@ describe("claude-tool", () => {
   });
 
   describe("concurrency", () => {
-    // NOTE: settled here via the callId `PendingIndex` (the fallback route), not
-    // the private channel. The unit harness mints a fixed `_msgid` for every
-    // emission, so two concurrent private-channel resolvers would collide on the
-    // same key — the callId is the per-call-unique route the real runtime also
-    // relies on for fresh-message answers.
+    // Settled via the callId `PendingIndex` — the live resolver never rides the
+    // wire (it can't survive a fan-out clone), so a return node always correlates
+    // back by the per-call-unique `callId` that rode on `_claudeTool`.
     it("keys concurrent calls independently — settling one leaves the other parked", async () => {
       const { node } = await createNode(ClaudeTool, { config: TOOL_CONFIG });
       const p1 = node.dispatch({ city: "SF" }, makeRun());
       const p2 = node.dispatch({ city: "NYC" }, makeRun());
 
       const [f1, f2] = node.sent("call");
-      const id1 = f1.output.claudeTool.callId as string;
-      const id2 = f2.output.claudeTool.callId as string;
+      const id1 = f1._claudeTool.callId as string;
+      const id2 = f2._claudeTool.callId as string;
       expect(id1).not.toBe(id2);
 
       PendingIndex.take(id1)!(answer("sunny"));

@@ -1,18 +1,54 @@
 {
   "label": "claude mcp",
   "configs": {
-    "name": "Name",
-    "agent": "Agent",
-    "serverName": "Servername",
-    "transport": "Transport",
-    "command": "Befehl",
-    "args": "Argumente",
-    "url": "URL",
-    "headerName": "Auth-Header (http/sse)",
-    "envName": "Umgebungsvariable (stdio)",
-    "timeout": "Zeitlimit (ms)",
-    "alwaysLoad": "Tools immer laden",
-    "preApproveAll": "Alle Tools vorab genehmigen"
+    "name": {
+      "label": "Name",
+      "description": "Eine optionale Bezeichnung, die am Node im Editor angezeigt wird."
+    },
+    "agent": {
+      "label": "Agent",
+      "description": "Bindet diesen MCP-Server an die Agent-Konfiguration, die er erweitert."
+    },
+    "serverName": {
+      "label": "Servername",
+      "description": "Legt einen eindeutigen Namen für diesen Server fest, in Tool-Namen als mcp__<name>__<tool> verwendet; darf nicht „flow“ sein."
+    },
+    "transport": {
+      "label": "Transport",
+      "description": "Wählt, wie der Server erreicht wird: ein lokaler Befehl (stdio) oder eine Remote-URL (http/sse)."
+    },
+    "command": {
+      "label": "Befehl",
+      "description": "Legt die auszuführende ausführbare Datei für den stdio-Transport fest (z. B. npx, node, python)."
+    },
+    "args": {
+      "label": "Argumente",
+      "description": "Listet Argumente auf, die an den stdio-Befehl übergeben werden, durch Komma oder Zeilenumbruch getrennt."
+    },
+    "url": {
+      "label": "URL",
+      "description": "Legt die Server-URL für den http- oder sse-Transport fest."
+    },
+    "headerName": {
+      "label": "Auth-Header (http/sse)",
+      "description": "Legt den Header fest, in dem das Geheimnis für http/sse gesendet wird (Standard Authorization: Bearer)."
+    },
+    "envName": {
+      "label": "Umgebungsvariable (stdio)",
+      "description": "Legt die Umgebungsvariable fest, als die das Geheimnis für stdio bereitgestellt wird."
+    },
+    "timeout": {
+      "label": "Zeitlimit (ms)",
+      "description": "Legt die maximalen Millisekunden pro Tool-Aufruf fest, bevor das SDK ihn abbricht; Werte unter 1000 werden ignoriert."
+    },
+    "alwaysLoad": {
+      "label": "Tools immer laden",
+      "description": "Bezieht die Tools dieses Servers immer in den Prompt ein und blockiert den Start, bis er verbunden ist."
+    },
+    "preApproveAll": {
+      "label": "Alle Tools vorab genehmigen",
+      "description": "Genehmigt jedes Tool auf diesem Server vorab, sodass Aufrufe die Genehmigungsabfrage überspringen."
+    }
   },
   "options": {
     "transport": {
@@ -22,6 +58,9 @@
     }
   },
   "credentials": {
-    "secret": "Token / API-Schlüssel"
+    "secret": {
+      "label": "Token / API-Schlüssel",
+      "description": "Enthält ein Token oder einen API-Schlüssel für diesen Server, gesendet als Bearer-Header (http/sse) oder Umgebungsvariable (stdio)."
+    }
   }
 }

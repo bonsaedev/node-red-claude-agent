@@ -17,8 +17,8 @@ import {
   clear as clearClaudeFolder,
 } from "../lib/claude-folder-store";
 
-type Config = Infer<typeof ConfigsSchema>;
-type Credentials = Infer<typeof CredentialsSchema>;
+type ClaudeAgentConfigurationConfig = Infer<typeof ConfigsSchema>;
+type ClaudeAgentConfigurationCredentials = Infer<typeof CredentialsSchema>;
 
 type SettingSource = "user" | "project" | "local";
 
@@ -35,13 +35,13 @@ function firstDuplicate(values: string[]): string | undefined {
 /**
  * Shared configuration for `claude-agent` nodes. Holds auth + the options that
  * shape every run and assembles them into the Agent SDK {@link Options} object
- * via {@link buildOptions}. Credentials (API key or subscription OAuth token)
+ * via {@link buildOptions}. ClaudeAgentConfigurationCredentials (API key or subscription OAuth token)
  * are injected through the spawned process environment, which is how the SDK
  * authenticates.
  */
 export default class ClaudeAgentConfiguration extends ConfigNode<
-  Config,
-  Credentials
+  ClaudeAgentConfigurationConfig,
+  ClaudeAgentConfigurationCredentials
 > {
   static override readonly type = "claude-agent-configuration";
   static override readonly configSchema = ConfigsSchema;

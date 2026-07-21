@@ -1,16 +1,46 @@
 {
   "label": "claude tool",
   "configs": {
-    "name": "Tool-Name",
-    "agent": "Agent",
-    "description": "Beschreibung",
-    "params": "Parameter",
-    "timeoutSeconds": "Zeitlimit (Sekunden)",
-    "preApproved": "Vorab genehmigt",
-    "readOnly": "Nur lesen",
-    "errorPort": "Fehler-Port",
-    "completePort": "Abschluss-Port",
-    "statusPort": "Status-Port"
+    "name": {
+      "label": "Tool-Name",
+      "description": "Legt den Tool-Namen fest, den das Modell aufruft (wird zu mcp__flow__<name>)."
+    },
+    "agent": {
+      "label": "Agent",
+      "description": "Bindet dieses Tool an die Agent-Konfiguration, die es erweitert."
+    },
+    "description": {
+      "label": "Beschreibung",
+      "description": "Beschreibt, was das Tool tut, damit Claude weiß, wann es aufgerufen werden soll."
+    },
+    "params": {
+      "label": "Parameter",
+      "description": "Definiert die Eingaben des Tools, eine Zeile pro Parameter."
+    },
+    "timeoutSeconds": {
+      "label": "Zeitlimit (Sekunden)",
+      "description": "Legt fest, wie viele Sekunden auf eine claude tool return gewartet wird, bevor ein Zeitüberschreitungsfehler an das Modell zurückgegeben wird."
+    },
+    "preApproved": {
+      "label": "Vorab genehmigt",
+      "description": "Genehmigt das Tool vorab, sodass der Aufruf die Berechtigungsprüfung überspringt."
+    },
+    "readOnly": {
+      "label": "Nur lesen",
+      "description": "Markiert das Tool als nebenwirkungsfrei, sodass Claude es parallel mit anderen Lesevorgängen bündeln darf."
+    },
+    "errorPort": {
+      "label": "Fehler-Port",
+      "description": "Fügt einen separaten Fehler-Ausgang hinzu; wenn der Node einen Fehler wirft, wird dieser dorthin gesendet, statt den Flow anzuhalten."
+    },
+    "completePort": {
+      "label": "Abschluss-Port",
+      "description": "Fügt einen Abschluss-Ausgang hinzu, der ausgibt, nachdem der Node eine Nachricht fertig verarbeitet hat."
+    },
+    "statusPort": {
+      "label": "Status-Port",
+      "description": "Fügt einen Status-Ausgang hinzu, der die Statusänderungen des Nodes als Nachrichten ausgibt."
+    }
   },
   "outputs": {
     "call": {

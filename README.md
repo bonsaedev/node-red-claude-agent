@@ -45,9 +45,9 @@ Install the built package into your Node-RED user directory (`~/.node-red`), the
    ```
    [inject → msg.payload = "Summarize today's AI news"]  →  [claude-agent]  →  [debug]
    ```
-4. **Deploy**, then click inject. Claude runs and the answer arrives on **`msg.output.payload`**.
+4. **Deploy**, then click inject. Claude runs and the answer arrives on **`msg.text`**.
 
-That's the whole happy path — **prompt in on `msg.payload`, answer out on `msg.output.payload`.** By default the agent runs autonomously (no approvals) and returns one final result.
+That's the whole happy path — **prompt in on `msg.payload`, answer out on `msg.text`.** By default the agent runs autonomously (no approvals) and returns one final result.
 
 Want it to work with files or run commands? Give the config node a **Working directory** and a **Permission mode** (see [Safety](#safety)). Want a human in the loop? Turn on [Interactive](#interactive--approvals).
 
@@ -82,12 +82,12 @@ Auth plus the options every run shares — one config is used by many agent node
 
 **In** — the prompt (`msg.payload`, or your configured source). Optional: `msg.sessionId` to resume a previous conversation, `msg.correlationId` echoed back on every emission so you can route replies.
 
-**Out — port 0 (response)** — `msg.output = { payload, kind, sessionId, correlationId }`:
+**Out — port 0 (response)** — the response fields are merged onto the message record: `msg = { …incoming, text, kind, sessionId, correlationId }`:
 
 - `kind: "result"` — the final answer (also carries `usage`, `total_cost_usd`, `num_turns`).
 - `kind: "assistant"` — each message as it streams (stream mode); `kind: "partial"` — token deltas if **Include partial** is on.
 
-Incoming top-level message keys are carried through.
+Incoming message keys are carried through — the message is a single accumulating record.
 
 ## Authentication
 
@@ -111,7 +111,7 @@ The token is readable by the agent's own shell (a Bash call can print it), so tr
 
 Turn on **Interactive** (with permission mode `default` or `plan`) to approve tool use and answer clarifying questions from a UI. Requests come out on **port 1 (ask)**:
 
-`msg.output = { correlationId, payload: { requestId, kind, toolName, input, questions?, suggestions? } }` — `kind` is `permission` or `question`.
+the ask fields are merged onto the record: `msg = { …incoming, correlationId, request: { requestId, kind, toolName, input, questions?, suggestions? } }` — `request.kind` is `permission` or `question`.
 
 Route the answer back into the node:
 

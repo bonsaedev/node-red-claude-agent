@@ -1,16 +1,46 @@
 {
   "label": "claude agent",
   "configs": {
-    "name": "Name",
-    "config": "Konfiguration",
-    "prompt": "Prompt",
-    "responseMode": "Antwortstil",
-    "interactive": "Interaktiv",
-    "includePartial": "Live-Tippen",
-    "permissionMode": "Tool-Berechtigungen",
-    "errorPort": "Fehler-Port",
-    "completePort": "Abschluss-Port",
-    "statusPort": "Status-Port"
+    "name": {
+      "label": "Name",
+      "description": "Eine optionale Bezeichnung, die am Node im Editor angezeigt wird."
+    },
+    "config": {
+      "label": "Konfiguration",
+      "description": "Wählt die Claude-Agent-Konfiguration (Anmeldung und Ausführungseinstellungen), die dieser Node verwendet."
+    },
+    "prompt": {
+      "label": "Prompt",
+      "description": "Legt fest, was der Assistent gefragt wird; standardmäßig die Nutzlast der eingehenden Nachricht."
+    },
+    "responseMode": {
+      "label": "Antwortstil",
+      "description": "Legt fest, ob nur die endgültige Antwort gesendet oder jeder Teil beim Eintreffen gestreamt wird."
+    },
+    "interactive": {
+      "label": "Interaktiv",
+      "description": "Lässt den Assistenten pausieren, um über den Rückfrage-Port eine Freigabe oder eine klärende Frage anzufordern."
+    },
+    "includePartial": {
+      "label": "Live-Tippen",
+      "description": "Streamt den erzeugten Text Wort für Wort für einen Live-Tippeffekt."
+    },
+    "permissionMode": {
+      "label": "Tool-Berechtigungen",
+      "description": "Überschreibt die Tool-Berechtigungen der Konfiguration nur für diesen Node."
+    },
+    "errorPort": {
+      "label": "Fehler-Port",
+      "description": "Fügt einen separaten Fehler-Ausgang hinzu; wenn der Node einen Fehler wirft, wird dieser dorthin gesendet, statt den Flow anzuhalten."
+    },
+    "completePort": {
+      "label": "Abschluss-Port",
+      "description": "Fügt einen Abschluss-Ausgang hinzu, der ausgibt, nachdem der Node eine Nachricht fertig verarbeitet hat."
+    },
+    "statusPort": {
+      "label": "Status-Port",
+      "description": "Fügt einen Status-Ausgang hinzu, der die Statusänderungen des Nodes als Nachrichten ausgibt."
+    }
   },
   "options": {
     "responseMode": {

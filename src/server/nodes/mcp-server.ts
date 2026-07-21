@@ -5,7 +5,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import McpToolIn from "./mcp-tool-in";
 import { ConfigsSchema } from "../../shared/schemas/mcp-server";
 
-type Config = Infer<typeof ConfigsSchema>;
+type McpServerConfig = Infer<typeof ConfigsSchema>;
 
 /** `RED.httpNode` is Node-RED's user-facing Express app (typed by nrg). Express
  *  keeps its registered routes on the internal `app._router.stack`, which the
@@ -29,7 +29,7 @@ type ExpressRequest = IncomingMessage & { body?: unknown };
  * POST builds a fresh MCP server + transport from the flow's current tools, so
  * there is no session bookkeeping and edits take effect on the next request.
  */
-export default class McpServer extends ConfigNode<Config> {
+export default class McpServer extends ConfigNode<McpServerConfig> {
   static override readonly type = "mcp-server";
   static override readonly configSchema = ConfigsSchema;
 

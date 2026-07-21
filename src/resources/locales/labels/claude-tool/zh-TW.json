@@ -1,16 +1,46 @@
 {
   "label": "claude 工具",
   "configs": {
-    "name": "工具名稱",
-    "agent": "代理",
-    "description": "說明",
-    "params": "參數",
-    "timeoutSeconds": "逾時（秒）",
-    "preApproved": "預先核准",
-    "readOnly": "唯讀",
-    "errorPort": "錯誤埠",
-    "completePort": "完成埠",
-    "statusPort": "狀態埠"
+    "name": {
+      "label": "工具名稱",
+      "description": "設定模型呼叫的工具名稱（變為 mcp__flow__<名稱>）。"
+    },
+    "agent": {
+      "label": "代理",
+      "description": "將此工具繫結到它所擴充的代理組態。"
+    },
+    "description": {
+      "label": "說明",
+      "description": "描述此工具的用途，以便 Claude 知道何時呼叫它。"
+    },
+    "params": {
+      "label": "參數",
+      "description": "定義工具的輸入，每個參數一行。"
+    },
+    "timeoutSeconds": {
+      "label": "逾時（秒）",
+      "description": "設定在向模型回傳逾時錯誤之前等待 claude 工具回傳的秒數。"
+    },
+    "preApproved": {
+      "label": "預先核准",
+      "description": "預先核准此工具，使呼叫略過權限檢查。"
+    },
+    "readOnly": {
+      "label": "唯讀",
+      "description": "將工具標記為無副作用，以便 Claude 可將其與其他讀取操作並行批次處理。"
+    },
+    "errorPort": {
+      "label": "錯誤埠",
+      "description": "新增獨立的錯誤輸出；當節點擲出錯誤時，錯誤會傳送到該埠而非中止流程。"
+    },
+    "completePort": {
+      "label": "完成埠",
+      "description": "新增一個完成輸出埠，在節點處理完一則訊息後發出。"
+    },
+    "statusPort": {
+      "label": "狀態埠",
+      "description": "新增一個狀態輸出埠，將節點的狀態變更作為訊息發出。"
+    }
   },
   "outputs": {
     "call": {

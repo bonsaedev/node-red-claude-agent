@@ -1,18 +1,54 @@
 {
   "label": "claude mcp",
   "configs": {
-    "name": "Name",
-    "agent": "Agent",
-    "serverName": "Server name",
-    "transport": "Transport",
-    "command": "Command",
-    "args": "Arguments",
-    "url": "URL",
-    "headerName": "Auth header (http/sse)",
-    "envName": "Env variable (stdio)",
-    "timeout": "Timeout (ms)",
-    "alwaysLoad": "Always load tools",
-    "preApproveAll": "Pre-approve all tools"
+    "name": {
+      "label": "Name",
+      "description": "An optional label shown on the node in the editor."
+    },
+    "agent": {
+      "label": "Agent",
+      "description": "Binds this MCP server to the agent configuration it extends."
+    },
+    "serverName": {
+      "label": "Server name",
+      "description": "Sets a unique name for this server, used in tool names as mcp__<name>__<tool>; cannot be 'flow'."
+    },
+    "transport": {
+      "label": "Transport",
+      "description": "Chooses how to reach the server: a local command (stdio) or a remote URL (http/sse)."
+    },
+    "command": {
+      "label": "Command",
+      "description": "Sets the executable to run for stdio transport (for example: npx, node, python)."
+    },
+    "args": {
+      "label": "Arguments",
+      "description": "Lists arguments passed to the stdio command, separated by comma or newline."
+    },
+    "url": {
+      "label": "URL",
+      "description": "Sets the server URL for http or sse transport."
+    },
+    "headerName": {
+      "label": "Auth header (http/sse)",
+      "description": "Sets the header the secret is sent in for http/sse (default Authorization: Bearer)."
+    },
+    "envName": {
+      "label": "Env variable (stdio)",
+      "description": "Sets the environment variable the secret is provided as for stdio."
+    },
+    "timeout": {
+      "label": "Timeout (ms)",
+      "description": "Sets the maximum milliseconds per tool call before the SDK aborts it; values under 1000 are ignored."
+    },
+    "alwaysLoad": {
+      "label": "Always load tools",
+      "description": "Always includes this server's tools in the prompt and blocks startup until it connects."
+    },
+    "preApproveAll": {
+      "label": "Pre-approve all tools",
+      "description": "Pre-approves every tool on this server so calls skip the approval prompt."
+    }
   },
   "options": {
     "transport": {
@@ -22,6 +58,9 @@
     }
   },
   "credentials": {
-    "secret": "Token / API key"
+    "secret": {
+      "label": "Token / API key",
+      "description": "Holds a token or API key for this server, sent as a Bearer header (http/sse) or an env var (stdio)."
+    }
   }
 }

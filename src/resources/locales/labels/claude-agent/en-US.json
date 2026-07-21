@@ -1,16 +1,46 @@
 {
   "label": "claude agent",
   "configs": {
-    "name": "Name",
-    "config": "Configuration",
-    "prompt": "Prompt",
-    "responseMode": "Response style",
-    "interactive": "Interactive",
-    "includePartial": "Live typing",
-    "permissionMode": "Tool permissions",
-    "errorPort": "Error port",
-    "completePort": "Complete port",
-    "statusPort": "Status port"
+    "name": {
+      "label": "Name",
+      "description": "An optional label shown on the node in the editor."
+    },
+    "config": {
+      "label": "Configuration",
+      "description": "Selects the Claude agent configuration (sign-in and run settings) this node uses."
+    },
+    "prompt": {
+      "label": "Prompt",
+      "description": "Sets what to ask the assistant; defaults to the incoming message payload."
+    },
+    "responseMode": {
+      "label": "Response style",
+      "description": "Chooses whether to send only the final answer or stream each part as it arrives."
+    },
+    "interactive": {
+      "label": "Interactive",
+      "description": "Lets the assistant pause to ask for approval or a clarifying question through the ask port."
+    },
+    "includePartial": {
+      "label": "Live typing",
+      "description": "Streams generated text word by word for a live typing effect."
+    },
+    "permissionMode": {
+      "label": "Tool permissions",
+      "description": "Overrides the configuration's tool permissions just for this node."
+    },
+    "errorPort": {
+      "label": "Error port",
+      "description": "Adds a separate error output; when the node throws, the error is sent there instead of halting the flow."
+    },
+    "completePort": {
+      "label": "Complete port",
+      "description": "Adds a complete output port that emits after the node finishes handling a message."
+    },
+    "statusPort": {
+      "label": "Status port",
+      "description": "Adds a status output port that emits the node's status changes as messages."
+    }
   },
   "options": {
     "responseMode": {

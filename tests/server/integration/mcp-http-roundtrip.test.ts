@@ -18,14 +18,13 @@ import McpToolOut from "../../../src/server/nodes/mcp-tool-out";
 
 /**
  * The intermediate node a flow author actually writes: read the tool args off the
- * envelope, (optionally) delay, then re-emit the answer under `payload` in the
- * DEFAULT passthrough mode — which carries `_msgid` forward, so the PRIVATE channel
- * holding the live resolver survives to mcp-tool-out. This is the real correlation
- * proof the unit harness can't give (it mints a fixed `_msgid`).
+ * record, (optionally) delay, then re-emit the answer under `payload` in the
+ * DEFAULT merge mode — which carries `_mcpTool` (and its `callId`) forward, so
+ * `mcp-tool-out` recovers the parked resolver from the package `PendingIndex`. A
+ * real HTTP round-trip through Node-RED is the correlation proof the unit harness
+ * (which drives the index directly) can't give.
  */
-type ComputeInput = Input<
-  Port<{ output: { payload: { city?: string; ms?: number } } }>
->;
+type ComputeInput = Input<Port<{ payload: { city?: string; ms?: number } }>>;
 class Weather extends IONode<
   Record<string, never>,
   never,
@@ -36,7 +35,7 @@ class Weather extends IONode<
   static override readonly category = "test";
   static override readonly color = "#cccccc";
   override async input(msg: ComputeInput) {
-    const { city, ms } = msg.output.payload;
+    const { city, ms } = msg.payload;
     if (ms) await new Promise((r) => setTimeout(r, ms));
     this.send(0, { payload: `weather in ${city}` });
   }
@@ -46,14 +45,14 @@ class Weather extends IONode<
 class JsonReply extends IONode<
   Record<string, never>,
   never,
-  Input<Port<{ output: { payload: { city?: string } } }>>,
+  Input<Port<{ payload: { city?: string } }>>,
   Outputs<[Port<{ payload: unknown }>]>
 > {
   static override readonly type = "json-reply";
   static override readonly category = "test";
   static override readonly color = "#cccccc";
-  override input(msg: Input<Port<{ output: { payload: { city?: string } } }>>) {
-    this.send(0, { payload: { tempF: 72, city: msg.output.payload.city } });
+  override input(msg: Input<Port<{ payload: { city?: string } }>>) {
+    this.send(0, { payload: { tempF: 72, city: msg.payload.city } });
   }
 }
 
@@ -61,15 +60,15 @@ class JsonReply extends IONode<
 class FailReply extends IONode<
   Record<string, never>,
   never,
-  Input<Port<{ output: { payload: { city?: string } } }>>,
+  Input<Port<{ payload: { city?: string } }>>,
   Outputs<[Port<{ payload: unknown; isError: boolean }>]>
 > {
   static override readonly type = "fail-reply";
   static override readonly category = "test";
   static override readonly color = "#cccccc";
-  override input(msg: Input<Port<{ output: { payload: { city?: string } } }>>) {
+  override input(msg: Input<Port<{ payload: { city?: string } }>>) {
     this.send(0, {
-      payload: `no such city: ${msg.output.payload.city}`,
+      payload: `no such city: ${msg.payload.city}`,
       isError: true,
     });
   }
@@ -79,18 +78,16 @@ class FailReply extends IONode<
 class Echo extends IONode<
   Record<string, never>,
   never,
-  Input<Port<{ output: { payload: unknown; mcpTool?: { name?: string } } }>>,
+  Input<Port<{ payload: unknown; _mcpTool?: { name?: string } }>>,
   Outputs<[Port<{ payload: unknown }>]>
 > {
   static override readonly type = "echo";
   static override readonly category = "test";
   static override readonly color = "#cccccc";
   override input(
-    msg: Input<
-      Port<{ output: { payload: unknown; mcpTool?: { name?: string } } }>
-    >,
+    msg: Input<Port<{ payload: unknown; _mcpTool?: { name?: string } }>>,
   ) {
-    this.send(0, { payload: `via ${msg.output.mcpTool?.name}` });
+    this.send(0, { payload: `via ${msg._mcpTool?.name}` });
   }
 }
 
@@ -177,7 +174,7 @@ describe("mcp-server HTTP round-trip (real MCP client over real Node-RED)", () =
     }
   });
 
-  it("routes two concurrent calls to the right answers (per-_msgid correlation)", async () => {
+  it("routes two concurrent calls to the right answers (per-callId correlation)", async () => {
     const flow = runtime.flow();
     const server = flow.addNode(McpServer, {
       serverName: "flowtools",
@@ -202,7 +199,7 @@ describe("mcp-server HTTP round-trip (real MCP client over real Node-RED)", () =
     ]);
     try {
       // SF completes LAST (150ms) though it started first — completion order is
-      // scrambled, so a right answer proves routing is by _msgid, not arrival order.
+      // scrambled, so a right answer proves routing is by callId, not arrival order.
       const [slow, fast] = await Promise.all([
         a.callTool({ name: "get_weather", arguments: { city: "SF", ms: 150 } }),
         b.callTool({ name: "get_weather", arguments: { city: "NYC", ms: 20 } }),

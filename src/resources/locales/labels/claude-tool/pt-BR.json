@@ -1,16 +1,46 @@
 {
   "label": "ferramenta claude",
   "configs": {
-    "name": "Nome da ferramenta",
-    "agent": "Agente",
-    "description": "Descrição",
-    "params": "Parâmetros",
-    "timeoutSeconds": "Tempo limite (segundos)",
-    "preApproved": "Pré-aprovada",
-    "readOnly": "Somente leitura",
-    "errorPort": "Porta de erro",
-    "completePort": "Porta de conclusão",
-    "statusPort": "Porta de status"
+    "name": {
+      "label": "Nome da ferramenta",
+      "description": "Define o nome da ferramenta que o modelo chama (torna-se mcp__flow__<nome>)."
+    },
+    "agent": {
+      "label": "Agente",
+      "description": "Vincula esta ferramenta à configuração do agente que ela estende."
+    },
+    "description": {
+      "label": "Descrição",
+      "description": "Descreve o que a ferramenta faz para que o Claude saiba quando chamá-la."
+    },
+    "params": {
+      "label": "Parâmetros",
+      "description": "Define as entradas da ferramenta, uma linha por parâmetro."
+    },
+    "timeoutSeconds": {
+      "label": "Tempo limite (segundos)",
+      "description": "Define quantos segundos esperar por uma ferramenta claude retorno antes de retornar um erro de tempo limite ao modelo."
+    },
+    "preApproved": {
+      "label": "Pré-aprovada",
+      "description": "Pré-aprova a ferramenta para que a chamada pule a verificação de permissões."
+    },
+    "readOnly": {
+      "label": "Somente leitura",
+      "description": "Marca a ferramenta como livre de efeitos colaterais para que o Claude possa agrupá-la em paralelo com outras leituras."
+    },
+    "errorPort": {
+      "label": "Porta de erro",
+      "description": "Adiciona uma saída de erro separada; quando o nó lança um erro, ele é enviado para lá em vez de interromper o fluxo."
+    },
+    "completePort": {
+      "label": "Porta de conclusão",
+      "description": "Adiciona uma porta de saída de conclusão que emite após o nó terminar de processar uma mensagem."
+    },
+    "statusPort": {
+      "label": "Porta de status",
+      "description": "Adiciona uma porta de saída de status que emite as mudanças de status do nó como mensagens."
+    }
   },
   "outputs": {
     "call": {

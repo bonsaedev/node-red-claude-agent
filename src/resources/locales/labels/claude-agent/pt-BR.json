@@ -1,16 +1,46 @@
 {
   "label": "agente claude",
   "configs": {
-    "name": "Nome",
-    "config": "Configuração",
-    "prompt": "Prompt",
-    "responseMode": "Estilo de resposta",
-    "interactive": "Interativo",
-    "includePartial": "Digitação ao vivo",
-    "permissionMode": "Permissões de ferramentas",
-    "errorPort": "Porta de erro",
-    "completePort": "Porta de conclusão",
-    "statusPort": "Porta de status"
+    "name": {
+      "label": "Nome",
+      "description": "Um rótulo opcional exibido no nó no editor."
+    },
+    "config": {
+      "label": "Configuração",
+      "description": "Seleciona a configuração do agente Claude (login e definições de execução) que este nó usa."
+    },
+    "prompt": {
+      "label": "Prompt",
+      "description": "Define o que perguntar ao assistente; por padrão, usa a carga da mensagem recebida."
+    },
+    "responseMode": {
+      "label": "Estilo de resposta",
+      "description": "Escolhe se envia apenas a resposta final ou transmite cada parte à medida que chega."
+    },
+    "interactive": {
+      "label": "Interativo",
+      "description": "Permite que o assistente pause para pedir uma aprovação ou uma pergunta de esclarecimento pela porta de solicitação."
+    },
+    "includePartial": {
+      "label": "Digitação ao vivo",
+      "description": "Transmite o texto gerado palavra por palavra para um efeito de digitação ao vivo."
+    },
+    "permissionMode": {
+      "label": "Permissões de ferramentas",
+      "description": "Substitui as permissões de ferramentas da configuração apenas para este nó."
+    },
+    "errorPort": {
+      "label": "Porta de erro",
+      "description": "Adiciona uma saída de erro separada; quando o nó lança um erro, ele é enviado para lá em vez de interromper o fluxo."
+    },
+    "completePort": {
+      "label": "Porta de conclusão",
+      "description": "Adiciona uma porta de saída de conclusão que emite após o nó terminar de processar uma mensagem."
+    },
+    "statusPort": {
+      "label": "Porta de status",
+      "description": "Adiciona uma porta de saída de status que emite as mudanças de status do nó como mensagens."
+    }
   },
   "options": {
     "responseMode": {

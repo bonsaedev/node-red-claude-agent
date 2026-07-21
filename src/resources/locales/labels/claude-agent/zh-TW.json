@@ -1,16 +1,46 @@
 {
   "label": "claude 代理",
   "configs": {
-    "name": "名稱",
-    "config": "組態",
-    "prompt": "提示詞",
-    "responseMode": "回應風格",
-    "interactive": "互動式",
-    "includePartial": "即時輸入",
-    "permissionMode": "工具權限",
-    "errorPort": "錯誤埠",
-    "completePort": "完成埠",
-    "statusPort": "狀態埠"
+    "name": {
+      "label": "名稱",
+      "description": "在編輯器中顯示於節點上的選用標籤。"
+    },
+    "config": {
+      "label": "組態",
+      "description": "選擇此節點使用的 Claude 代理組態（登入和執行設定）。"
+    },
+    "prompt": {
+      "label": "提示詞",
+      "description": "設定要向助理詢問的內容；預設使用傳入訊息的負載。"
+    },
+    "responseMode": {
+      "label": "回應風格",
+      "description": "選擇僅傳送最終答案，或在各部分抵達時逐段串流。"
+    },
+    "interactive": {
+      "label": "互動式",
+      "description": "允許助理暫停，透過提問埠請求核准或提出釐清問題。"
+    },
+    "includePartial": {
+      "label": "即時輸入",
+      "description": "逐字串流產生的文字，實現即時輸入效果。"
+    },
+    "permissionMode": {
+      "label": "工具權限",
+      "description": "僅針對此節點覆寫組態的工具權限。"
+    },
+    "errorPort": {
+      "label": "錯誤埠",
+      "description": "新增獨立的錯誤輸出；當節點擲出錯誤時，錯誤會傳送到該埠而非中止流程。"
+    },
+    "completePort": {
+      "label": "完成埠",
+      "description": "新增一個完成輸出埠，在節點處理完一則訊息後發出。"
+    },
+    "statusPort": {
+      "label": "狀態埠",
+      "description": "新增一個狀態輸出埠，將節點的狀態變更作為訊息發出。"
+    }
   },
   "options": {
     "responseMode": {

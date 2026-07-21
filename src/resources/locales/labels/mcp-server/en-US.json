@@ -1,8 +1,17 @@
 {
   "label": "MCP server",
   "configs": {
-    "name": "Name",
-    "serverName": "Server name",
-    "path": "HTTP path"
+    "name": {
+      "label": "Name",
+      "description": "An optional label shown on the node in the editor."
+    },
+    "serverName": {
+      "label": "Server name",
+      "description": "The MCP server name advertised to connecting clients in the initialize reply."
+    },
+    "path": {
+      "label": "HTTP path",
+      "description": "The HTTP path the MCP endpoint is mounted on; clients connect here via StreamableHTTP."
+    }
   }
 }

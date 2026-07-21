@@ -1,11 +1,26 @@
 {
   "label": "herramienta claude retorno",
   "configs": {
-    "name": "Nombre",
-    "format": "Formato de retorno",
-    "errorPort": "Puerto de error",
-    "completePort": "Puerto de finalización",
-    "statusPort": "Puerto de estado"
+    "name": {
+      "label": "Nombre",
+      "description": "Una etiqueta opcional que se muestra en el nodo en el editor."
+    },
+    "format": {
+      "label": "Formato de retorno",
+      "description": "Elige si msg.payload se devuelve al modelo como un bloque de texto sin formato o como JSON legible por máquina."
+    },
+    "errorPort": {
+      "label": "Puerto de error",
+      "description": "Añade un puerto de salida de error; cuando el nodo lanza un error, este se envía allí en lugar de detener el flujo."
+    },
+    "completePort": {
+      "label": "Puerto de finalización",
+      "description": "Añade un puerto de salida de finalización que emite después de que el nodo termina de procesar un mensaje."
+    },
+    "statusPort": {
+      "label": "Puerto de estado",
+      "description": "Añade un puerto de salida de estado que emite los cambios de estado del nodo como mensajes."
+    }
   },
   "options": {
     "format": {
@@ -15,6 +30,6 @@
   },
   "input": {
     "label": "Retorno",
-    "description": "La respuesta del flujo a una llamada de herramienta de Claude. El valor viaja en msg.output.payload; establece msg.output.isError para devolver un error al modelo."
+    "description": "La respuesta del flujo a una llamada de herramienta de Claude. El valor viaja en msg.payload; establece msg.isError para devolver un error al modelo."
   }
 }

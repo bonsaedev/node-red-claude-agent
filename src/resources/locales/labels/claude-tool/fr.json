@@ -1,16 +1,46 @@
 {
   "label": "outil claude",
   "configs": {
-    "name": "Nom de l'outil",
-    "agent": "Agent",
-    "description": "Description",
-    "params": "Paramètres",
-    "timeoutSeconds": "Délai d'expiration (secondes)",
-    "preApproved": "Pré-approuvé",
-    "readOnly": "Lecture seule",
-    "errorPort": "Port d'erreur",
-    "completePort": "Port de fin",
-    "statusPort": "Port de statut"
+    "name": {
+      "label": "Nom de l'outil",
+      "description": "Définit le nom de l'outil que le modèle appelle (devient mcp__flow__<nom>)."
+    },
+    "agent": {
+      "label": "Agent",
+      "description": "Lie cet outil à la configuration d'agent qu'il étend."
+    },
+    "description": {
+      "label": "Description",
+      "description": "Décrit ce que fait l'outil afin que Claude sache quand l'appeler."
+    },
+    "params": {
+      "label": "Paramètres",
+      "description": "Définit les entrées de l'outil, une ligne par paramètre."
+    },
+    "timeoutSeconds": {
+      "label": "Délai d'expiration (secondes)",
+      "description": "Définit le nombre de secondes d'attente d'un retour d'outil claude avant de renvoyer une erreur de délai au modèle."
+    },
+    "preApproved": {
+      "label": "Pré-approuvé",
+      "description": "Pré-approuve l'outil afin que l'appel saute le contrôle des autorisations."
+    },
+    "readOnly": {
+      "label": "Lecture seule",
+      "description": "Marque l'outil comme sans effet de bord afin que Claude puisse le regrouper en parallèle avec d'autres lectures."
+    },
+    "errorPort": {
+      "label": "Port d'erreur",
+      "description": "Ajoute une sortie d'erreur distincte ; lorsque le nœud lève une erreur, celle-ci y est envoyée au lieu d'interrompre le flux."
+    },
+    "completePort": {
+      "label": "Port de fin",
+      "description": "Ajoute un port de sortie de fin qui émet une fois que le nœud a terminé de traiter un message."
+    },
+    "statusPort": {
+      "label": "Port de statut",
+      "description": "Ajoute un port de sortie de statut qui émet les changements de statut du nœud sous forme de messages."
+    }
   },
   "outputs": {
     "call": {

@@ -1,11 +1,26 @@
 {
   "label": "claude 工具返回",
   "configs": {
-    "name": "名称",
-    "format": "返回格式",
-    "errorPort": "错误端口",
-    "completePort": "完成端口",
-    "statusPort": "状态端口"
+    "name": {
+      "label": "名称",
+      "description": "在编辑器中显示于节点上的可选标签。"
+    },
+    "format": {
+      "label": "返回格式",
+      "description": "选择将 msg.payload 作为纯文本块还是机器可读的 JSON 返回给模型。"
+    },
+    "errorPort": {
+      "label": "错误端口",
+      "description": "添加一个错误输出端口；当节点抛出错误时，错误会发送到该端口，而不是中断流程。"
+    },
+    "completePort": {
+      "label": "完成端口",
+      "description": "添加一个完成输出端口，在节点处理完一条消息后发出。"
+    },
+    "statusPort": {
+      "label": "状态端口",
+      "description": "添加一个状态输出端口，将节点的状态变化作为消息发出。"
+    }
   },
   "options": {
     "format": {
@@ -15,6 +30,6 @@
   },
   "input": {
     "label": "返回",
-    "description": "流程对 Claude 工具调用的答复。值通过 msg.output.payload 传递；设置 msg.output.isError 可向模型返回错误。"
+    "description": "流程对 Claude 工具调用的答复。值通过 msg.payload 传递；设置 msg.isError 可向模型返回错误。"
   }
 }

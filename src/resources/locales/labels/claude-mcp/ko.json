@@ -1,18 +1,54 @@
 {
   "label": "claude MCP",
   "configs": {
-    "name": "이름",
-    "agent": "에이전트",
-    "serverName": "서버 이름",
-    "transport": "전송 방식",
-    "command": "명령",
-    "args": "인수",
-    "url": "URL",
-    "headerName": "인증 헤더 (http/sse)",
-    "envName": "환경 변수 (stdio)",
-    "timeout": "제한 시간 (ms)",
-    "alwaysLoad": "항상 도구 불러오기",
-    "preApproveAll": "모든 도구 사전 승인"
+    "name": {
+      "label": "이름",
+      "description": "편집기에서 노드에 표시되는 선택적 레이블입니다."
+    },
+    "agent": {
+      "label": "에이전트",
+      "description": "이 MCP 서버를 확장 대상 에이전트 구성에 바인딩합니다."
+    },
+    "serverName": {
+      "label": "서버 이름",
+      "description": "이 서버의 고유한 이름을 설정하며, 도구 이름에서 mcp__<이름>__<도구> 형태로 사용됩니다. 'flow'일 수 없습니다."
+    },
+    "transport": {
+      "label": "전송 방식",
+      "description": "서버에 연결하는 방법을 선택합니다: 로컬 명령(stdio) 또는 원격 URL(http/sse)."
+    },
+    "command": {
+      "label": "명령",
+      "description": "stdio 전송에서 실행할 실행 파일을 설정합니다(예: npx, node, python)."
+    },
+    "args": {
+      "label": "인수",
+      "description": "stdio 명령에 전달할 인수를 쉼표 또는 줄바꿈으로 구분하여 나열합니다."
+    },
+    "url": {
+      "label": "URL",
+      "description": "http 또는 sse 전송의 서버 URL을 설정합니다."
+    },
+    "headerName": {
+      "label": "인증 헤더 (http/sse)",
+      "description": "http/sse에서 비밀 값을 보낼 헤더를 설정합니다(기본값 Authorization: Bearer)."
+    },
+    "envName": {
+      "label": "환경 변수 (stdio)",
+      "description": "stdio에서 비밀 값을 제공할 환경 변수를 설정합니다."
+    },
+    "timeout": {
+      "label": "제한 시간 (ms)",
+      "description": "SDK가 도구 호출을 중단하기까지의 최대 밀리초를 설정합니다. 1000 미만 값은 무시됩니다."
+    },
+    "alwaysLoad": {
+      "label": "항상 도구 불러오기",
+      "description": "이 서버의 도구를 항상 프롬프트에 포함하고 연결될 때까지 시작을 차단합니다."
+    },
+    "preApproveAll": {
+      "label": "모든 도구 사전 승인",
+      "description": "이 서버의 모든 도구를 사전 승인하여 호출이 승인 프롬프트를 건너뛰도록 합니다."
+    }
   },
   "options": {
     "transport": {
@@ -22,6 +58,9 @@
     }
   },
   "credentials": {
-    "secret": "토큰 / API 키"
+    "secret": {
+      "label": "토큰 / API 키",
+      "description": "이 서버용 토큰 또는 API 키를 담으며, Bearer 헤더(http/sse) 또는 환경 변수(stdio)로 전송됩니다."
+    }
   }
 }

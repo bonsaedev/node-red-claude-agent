@@ -4,24 +4,78 @@
     "learnMore": "자세히 보기"
   },
   "configs": {
-    "name": "이름",
-    "provider": "공급자",
-    "authMethod": "로그인 방법",
-    "model": "모델",
-    "fallbackModel": "예비 모델",
-    "effort": "추론 강도",
-    "systemPromptPreset": "어시스턴트 스타일",
-    "appendSystemPrompt": "추가 지침",
-    "customSystemPrompt": "사용자 지정 지침",
-    "cwd": "작업 폴더",
-    "permissionMode": "도구 권한",
-    "allowedTools": "허용된 도구",
-    "disallowedTools": "차단된 도구",
-    "settingSources": "불러올 프로젝트 설정",
-    "maxTurns": "최대 단계 수",
-    "maxBudgetUsd": "지출 한도 (USD)",
-    "additionalDirectories": "추가 폴더",
-    "supportedDialogKinds": "질문 유형 (고급)"
+    "name": {
+      "label": "이름",
+      "description": "편집기에서 노드에 표시되는 선택적 레이블입니다."
+    },
+    "provider": {
+      "label": "공급자",
+      "description": "Claude가 실행되는 위치를 선택합니다 — Anthropic에 직접, 또는 Amazon, Google, Microsoft 클라우드 계정을 통해."
+    },
+    "authMethod": {
+      "label": "로그인 방법",
+      "description": "공급자가 Anthropic일 때 로그인 방법을 선택합니다: API 키 또는 Claude 구독."
+    },
+    "model": {
+      "label": "모델",
+      "description": "사용할 Claude 모델을 선택합니다. 기본값을 사용하려면 비워 둡니다."
+    },
+    "fallbackModel": {
+      "label": "예비 모델",
+      "description": "기본 모델을 사용할 수 없을 때 자동으로 사용되는 예비 모델을 선택합니다."
+    },
+    "effort": {
+      "label": "추론 강도",
+      "description": "모델이 작업 전에 얼마나 깊이 생각하는지 설정합니다 — 높을수록 추론이 깊어지고 토큰이 더 많이 사용됩니다."
+    },
+    "systemPromptPreset": {
+      "label": "어시스턴트 스타일",
+      "description": "어시스턴트가 시작할 때 사용하는 내장 동작을 선택합니다."
+    },
+    "appendSystemPrompt": {
+      "label": "추가 지침",
+      "description": "Claude Code 스타일에 추가 지침을 더합니다."
+    },
+    "customSystemPrompt": {
+      "label": "사용자 지정 지침",
+      "description": "직접 작성한 지침을 담으며, 스타일이 사용자 지정으로 설정된 경우에만 사용됩니다."
+    },
+    "cwd": {
+      "label": "작업 폴더",
+      "description": "어시스턴트가 작업하는 폴더를 설정합니다. 비워 두면 Node-RED의 폴더를 사용합니다."
+    },
+    "permissionMode": {
+      "label": "도구 권한",
+      "description": "어시스턴트가 확인을 요청하기 전에 스스로 어디까지 할 수 있는지 설정합니다."
+    },
+    "allowedTools": {
+      "label": "허용된 도구",
+      "description": "어시스턴트가 묻지 않고 사용할 수 있는 도구를 한 줄에 하나씩 나열합니다."
+    },
+    "disallowedTools": {
+      "label": "차단된 도구",
+      "description": "어시스턴트가 절대 사용할 수 없는 도구를 한 줄에 하나씩 나열합니다."
+    },
+    "settingSources": {
+      "label": "불러올 프로젝트 설정",
+      "description": "불러올 프로젝트 설정 파일(user, project, local)을 선택합니다."
+    },
+    "maxTurns": {
+      "label": "최대 단계 수",
+      "description": "어시스턴트가 수행할 수 있는 주고받는 단계 수를 제한합니다. 0은 무제한을 의미합니다."
+    },
+    "maxBudgetUsd": {
+      "label": "지출 한도 (USD)",
+      "description": "예상 비용이 이 미국 달러 금액에 도달하면 실행을 중지합니다. 0은 무제한을 의미합니다."
+    },
+    "additionalDirectories": {
+      "label": "추가 폴더",
+      "description": "작업 폴더 외에 어시스턴트가 열 수 있는 폴더를 한 줄에 하나씩 나열합니다."
+    },
+    "supportedDialogKinds": {
+      "label": "질문 유형 (고급)",
+      "description": "고급: UI가 응답할 수 있는 명확화 질문의 유형을 나열합니다."
+    }
   },
   "options": {
     "provider": {
@@ -75,7 +129,13 @@
     "cancel": "취소"
   },
   "credentials": {
-    "apiKey": "API 키",
-    "oauthToken": "구독 토큰"
+    "apiKey": {
+      "label": "API 키",
+      "description": "Anthropic API 키를 담으며, 로그인 방법이 API 키일 때 사용됩니다."
+    },
+    "oauthToken": {
+      "label": "구독 토큰",
+      "description": "Claude 구독 토큰을 담으며, 로그인 방법이 붙여넣은 구독 토큰일 때 사용됩니다."
+    }
   }
 }
